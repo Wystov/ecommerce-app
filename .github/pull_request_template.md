@@ -10,15 +10,11 @@
 
 #### 🎑 Screenshots (if applicable)
 
-<!-- If the changes involve the user interface or graphics, add screenshots to help understand the modifications. -->
+_If the changes involve the user interface or graphics, add screenshots to help understand the modifications._
 
-#### 🔗 Related issue link
+#### 🔗 Description
 
-_Describe the source of requirement. (For example, provide a link and the number of the task)_
-
-#### 💡 Background and solution
-
-_Describe the big picture of your changes here_
+_Brief description of the work performed._
 
 #### ☑️ Self Check before Merge
 
@@ -26,3 +22,4 @@ _Describe the big picture of your changes here_
 
 - [x] Documentation is updated/provided or not needed
 - [x] New code does not break existing tests.
+- [x] Before creating pull request, the development branch has been merged into this branch, and any conflicts have been resolved.
