@@ -18,13 +18,13 @@ eCommerce Application is a comprehensive online shopping portal that provides an
 
 - Language: [Typescript](https://www.typescriptlang.org/)
 - Front-end: [Vue](https://vuejs.org)
-  - Store-library: [Pinia](https://pinia.vuejs.org)
+  - Store: [Pinia](https://pinia.vuejs.org)
   - Routing: [Vue-router](https://router.vuejs.org)
 - Back-end and database: [CommerceTools](https://commercetools.com)
 
 ### Utilities
 
-- Linter: [ESLint](https://eslint.org) [config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb)
+- Linter: [ESLint](https://eslint.org) with [airbnb](https://www.npmjs.com/package/eslint-config-airbnb) style guide
 - Formatter: [Prettier](https://prettier.io)
 - Git-hook controller: [Husky](https://typicode.github.io/husky/) 
 - Test-framework: [Vitest](https://vitest.dev)
@@ -32,7 +32,7 @@ eCommerce Application is a comprehensive online shopping portal that provides an
 
 ## Run the project locally
 
-To start working on the project on your local machine, please, make sure that you install version control system [Git](https://git-scm.com/downloads) and pre-built installer [Node.js LTS](https://nodejs.org/en/download).
+To start working on the project on your local machine, please, make sure that you install [Git](https://git-scm.com/downloads) and [Node.js LTS](https://nodejs.org/en/download).
 
 ### Steps to start
 
@@ -43,4 +43,4 @@ To start working on the project on your local machine, please, make sure that yo
 If you'd like to see changes in the project right away, you can start dev-server by next steps:
 
 - Run `npm run dev` to starts a local dev-server with [HMR](https://vitejs.dev/guide/features.html#hot-module-replacement) for development
-- Open `https://localhost:3000` in a preferable browser
+- Press `o` to see the project in [Google Chrome](https://www.google.com/chrome/) or put `https://localhost:5173/` to the address bar of the preferable browser
