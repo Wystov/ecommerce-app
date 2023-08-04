@@ -44,3 +44,25 @@ If you'd like to see changes in the project right away, you can start dev-server
 
 - Run `npm run dev` to starts a local dev-server with [HMR](https://vitejs.dev/guide/features.html#hot-module-replacement) for development
 - Press `o` to see the project in [Google Chrome](https://www.google.com/chrome/) or put `https://localhost:5173/` to the address bar of the preferable browser
+
+### Available scripts
+
+- `npm run dev` - run dev-server
+- `npm run build-only` - build the project
+- `npm run build` - build the project for production (with types check)
+- `npm run preview` - run builded project on dev-server 
+  (work correctly after run `npm run build` first)
+- `npm run type-check` - run types check
+- `npm run lint` - run eslint check with --fix
+- `npm run format` - run formatting by prettier
+- `npm run prepare` - enable Git hooks in automatically mode
+- `test:unit` - run tests
+- `npm run test-coverage` - run a table of coverage the project by tests in percentage
+
+
+## Contributors
+
+[Wistov](https://github.com/Wystov) | [Duxcoder](https://github.com/Duxcoder) | [CoracaoDoMundo](https://github.com/CoracaoDoMundo)
+
+[RS school](https://rs.school) 
+
