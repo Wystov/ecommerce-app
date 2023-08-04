@@ -62,7 +62,7 @@ If you'd like to see changes in the project right away, you can start dev-server
 
 ## Contributors
 
-[Wistov](https://github.com/Wystov) | [Duxcoder](https://github.com/Duxcoder) | [CoracaoDoMundo](https://github.com/CoracaoDoMundo)
+[Wystov](https://github.com/Wystov) | [Duxcoder](https://github.com/Duxcoder) | [CoracaoDoMundo](https://github.com/CoracaoDoMundo)
 
 [RS school](https://rs.school) 
 
