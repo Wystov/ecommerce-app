@@ -14,7 +14,8 @@
     "test:unit": "vitest --dom src/",
     "test-coverage": "vitest run --coverage --dom src/",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "init-msw":	"msw init public/"
   },
   "dependencies": {
     "happy-dom": "^6.0.4",
