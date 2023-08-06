@@ -38,7 +38,6 @@ To start working on the project on your local machine, please, make sure that yo
 
 - Clone [repository](https://github.com/Wystov/ecommerce-app)
 - Run `npm install` or `npm i` to install all packages needed
-- Run `npm run prepare` to prepare Husky script to work
 
 If you'd like to see changes in the project right away, you can start dev-server by next steps:
 
@@ -58,6 +57,9 @@ If you'd like to see changes in the project right away, you can start dev-server
 - `npm run prepare` - enable Git hooks in automatically mode
 - `test:unit` - run tests
 - `npm run test-coverage` - run a table of coverage the project by tests in percentage
+- `npm run storybook` - run storybook on `https://localhost:6006/`
+- `npm run build-storybook` - build storybook for production
+- `npm run init-msw` - initialize msw-library in the project
 
 
 ## Contributors

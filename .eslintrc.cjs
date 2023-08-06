@@ -9,6 +9,7 @@ module.exports = {
     '@vue/eslint-config-typescript',
     '@vue/eslint-config-prettier/skip-formatting',
     '@vue/eslint-config-airbnb',
+    'plugin:storybook/recommended',
   ],
   parser: 'vue-eslint-parser',
   parserOptions: {
