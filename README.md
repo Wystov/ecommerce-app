@@ -4,12 +4,12 @@ eCommerce Application is a comprehensive online shopping portal that provides an
 
 ### Key pages in the application include:
 
-- Login and Registration pages 
-- Main page 
-- Catalog Product page 
-- Detailed Product page 
-- User Profile page 
-- Basket page 
+- Login and Registration pages
+- Main page
+- Catalog Product page
+- Detailed Product page
+- User Profile page
+- Basket page
 - About Us page
 
 ## Technology Overview
@@ -26,7 +26,7 @@ eCommerce Application is a comprehensive online shopping portal that provides an
 
 - Linter: [ESLint](https://eslint.org) with [airbnb](https://www.npmjs.com/package/eslint-config-airbnb) style guide
 - Formatter: [Prettier](https://prettier.io)
-- Git-hook controller: [Husky](https://typicode.github.io/husky/) 
+- Git-hook controller: [Husky](https://typicode.github.io/husky/)
 - Test-framework: [Vitest](https://vitest.dev)
 - Frontend-workshop: [Storybook](https://storybook.js.org)
 
@@ -49,7 +49,8 @@ If you'd like to see changes in the project right away, you can start dev-server
 - `npm run dev` - run dev-server
 - `npm run build-only` - build the project
 - `npm run build` - build the project for production (with types check)
-- `npm run preview` - run builded project on dev-server 
+- `npm run build:dev` - build the project for development (add sourcemap, no minify, no types check)
+- `npm run preview` - run builded project on dev-server
   (work correctly after run `npm run build` first)
 - `npm run type-check` - run types check
 - `npm run lint` - run eslint check with --fix
@@ -66,5 +67,5 @@ If you'd like to see changes in the project right away, you can start dev-server
 
 [Wystov](https://github.com/Wystov) | [Duxcoder](https://github.com/Duxcoder) | [CoracaoDoMundo](https://github.com/CoracaoDoMundo)
 
-[RS school](https://rs.school) 
+[RS school](https://rs.school)
 
