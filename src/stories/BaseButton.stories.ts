@@ -1,7 +1,7 @@
 import BaseButton from '@/components/shared/BaseButton.vue';
 
 export default {
-  title: 'BaseButton',
+  title: 'Button',
   component: BaseButton,
   tags: ['autodocs'],
   argTypes: {

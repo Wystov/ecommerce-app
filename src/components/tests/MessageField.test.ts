@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect } from 'vitest';
-import MessageField from '../shared/MessageField.vue';
+import BaseMessage from '../shared/BaseMessage.vue';
 
-describe('MessageField', () => {
+describe('BaseMessage', () => {
   it('render with danger alert type', () => {
-    const wrapper = mount(MessageField, {
+    const wrapper = mount(BaseMessage, {
       props: {
         alert: 'danger',
       },
@@ -13,7 +13,7 @@ describe('MessageField', () => {
   });
 
   it('render with rounded style', () => {
-    const wrapper = mount(MessageField, {
+    const wrapper = mount(BaseMessage, {
       props: {
         rounded: true,
       },
@@ -24,7 +24,7 @@ describe('MessageField', () => {
   it('render title and message slot content', () => {
     const title = 'Error';
     const message = 'Error message for promise team';
-    const wrapper = mount(MessageField, {
+    const wrapper = mount(BaseMessage, {
       props: {
         title,
       },

@@ -1,8 +1,8 @@
-import MessageField from '@/components/shared/MessageField.vue';
+import BaseMessage from '@/components/shared/BaseMessage.vue';
 
 export default {
-  title: 'MessageField',
-  component: MessageField,
+  title: 'Message',
+  component: BaseMessage,
   tags: ['autodocs'],
   argTypes: {
     alert: {

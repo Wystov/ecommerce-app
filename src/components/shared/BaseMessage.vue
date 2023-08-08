@@ -1,5 +1,5 @@
 <script lang="ts">
-import { type MessageFieldClasses } from '@/types/types';
+import { type BaseMessageClasses } from '@/types/types';
 
 export default {
   props: {
@@ -15,7 +15,7 @@ export default {
     },
   },
   computed: {
-    classes(): MessageFieldClasses {
+    classes(): BaseMessageClasses {
       return {
         primary: this.alert === 'primary',
         danger: this.alert === 'danger',
