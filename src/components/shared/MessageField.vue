@@ -7,6 +7,7 @@ export default {
       type: String,
       default: 'primary',
     },
+    text: { type: String, default: '' },
     title: { type: String, default: '' },
     rounded: {
       type: Boolean,
@@ -29,14 +30,18 @@ export default {
 
 <template>
   <div class="message-field" :class="classes">
-    <h3 class="title">{{ title }}</h3>
-    <p class="message"><slot /></p>
+    <h3 v-show="title" class="title">{{ title }}</h3>
+    <p class="message"><slot />{{ text }}</p>
   </div>
 </template>
 
 <style scoped>
 .message-field {
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4em;
+  padding: 16px 24px;
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -46,6 +51,9 @@ export default {
 .message {
   padding: 0;
   margin: 0;
+}
+.message {
+  text-align: justify;
 }
 .primary {
   background-color: #d9edf7;
