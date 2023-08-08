@@ -4,11 +4,11 @@
   </component>
 </template>
 <script lang="ts">
-import { type ButtonClasses } from '@/types/components/types';
+import { type ButtonClasses } from '@/types/types';
 
 export default {
   props: {
-    label: { String, default: '' },
+    label: { type: String, default: '' },
     dark: { type: Boolean, default: false },
     size: { type: String, default: 'small' },
     rounded: { type: Boolean, default: false },
@@ -45,6 +45,7 @@ export default {
   width: auto;
   min-width: 4em;
   padding: 0.5em 1em;
+  font-family: Arial, Helvetica, sans-serif;
   border: solid 1px transparent;
   border-radius: 4px;
   transition: 0.3s;
