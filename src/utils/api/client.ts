@@ -15,7 +15,7 @@ export class ApiClient {
     this.api = this.newFlow(user);
   }
 
-  public request(): ByProjectKeyRequestBuilder {
+  public call(): ByProjectKeyRequestBuilder {
     return this.api;
   }
 

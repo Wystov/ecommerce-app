@@ -6,7 +6,7 @@ export default {
     const api = new ApiClient();
 
     // anonymous flow
-    api.request().get().execute();
+    api.call().get().execute();
     // api.createCustomer('12467asdfadsf@asd.com', '123');
 
     // password flow

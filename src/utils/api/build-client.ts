@@ -5,6 +5,7 @@ import {
   type AnonymousAuthMiddlewareOptions,
   type UserAuthOptions,
   type Client,
+  type RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
 const clientId = import.meta.env.VITE_CLIENT_ID;
@@ -17,9 +18,9 @@ const apiUrl = import.meta.env.VITE_API_URL;
 async function fetcher(...args: Parameters<typeof fetch>): Promise<Response> {
   const response = await fetch(...args);
   const clone = response.clone();
-  const token = await clone.json();
+  const data = await clone.json();
 
-  localStorage.setItem('ecommerce-shop', token.refresh_token);
+  if (data.refresh_token) localStorage.setItem('ecommerce-shop', data.refresh_token);
 
   return response;
 }
@@ -44,7 +45,7 @@ const anonymousOptions: AnonymousAuthMiddlewareOptions = {
   },
 };
 
-const passwordOptions = (user: UserAuthOptions): PasswordAuthMiddlewareOptions => {
+const getPasswordOptions = (user: UserAuthOptions): PasswordAuthMiddlewareOptions => {
   const options: PasswordAuthMiddlewareOptions = {
     ...baseAuthOptions,
     credentials: {
@@ -55,21 +56,31 @@ const passwordOptions = (user: UserAuthOptions): PasswordAuthMiddlewareOptions =
   return options;
 };
 
+const getRefreshOptions = (refreshToken: string): RefreshAuthMiddlewareOptions => {
+  const options: RefreshAuthMiddlewareOptions = {
+    ...baseAuthOptions,
+    credentials,
+    refreshToken,
+  };
+  return options;
+};
+
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: apiUrl,
   fetch,
 };
 
 export const getClient = (user?: UserAuthOptions): Client => {
+  const refreshToken = localStorage.getItem('ecommerce-shop');
+  const api = new ClientBuilder();
   if (user) {
-    return new ClientBuilder()
-      .withPasswordFlow(passwordOptions(user))
-      .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware()
-      .build();
+    api.withPasswordFlow(getPasswordOptions(user));
+  } else if (typeof refreshToken === 'string') {
+    api.withRefreshTokenFlow(getRefreshOptions(refreshToken));
+  } else {
+    api.withAnonymousSessionFlow(anonymousOptions);
   }
-  return new ClientBuilder()
-    .withAnonymousSessionFlow(anonymousOptions)
+  return api
     .withHttpMiddleware(httpMiddlewareOptions)
     .withLoggerMiddleware()
     .build();
