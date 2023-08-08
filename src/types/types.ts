@@ -10,5 +10,12 @@ interface ButtonClasses {
   active: boolean;
   disabled: boolean;
 }
+interface MessageFieldClasses {
+  primary: boolean;
+  danger: boolean;
+  warning: boolean;
+  success: boolean;
+  rounded: boolean;
+}
 
-export type { ButtonClasses };
+export type { ButtonClasses, MessageFieldClasses };
