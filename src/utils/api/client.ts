@@ -1,11 +1,9 @@
 import {
   createApiBuilderFromCtpClient,
-  type ClientResponse,
-  type CustomerSignInResult,
-  type Customer,
 } from '@commercetools/platform-sdk';
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import router from '@/router/index';
 import { getClient } from './build-client';
 
 const projectKey = import.meta.env.VITE_PROJECT_KEY;
@@ -29,23 +27,24 @@ export class ApiClient {
   public async createCustomer(
     email: string,
     password: string,
-  ): Promise<ClientResponse<CustomerSignInResult> | undefined> {
+  ): Promise<void> {
     try {
       const response = await this.api
         .customers()
         .post({ body: { email, password } })
         .execute();
-      return response;
+      if (response.statusCode === 201) {
+        this.signInCustomer(email, password);
+      }
     } catch (error) {
       console.log(error);
-      return undefined;
     }
   }
 
   public async signInCustomer(
     email: string,
     password: string,
-  ): Promise<ClientResponse<Customer> | undefined> {
+  ): Promise<void> {
     const passwordFlowApi = this.newFlow({ username: email, password });
     try {
       const response = await passwordFlowApi
@@ -54,12 +53,10 @@ export class ApiClient {
         .execute();
       if (response.statusCode === 200) {
         this.api = passwordFlowApi;
-        return response;
+        router.push('/');
       }
-      throw new Error(JSON.stringify(response));
     } catch (error) {
-      console.log(JSON.parse(error as string));
-      return undefined;
+      console.log(error);
     }
   }
 }

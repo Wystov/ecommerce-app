@@ -7,10 +7,10 @@ export default {
 
     // anonymous flow
     api.request().get().execute();
-    // api.createCustomer('124asdfadsf@asd.com', '123');
+    // api.createCustomer('12467asdfadsf@asd.com', '123');
 
     // password flow
-    // api.signInCustomer('124asdfadsf@asd.com', '123');
+    // api.signInCustomer('1246asdfadsf@asd.com', '123');
   },
 };
 </script>
