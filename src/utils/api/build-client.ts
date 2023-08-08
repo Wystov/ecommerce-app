@@ -14,6 +14,16 @@ const projectKey = import.meta.env.VITE_PROJECT_KEY;
 const scopes = [import.meta.env.VITE_SCOPE];
 const apiUrl = import.meta.env.VITE_API_URL;
 
+async function fetcher(...args: Parameters<typeof fetch>): Promise<Response> {
+  const response = await fetch(...args);
+  const clone = response.clone();
+  const token = await clone.json();
+
+  localStorage.setItem('ecommerce-shop', token.refresh_token);
+
+  return response;
+}
+
 const credentials = {
   clientId,
   clientSecret,
@@ -23,7 +33,7 @@ const baseAuthOptions = {
   host: authUrl,
   projectKey,
   scopes,
-  fetch,
+  fetch: fetcher,
 };
 
 const anonymousOptions: AnonymousAuthMiddlewareOptions = {
