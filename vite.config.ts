@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url';
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -15,5 +16,15 @@ export default defineConfig(({ mode }) => ({
   build: {
     minify: mode === 'production' ? 'esbuild' : false,
     sourcemap: mode === 'production' ? false : 'inline',
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis',
+      },
+      plugins: [
+        NodeModulesPolyfillPlugin(),
+      ],
+    },
   },
 }));

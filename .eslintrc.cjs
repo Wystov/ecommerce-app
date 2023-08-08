@@ -23,6 +23,7 @@ module.exports = {
     'no-plusplus': 'off',
     'import/prefer-default-export': 'off',
     'max-lines-per-function': ['error', 40],
+    'class-methods-use-this': 'off',
     '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-unnecessary-type-assertion': 'error',
