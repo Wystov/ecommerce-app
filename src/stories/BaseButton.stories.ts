@@ -1,4 +1,4 @@
-import BaseButton from '@/components/shared/button/BaseButton.vue';
+import BaseButton from '@/components/shared/BaseButton.vue';
 
 export default {
   title: 'BaseButton',
@@ -11,14 +11,6 @@ export default {
       },
       options: ['small', 'medium', 'large'],
     },
-  },
-};
-
-export const Light = {
-  args: {
-    light: true,
-    label: 'Base Button',
-    size: 'medium',
   },
 };
 
