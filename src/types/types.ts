@@ -18,4 +18,10 @@ interface BaseMessageClasses {
   rounded: boolean;
 }
 
-export type { ButtonClasses, BaseMessageClasses };
+interface BaseCheckboxFilling {
+  label: string,
+  id: string,
+  name: string,
+}
+
+export type { ButtonClasses, BaseMessageClasses, BaseCheckboxFilling };
