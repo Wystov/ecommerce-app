@@ -25,6 +25,6 @@ describe('BaseButton test', () => {
     });
     expect(wrapper.find('.disabled').exists()).toBeTruthy();
     const buttonElement = wrapper.find('.button').element;
-    expect(buttonElement.getAttribute('disabled')).toBeTruthy();
+    expect(buttonElement.hasAttribute('disabled')).toBeTruthy();
   });
 });
