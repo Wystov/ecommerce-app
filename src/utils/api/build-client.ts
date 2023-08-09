@@ -7,6 +7,7 @@ import {
   type Client,
   type RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
+import type { TokenResponse } from '@/types/types';
 
 const clientId = import.meta.env.VITE_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_SECRET;
@@ -18,7 +19,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 async function fetcher(...args: Parameters<typeof fetch>): Promise<Response> {
   const response = await fetch(...args);
   const clone = response.clone();
-  const data = await clone.json();
+  const data: TokenResponse = await clone.json();
 
   if (data.refresh_token) localStorage.setItem('ecommerce-shop', data.refresh_token);
 

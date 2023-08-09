@@ -17,5 +17,8 @@ interface BaseMessageClasses {
   success: boolean;
   rounded: boolean;
 }
+interface TokenResponse {
+  refresh_token?: string;
+}
 
-export type { ButtonClasses, BaseMessageClasses };
+export type { ButtonClasses, BaseMessageClasses, TokenResponse };
