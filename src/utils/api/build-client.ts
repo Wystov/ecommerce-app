@@ -82,7 +82,5 @@ export const getClient = (user?: UserAuthOptions): Client => {
   } else {
     api.withAnonymousSessionFlow(anonymousOptions);
   }
-  return api
-    .withHttpMiddleware(httpMiddlewareOptions)
-    .build();
+  return api.withHttpMiddleware(httpMiddlewareOptions).build();
 };
