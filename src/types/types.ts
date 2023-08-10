@@ -1,3 +1,5 @@
+import { NamePages } from './enums';
+
 interface ButtonClasses {
   'theme-dark': boolean;
   'theme-light': boolean;
@@ -17,5 +19,16 @@ interface BaseMessageClasses {
   success: boolean;
   rounded: boolean;
 }
-
-export type { ButtonClasses, BaseMessageClasses };
+interface AuthorizationList {
+  name: NamePages;
+  authorization: Boolean;
+  icon: {};
+}
+interface DataHeader {
+  navigation: NamePages[];
+  authorizationList: AuthorizationList[];
+  authorized: Boolean;
+}
+export type {
+  ButtonClasses, BaseMessageClasses, AuthorizationList, DataHeader,
+};

@@ -4,4 +4,4 @@ export default {
 };
 </script>
 
-<template><h1 class="container">MainPage</h1></template>
+<template><h1 class="container">Catalog</h1></template>
