@@ -1,41 +1,30 @@
 <template>
-  <div class="checkbox-block" v-for="(box, index) in checkboxArr" :key="index">
+  <div class="checkbox-block">
     <input
       type="checkbox"
-      id="{{ box.id }}"
-      name="{{ box.name }}"
+      id="{{ id }}"
+      name="{{ name }}"
       class="checkbox"
       :class="{ 'dark-theme-checkbox': isDark }"
       :checked="checked"
       :disabled="disabled"
     />
-    <label :for="'label-' + box.id" class="label" :class="{ 'dark-theme-label': isDark }">{{ box.label }}</label>
+    <label for="{{ id }}" class="label" :class="{ 'dark-theme-label': isDark }">{{ label }}</label>
   </div>
 </template>
 
 <script lang="ts">
-import { type BaseCheckboxFilling } from '@/types/types';
 import '../../assets/styles/style.css';
 
 export default {
   components: {},
   props: {
-    checkboxArr: {
-      type: Array<BaseCheckboxFilling>,
-      default: [{ label: 'Label', id: 'checkbox-id', name: 'value' }],
-    },
-    checked: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    isDark: {
-      type: Boolean,
-      default: false,
-    },
+    label: { type: String, default: 'Label', require: true },
+    id: { type: String, default: 'checkbox-id', require: true },
+    name: { type: String, default: 'value', require: true },
+    checked: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
+    isDark: { type: Boolean, default: false },
   },
 };
 </script>
