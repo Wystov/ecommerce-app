@@ -1,10 +1,11 @@
-import {
-  createApiBuilderFromCtpClient,
-} from '@commercetools/platform-sdk';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import router from '@/router/index';
+import type { UserSignUp } from '@/types/types';
+import { LocalStorageKeys } from '@/types/enums';
 import { getClient } from './build-client';
+import { authErrorHandler } from './error-handler';
+import { handleUserData } from '../handle-signup-data';
 
 const projectKey = import.meta.env.VITE_PROJECT_KEY;
 
@@ -24,39 +25,29 @@ export class ApiClient {
       .withProjectKey({ projectKey });
   }
 
-  public async createCustomer(
-    email: string,
-    password: string,
-  ): Promise<void> {
+  public async createCustomer(data: UserSignUp): Promise<string> {
+    const { user, userFullData } = handleUserData(data);
     try {
-      const response = await this.api
+      await this.api
         .customers()
-        .post({ body: { email, password } })
+        .post({ body: userFullData })
         .execute();
-      if (response.statusCode === 201) {
-        this.signInCustomer(email, password);
-      }
+      localStorage.removeItem(LocalStorageKeys.AnonId);
+      await this.signInCustomer(user);
+      return 'ok';
     } catch (error) {
-      console.log(error);
+      return authErrorHandler(error);
     }
   }
 
-  public async signInCustomer(
-    email: string,
-    password: string,
-  ): Promise<void> {
-    const passwordFlowApi = this.newFlow({ username: email, password });
+  public async signInCustomer(user: UserAuthOptions): Promise<string> {
+    const passwordFlowApi = this.newFlow(user);
     try {
-      const response = await passwordFlowApi
-        .me()
-        .get()
-        .execute();
-      if (response.statusCode === 200) {
-        this.api = passwordFlowApi;
-        router.push('/');
-      }
+      await passwordFlowApi.me().get().execute();
+      this.api = passwordFlowApi;
+      return 'ok';
     } catch (error) {
-      console.log(error);
+      return authErrorHandler(error);
     }
   }
 }

@@ -1,3 +1,5 @@
+import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
+
 interface ButtonClasses {
   'theme-dark': boolean;
   'theme-light': boolean;
@@ -20,5 +22,19 @@ interface BaseMessageClasses {
 interface TokenResponse {
   refresh_token?: string;
 }
+interface UserSignUp {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  anonymousId?: string;
+}
+interface UserDataBundle {
+  user: UserAuthOptions;
+  userFullData: UserSignUp;
+}
 
-export type { ButtonClasses, BaseMessageClasses, TokenResponse };
+export type {
+  ButtonClasses, BaseMessageClasses, TokenResponse, UserSignUp, UserDataBundle,
+};

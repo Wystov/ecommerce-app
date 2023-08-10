@@ -1,3 +1,4 @@
 export const enum LocalStorageKeys {
-  Token = 'ecommerce-shop',
+  Token = 'ecommerce-shop: refresh',
+  AnonId = 'ecommerce-shop: anonid'
 }
