@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'node-fetch': 'axios',
     },
   },
   build: {

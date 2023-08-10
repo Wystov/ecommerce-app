@@ -19,7 +19,10 @@
     "init-msw": "msw init public/"
   },
   "dependencies": {
+    "@commercetools/platform-sdk": "^4.11.0",
+    "@commercetools/sdk-client-v2": "^2.2.0",
     "@heroicons/vue": "^2.0.18",
+    "axios": "^1.4.0",
     "pinia": "^2.1.4",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
@@ -49,6 +52,7 @@
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-storybook": "^0.6.11",
     "eslint-plugin-vue": "^9.15.1",
+    "happy-dom": "^10.9.0",
     "husky": "^8.0.0",
     "lint-staged": "^13.2.3",
     "msw": "^1.2.1",
@@ -60,7 +64,6 @@
     "vite": "^4.4.6",
     "vitest": "^0.34.1",
     "vue-eslint-parser": "^9.3.1",
-    "vue-tsc": "^1.8.6",
-    "happy-dom": "^6.0.4"
+    "vue-tsc": "^1.8.6"
   }
 }

@@ -23,6 +23,8 @@ module.exports = {
     'no-plusplus': 'off',
     'import/prefer-default-export': 'off',
     'max-lines-per-function': ['error', 40],
+    'class-methods-use-this': 'off',
+    'no-console': 'off',
     '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-unnecessary-type-assertion': 'error',
@@ -37,6 +39,10 @@ module.exports = {
         '': 'never',
       },
     ],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
   settings: {
     'import/resolver': {
