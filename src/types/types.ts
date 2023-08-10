@@ -24,11 +24,17 @@ interface AuthorizationList {
   authorization: Boolean;
   icon: {};
 }
-interface DataHeader {
-  navigation: NamePages[];
+interface DataAuthorization {
   authorizationList: AuthorizationList[];
   authorized: Boolean;
 }
+interface DataNavigation {
+  navigation: NamePages[];
+}
 export type {
-  ButtonClasses, BaseMessageClasses, AuthorizationList, DataHeader,
+  ButtonClasses,
+  BaseMessageClasses,
+  AuthorizationList,
+  DataAuthorization,
+  DataNavigation,
 };
