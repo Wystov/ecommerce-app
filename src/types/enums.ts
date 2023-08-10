@@ -16,4 +16,8 @@ const enum PathPages {
   Registration = '/Registration',
 }
 
-export { NamePages, PathPages };
+const enum LocalStorageKeys {
+  Token = 'ecommerce-shop',
+}
+
+export { NamePages, PathPages, LocalStorageKeys };

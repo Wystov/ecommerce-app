@@ -56,16 +56,15 @@ If you'd like to see changes in the project right away, you can start dev-server
 - `npm run lint` - run eslint check with --fix
 - `npm run format` - run formatting by prettier
 - `npm run prepare` - enable Git hooks in automatically mode
-- `test:unit` - run tests
+- `npm run test:unit` - run tests
 - `npm run test-coverage` - run a table of coverage the project by tests in percentage
+- `npm run test-ui` - run tests with ui
 - `npm run storybook` - run storybook on `https://localhost:6006/`
 - `npm run build-storybook` - build storybook for production
 - `npm run init-msw` - initialize msw-library in the project
-
 
 ## Contributors
 
 [Wystov](https://github.com/Wystov) | [Duxcoder](https://github.com/Duxcoder) | [CoracaoDoMundo](https://github.com/CoracaoDoMundo)
 
 [RS school](https://rs.school)
-

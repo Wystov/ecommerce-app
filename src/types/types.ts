@@ -19,6 +19,9 @@ interface BaseMessageClasses {
   success: boolean;
   rounded: boolean;
 }
+interface TokenResponse {
+  refresh_token?: string;
+}
 interface AuthorizationList {
   name: NamePages;
   authorization: Boolean;
@@ -36,4 +39,5 @@ export type {
   AuthorizationList,
   DataAuthorization,
   DataNavigation,
+  TokenResponse,
 };
