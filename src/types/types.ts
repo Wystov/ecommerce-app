@@ -26,7 +26,6 @@ interface AuthorizationList {
 }
 interface DataAuthorization {
   authorizationList: AuthorizationList[];
-  authorized: Boolean;
 }
 interface DataNavigation {
   navigation: NamePages[];

@@ -7,7 +7,7 @@ import CatalogView from '@/views/CatalogView.vue';
 import { NamePages, PathPages } from '@/types/enums';
 
 const {
-  Home, AboutUs, Catalog, Login, Registration,
+  Home, AboutUs, Catalog, Login, Logout, Registration,
 } = NamePages;
 
 const routes = [
@@ -42,6 +42,11 @@ const routes = [
     meta: {
       title: Login,
     },
+  },
+  {
+    name: Logout,
+    path: PathPages.Logout,
+    redirect: { name: NamePages.Home },
   },
   {
     name: Registration,

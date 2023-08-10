@@ -12,7 +12,9 @@ import {
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
 } from '@heroicons/vue/20/solid';
+import { mapStores } from 'pinia';
 import { type DataAuthorization } from '@/types/types';
+import { useUserStore } from '@/stores/user';
 import { NamePages } from '@/types/enums';
 import BaseButton from './shared/BaseButton.vue';
 
@@ -43,14 +45,15 @@ export default {
           icon: ArrowRightOnRectangleIcon,
         },
       ],
-      authorized: false,
     };
   },
-  computed: {},
+  computed: {
+    ...mapStores(useUserStore),
+  },
   methods: {
     updateAuthorizationList(): void {
       this.authorizationList = this.authorizationList.filter(
-        (link) => this.authorized === link.authorization,
+        (link) => this.userStore.authorized === link.authorization,
       );
     },
     routePage(name: NamePages): void {
