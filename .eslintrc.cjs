@@ -39,6 +39,10 @@ module.exports = {
         '': 'never',
       },
     ],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
   settings: {
     'import/resolver': {

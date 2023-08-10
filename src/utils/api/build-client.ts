@@ -8,6 +8,7 @@ import {
   type RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import type { TokenResponse } from '@/types/types';
+import { LocalStorageKeys } from '@/types/enums';
 
 const clientId = import.meta.env.VITE_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_SECRET;
@@ -21,7 +22,7 @@ async function fetcher(...args: Parameters<typeof fetch>): Promise<Response> {
   const clone = response.clone();
   const data: TokenResponse = await clone.json();
 
-  if (data.refresh_token) localStorage.setItem('ecommerce-shop', data.refresh_token);
+  if (data.refresh_token) localStorage.setItem(LocalStorageKeys.Token, data.refresh_token);
 
   return response;
 }
@@ -72,7 +73,7 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 };
 
 export const getClient = (user?: UserAuthOptions): Client => {
-  const refreshToken = localStorage.getItem('ecommerce-shop');
+  const refreshToken = localStorage.getItem(LocalStorageKeys.Token);
   const api = new ClientBuilder();
   if (user) {
     api.withPasswordFlow(getPasswordOptions(user));
@@ -83,6 +84,5 @@ export const getClient = (user?: UserAuthOptions): Client => {
   }
   return api
     .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware()
     .build();
 };
