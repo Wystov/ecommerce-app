@@ -11,6 +11,9 @@ describe('BaseCheckbox tests', () => {
   it('should render checkbox in dark theme', () => {
     const wrapper = mount(BaseCheckbox, {
       props: {
+        label: 'Option',
+        id: 'checkbox-id',
+        name: 'checkbox-name',
         isDark: true,
       },
     });
@@ -19,6 +22,9 @@ describe('BaseCheckbox tests', () => {
   it('should render disabled checkbox', () => {
     const wrapper = mount(BaseCheckbox, {
       props: {
+        label: 'Option',
+        id: 'checkbox-id',
+        name: 'checkbox-name',
         disabled: true,
       },
     });

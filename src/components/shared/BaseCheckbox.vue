@@ -17,11 +17,10 @@
 import '../../assets/styles/style.css';
 
 export default {
-  components: {},
   props: {
-    label: { type: String, default: 'Label', require: true },
-    id: { type: String, default: 'checkbox-id', require: true },
-    name: { type: String, default: 'value', require: true },
+    label: { type: String, required: true },
+    id: { type: String, required: true },
+    name: { type: String, required: true },
     checked: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     isDark: { type: Boolean, default: false },
