@@ -9,11 +9,11 @@ enum NamePages {
 
 const enum PathPages {
   Home = '/',
-  AboutUs = '/About-us',
-  Catalog = '/Catalog',
-  Login = '/Login',
+  AboutUs = '/about-us',
+  Catalog = '/catalog',
+  Login = '/login',
   Logout = '/',
-  Registration = '/Registration',
+  Registration = '/registration',
 }
 
 const enum LocalStorageKeys {
