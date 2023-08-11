@@ -1,5 +1,3 @@
-import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
-
 interface ButtonClasses {
   'theme-dark': boolean;
   'theme-light': boolean;
@@ -22,6 +20,12 @@ interface BaseMessageClasses {
 interface TokenResponse {
   refresh_token?: string;
 }
+interface UserAddress {
+  country: 'US' | 'GB';
+  city: string;
+  streetName: string;
+  postalCode: string;
+}
 interface UserSignUp {
   email: string;
   password: string;
@@ -29,12 +33,17 @@ interface UserSignUp {
   lastName: string;
   dateOfBirth: string;
   anonymousId?: string;
+  addresses: UserAddress[];
+  shippingAddresses?: number[];
+  defaultShippingAddress?: number;
+  billingAddresses?: number[];
+  defaultBillingAddress?: number;
 }
-interface UserDataBundle {
-  user: UserAuthOptions;
-  userFullData: UserSignUp;
+interface DefaultAddressProps {
+  defaultShipping: boolean;
+  defaultBilling: boolean;
 }
 
 export type {
-  ButtonClasses, BaseMessageClasses, TokenResponse, UserSignUp, UserDataBundle,
+  ButtonClasses, BaseMessageClasses, TokenResponse, UserSignUp, UserAddress, DefaultAddressProps,
 };

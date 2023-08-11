@@ -1,14 +1,18 @@
-import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import { LocalStorageKeys } from '@/types/enums';
-import type { UserDataBundle, UserSignUp } from '@/types/types';
+import type { UserSignUp, DefaultAddressProps } from '@/types/types';
 
-export const handleUserData = (data: UserSignUp): UserDataBundle => {
-  const user: UserAuthOptions = {
-    username: data.email,
-    password: data.password,
-  };
+export const handleUserData = (data: UserSignUp, props: DefaultAddressProps): UserSignUp => {
   const userFullData = data;
+
   const anonId = localStorage.getItem(LocalStorageKeys.AnonId);
   if (anonId) userFullData.anonymousId = anonId;
-  return { user, userFullData };
+
+  const billingId = userFullData.addresses.length > 1 ? 1 : 0;
+  userFullData.shippingAddresses = [0];
+  userFullData.billingAddresses = [billingId];
+
+  if (props.defaultShipping) userFullData.defaultShippingAddress = 0;
+  if (props.defaultBilling) userFullData.defaultBillingAddress = billingId;
+
+  return userFullData;
 };

@@ -1,7 +1,7 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import type { UserSignUp } from '@/types/types';
+import type { DefaultAddressProps, UserSignUp } from '@/types/types';
 import { LocalStorageKeys } from '@/types/enums';
 import { getClient } from './build-client';
 import { authErrorHandler } from './error-handler';
@@ -9,7 +9,7 @@ import { handleUserData } from '../handle-signup-data';
 
 const projectKey = import.meta.env.VITE_PROJECT_KEY;
 
-export class ApiClient {
+class ApiClient {
   private api: ByProjectKeyRequestBuilder;
 
   constructor(user?: UserAuthOptions) {
@@ -25,15 +25,14 @@ export class ApiClient {
       .withProjectKey({ projectKey });
   }
 
-  public async createCustomer(data: UserSignUp): Promise<string> {
-    const { user, userFullData } = handleUserData(data);
+  public async createCustomer(data: UserSignUp, props: DefaultAddressProps): Promise<string> {
+    const body = handleUserData(data, props);
     try {
       await this.api
         .customers()
-        .post({ body: userFullData })
+        .post({ body })
         .execute();
       localStorage.removeItem(LocalStorageKeys.AnonId);
-      await this.signInCustomer(user);
       return 'ok';
     } catch (error) {
       return authErrorHandler(error);
@@ -50,4 +49,22 @@ export class ApiClient {
       return authErrorHandler(error);
     }
   }
+
+  public async isEmailAvailable(email: string): Promise<string> {
+    const queryArgs = { where: `email="${email}"` };
+    try {
+      const { body } = await this.api
+        .customers()
+        .get({ queryArgs })
+        .execute();
+      if (body.results.length) throw new Error('email not available');
+      return 'ok';
+    } catch (error) {
+      return authErrorHandler(error);
+    }
+  }
 }
+
+const api = new ApiClient();
+
+export default api;
