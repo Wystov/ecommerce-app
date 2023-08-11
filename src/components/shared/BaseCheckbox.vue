@@ -2,14 +2,14 @@
   <div class="checkbox-block">
     <input
       type="checkbox"
-      id="{{ id }}"
-      name="{{ name }}"
+      :id="id"
+      :name="name"
       class="checkbox"
       :class="{ 'dark-theme-checkbox': isDark }"
       :checked="checked"
       :disabled="disabled"
     />
-    <label for="{{ id }}" class="label" :class="{ 'dark-theme-label': isDark }">{{ label }}</label>
+    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }">{{ label }}</label>
   </div>
 </template>
 
