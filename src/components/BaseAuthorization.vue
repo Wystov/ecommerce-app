@@ -1,6 +1,10 @@
 <template>
   <div class="authorization-list">
-    <BaseButton v-for="(link, i) in authorizationList" :key="i" @click="routePage(link.name)">
+    <BaseButton
+      v-for="(link, i) in authorizationList"
+      :key="i"
+      @click="$router.push({ name: link.name })"
+    >
       <component :is="link.icon" class="icon" />
       {{ link.name }}
     </BaseButton>
@@ -53,11 +57,8 @@ export default {
   methods: {
     updateAuthorizationList(): void {
       this.authorizationList = this.authorizationList.filter(
-        (link) => this.userStore.authorized === link.authorization,
+        (link) => this.userStore.authorized === link.authorization
       );
-    },
-    routePage(name: NamePages): void {
-      this.$router.push({ name });
     },
   },
   created(): void {

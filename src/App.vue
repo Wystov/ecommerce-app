@@ -1,15 +1,15 @@
 <script lang="ts">
-import './assets/styles/global.css';
-import BaseHeader from '@/components/BaseHeader.vue';
+import './assets/styles/style.css';
+import AppHeader from '@/components/AppHeader.vue';
 
 export default {
   components: {
-    BaseHeader,
+    AppHeader,
   },
 };
 </script>
 
 <template>
-  <BaseHeader />
+  <AppHeader />
   <RouterView />
 </template>

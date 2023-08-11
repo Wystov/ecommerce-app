@@ -2,7 +2,7 @@
   <div class="navigation">
     <ul class="navigation-list">
       <li class="navigation-link" v-for="(page, i) in navigation" :key="i">
-        <BaseButton dark rounded @click="routePage(page)">{{ page }}</BaseButton>
+        <BaseButton dark rounded @click="$router.push({ name: page })">{{ page }}</BaseButton>
       </li>
     </ul>
   </div>
@@ -19,12 +19,6 @@ export default {
   data(): DataNavigation {
     const { Home, AboutUs, Catalog } = NamePages;
     return { navigation: [Home, AboutUs, Catalog] };
-  },
-  computed: {},
-  methods: {
-    routePage(name: NamePages): void {
-      this.$router.push({ name });
-    },
   },
 };
 </script>

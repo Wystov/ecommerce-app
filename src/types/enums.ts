@@ -9,7 +9,7 @@ enum NamePages {
 
 const enum PathPages {
   Home = '/',
-  AboutUs = '/AboutUs',
+  AboutUs = '/About-us',
   Catalog = '/Catalog',
   Login = '/Login',
   Logout = '/',
