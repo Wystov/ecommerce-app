@@ -4,7 +4,7 @@
       label
     }}</label>
     <input
-      type="text"
+      type="{{ type }}"
       id="input-field"
       :placeholder="name ? name : ''"
       v-model.trim="inputValue"
@@ -35,6 +35,10 @@ export default {
     label: {
       type: String,
       default: '',
+    },
+    type: {
+      type: String,
+      default: 'text',
     },
     isDark: {
       type: Boolean,
