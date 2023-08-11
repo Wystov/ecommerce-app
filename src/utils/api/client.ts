@@ -21,17 +21,13 @@ class ApiClient {
   }
 
   private newFlow(user?: UserAuthOptions): ByProjectKeyRequestBuilder {
-    return createApiBuilderFromCtpClient(getClient(user))
-      .withProjectKey({ projectKey });
+    return createApiBuilderFromCtpClient(getClient(user)).withProjectKey({ projectKey });
   }
 
   public async createCustomer(data: UserSignUp, props: DefaultAddressProps): Promise<string> {
     const body = handleUserData(data, props);
     try {
-      await this.api
-        .customers()
-        .post({ body })
-        .execute();
+      await this.api.customers().post({ body }).execute();
       localStorage.removeItem(LocalStorageKeys.AnonId);
       return 'ok';
     } catch (error) {
@@ -53,10 +49,7 @@ class ApiClient {
   public async isEmailAvailable(email: string): Promise<string> {
     const queryArgs = { where: `email="${email}"` };
     try {
-      const { body } = await this.api
-        .customers()
-        .get({ queryArgs })
-        .execute();
+      const { body } = await this.api.customers().get({ queryArgs }).execute();
       if (body.results.length) throw new Error('email not available');
       return 'ok';
     } catch (error) {

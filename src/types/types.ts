@@ -1,3 +1,5 @@
+import { NamePages } from './enums';
+
 interface ButtonClasses {
   'theme-dark': boolean;
   'theme-light': boolean;
@@ -19,6 +21,17 @@ interface BaseMessageClasses {
 }
 interface TokenResponse {
   refresh_token?: string;
+}
+interface AuthorizationList {
+  name: NamePages;
+  authorization: Boolean;
+  icon: {};
+}
+interface DataAuthorization {
+  authorizationList: AuthorizationList[];
+}
+interface DataNavigation {
+  navigation: NamePages[];
 }
 interface UserAddress {
   country: 'US' | 'GB';
@@ -45,5 +58,13 @@ interface DefaultAddressProps {
 }
 
 export type {
-  ButtonClasses, BaseMessageClasses, TokenResponse, UserSignUp, UserAddress, DefaultAddressProps,
+  ButtonClasses,
+  BaseMessageClasses,
+  AuthorizationList,
+  DataAuthorization,
+  DataNavigation,
+  TokenResponse,
+  UserSignUp,
+  UserAddress,
+  DefaultAddressProps,
 };
