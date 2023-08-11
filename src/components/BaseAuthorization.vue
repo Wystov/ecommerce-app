@@ -1,7 +1,7 @@
 <template>
   <div class="authorization-list">
     <BaseButton
-      v-for="(link, i) in authorizationList"
+      v-for="(link, i) in updateAuthorizationList"
       :key="i"
       @click="$router.push({ name: link.name })"
     >
@@ -17,7 +17,7 @@ import {
   UserPlusIcon,
 } from '@heroicons/vue/20/solid';
 import { mapStores } from 'pinia';
-import { type DataAuthorization } from '@/types/types';
+import type { DataAuthorization, AuthorizationList } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 import { NamePages } from '@/types/enums';
 import BaseButton from './shared/BaseButton.vue';
@@ -53,16 +53,11 @@ export default {
   },
   computed: {
     ...mapStores(useUserStore),
-  },
-  methods: {
-    updateAuthorizationList(): void {
-      this.authorizationList = this.authorizationList.filter(
+    updateAuthorizationList(): AuthorizationList[] {
+      return this.authorizationList.filter(
         (link) => this.userStore.authorized === link.authorization
       );
     },
-  },
-  created(): void {
-    this.updateAuthorizationList();
   },
 };
 </script>
