@@ -56,6 +56,10 @@ interface DefaultAddressProps {
   defaultShipping: boolean;
   defaultBilling: boolean;
 }
+interface ApiResponse {
+  ok: boolean;
+  message?: string;
+}
 
 export type {
   ButtonClasses,
@@ -67,4 +71,5 @@ export type {
   UserSignUp,
   UserAddress,
   DefaultAddressProps,
+  ApiResponse,
 };
