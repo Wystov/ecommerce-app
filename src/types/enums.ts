@@ -17,7 +17,8 @@ const enum PathPages {
 }
 
 const enum LocalStorageKeys {
-  Token = 'ecommerce-shop',
+  Token = 'ecommerce-shop: refresh',
+  AnonId = 'ecommerce-shop: anonid',
 }
 
 export { NamePages, PathPages, LocalStorageKeys };

@@ -9,7 +9,10 @@ export default defineConfig({
     environment: 'happy-dom',
     globals: false,
     coverage: {
-      provider: 'istanbul',
+      all: true,
+      include: ['src/**/*.{ts,vue}'],
+      exclude: ['src/stories/**'],
+      provider: 'v8',
     },
   },
 });

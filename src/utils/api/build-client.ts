@@ -39,12 +39,17 @@ const baseAuthOptions = {
   fetch: fetcher,
 };
 
-const anonymousOptions: AnonymousAuthMiddlewareOptions = {
-  ...baseAuthOptions,
-  credentials: {
-    ...credentials,
-    anonymousId: `${Date.now()}-id`,
-  },
+const getAnonymousOptions = (): AnonymousAuthMiddlewareOptions => {
+  const options: AnonymousAuthMiddlewareOptions = {
+    ...baseAuthOptions,
+    credentials: {
+      ...credentials,
+      anonymousId: `${Date.now()}-id`,
+    },
+  };
+  const { anonymousId } = options.credentials;
+  if (anonymousId) localStorage.setItem(LocalStorageKeys.AnonId, anonymousId);
+  return options;
 };
 
 const getPasswordOptions = (user: UserAuthOptions): PasswordAuthMiddlewareOptions => {
@@ -80,7 +85,7 @@ export const getClient = (user?: UserAuthOptions): Client => {
   } else if (typeof refreshToken === 'string') {
     api.withRefreshTokenFlow(getRefreshOptions(refreshToken));
   } else {
-    api.withAnonymousSessionFlow(anonymousOptions);
+    api.withAnonymousSessionFlow(getAnonymousOptions());
   }
   return api.withHttpMiddleware(httpMiddlewareOptions).build();
 };
