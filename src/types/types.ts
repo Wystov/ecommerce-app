@@ -42,7 +42,6 @@ interface DataLogin {
   passInputType: string;
   emailMessageShown: boolean;
   passMessageShown: boolean;
-  // messageTitle: string;
   emailMessageText: string;
   passMessageText: string;
 }
