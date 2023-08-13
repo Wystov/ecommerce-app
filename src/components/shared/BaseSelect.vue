@@ -1,13 +1,7 @@
 <template>
   <div class="select-group">
     <label v-if="label" :for="id"> {{ label }}</label>
-    <select
-      :id="id"
-      class="select"
-      v-model="selected"
-      :placeholder="placeholder ? placeholder : ''"
-      :class="classes"
-    >
+    <select :id="id" class="select" v-model="selected" :class="classes">
       <option v-for="option in options" :value="option.value" :key="option.value">
         {{ option.text }}
       </option>
@@ -15,6 +9,7 @@
   </div>
 </template>
 <script lang="ts">
+import '../../assets/styles/style.css';
 import type { SelectOptions, SelectClasses } from '../../types/types';
 
 export default {
@@ -31,10 +26,6 @@ export default {
     id: {
       type: String,
       required: true,
-    },
-    placeholder: {
-      type: String,
-      default: '',
     },
     isDark: {
       type: Boolean,
