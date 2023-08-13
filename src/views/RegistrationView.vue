@@ -1,32 +1,53 @@
 <template>
-  <h1 class="container">Registration</h1>
+  <section class="container">
+    <form>
+      <h1>Registration</h1>
 
-  <div class="field-container" v-for="(field, i) in fields" :key="i">
-    <BaseInput :label="field.label" @focusout="checkValid($event, i)" :valid="field.valid" />
-    <Transition>
-      <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">{{
-        field.invalidMessage
-      }}</BaseMessage>
-    </Transition>
-  </div>
-
-  <BaseButton size="large">Submit</BaseButton>
+      <div class="field-container" v-for="(field, i) in fields" :key="i">
+        <BaseInput
+          :label="field.label"
+          @focusout="checkValid($event, i)"
+          :valid="field.valid"
+          :type="field.type"
+          :id="'field-registration-' + field.label.toLowerCase()"
+        />
+        <Transition>
+          <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">{{
+            field.invalidMessage
+          }}</BaseMessage>
+        </Transition>
+      </div>
+      <BaseSelect label="Country" valid="valid" :options="options" />
+      <BaseButton size="large">Submit</BaseButton>
+    </form>
+  </section>
 </template>
 -
 <script lang="ts">
 import BaseInput from '@/components/shared/BaseInput.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
+import BaseSelect from '@/components/shared/BaseSelect.vue';
+import isOlder from '@/utils/isOlder';
+import { Country } from '@/types/enums';
 
 export default {
+  components: {
+    BaseButton,
+    BaseInput,
+    BaseMessage,
+    BaseSelect,
+  },
   // eslint-disable-next-line max-lines-per-function
   data(): {
     fields: {
       label: string;
+      type?: string;
       pattern?: RegExp;
       valid?: 'valid' | 'invalid' | '';
       invalidMessage?: string;
     }[];
+    options: { text: string; value: string }[];
   } {
     return {
       fields: [
@@ -40,6 +61,7 @@ export default {
         {
           label: 'Password',
           pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[0-9a-zA-Z!@#$%^&*]{8,}$/,
+          type: 'password',
           invalidMessage:
             'Password is not correct. Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, and 1 number',
         },
@@ -57,6 +79,7 @@ export default {
         },
         {
           label: 'Date of birth',
+          type: 'date',
           invalidMessage:
             'Date of birth is not correct. A valid date input ensuring the user is above a certain age (e.g., 13 years old or older)',
         },
@@ -80,20 +103,21 @@ export default {
           invalidMessage: 'Country is not correct. Please choose country',
         },
       ],
+      options: [
+        { text: Country.US, value: 'US' },
+        { text: Country.GB, value: 'GB' },
+      ],
     };
-  },
-  components: {
-    BaseButton,
-    BaseInput,
-    BaseMessage,
   },
   methods: {
     checkValid(e: Event, i: number): void {
       const input = e.target as HTMLInputElement;
       const field = this.fields[i];
-
       if (input !== null && field.pattern) {
         field.valid = field.pattern.test(input.value) ? 'valid' : 'invalid';
+      }
+      if (input !== null && field.type === 'date') {
+        field.valid = isOlder(input.value, 13) ? 'valid' : 'invalid';
       }
     },
   },

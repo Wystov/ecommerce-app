@@ -20,4 +20,9 @@ const enum LocalStorageKeys {
   Token = 'ecommerce-shop',
 }
 
-export { NamePages, PathPages, LocalStorageKeys };
+const enum Country {
+  US = 'United States',
+  GB = 'United Kingdom',
+}
+
+export { NamePages, PathPages, LocalStorageKeys, Country };
