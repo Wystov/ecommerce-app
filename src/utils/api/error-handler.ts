@@ -15,6 +15,6 @@ export const authErrorHandler = (error: unknown): ApiResponse => {
     response.message = message ?? error.message;
     return response;
   }
-  response.message = 'Unexpected error occured';
+  response.message = 'Unexpected error occurred';
   return response;
 };

@@ -12,9 +12,9 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "prepare": "husky install",
-    "test:unit": "vitest --dom src/",
-    "test-coverage": "vitest run --coverage --dom src/",
-    "test-ui": "vitest --ui",
+    "test:unit": "vitest run",
+    "test-coverage": "vitest run --coverage",
+    "test-ui": "vitest --ui --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "init-msw": "msw init public/"
