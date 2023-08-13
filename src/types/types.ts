@@ -38,6 +38,33 @@ interface DataAuthorization {
 interface DataNavigation {
   navigation: NamePages[];
 }
+interface UserAddress {
+  country: 'US' | 'GB';
+  city: string;
+  streetName: string;
+  postalCode: string;
+}
+interface UserSignUp {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  anonymousId?: string;
+  addresses: UserAddress[];
+  shippingAddresses?: number[];
+  defaultShippingAddress?: number;
+  billingAddresses?: number[];
+  defaultBillingAddress?: number;
+}
+interface DefaultAddressProps {
+  defaultShipping: boolean;
+  defaultBilling: boolean;
+}
+interface ApiResponse {
+  ok: boolean;
+  message?: string;
+}
 interface SelectOptions {
   text: string;
   value: string;
@@ -50,5 +77,9 @@ export type {
   DataAuthorization,
   DataNavigation,
   TokenResponse,
+  UserSignUp,
+  UserAddress,
+  DefaultAddressProps,
+  ApiResponse,
   SelectOptions,
 };

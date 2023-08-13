@@ -1,12 +1,15 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import router from '@/router/index';
+import type { DefaultAddressProps, UserSignUp, ApiResponse } from '@/types/types';
+import { LocalStorageKeys } from '@/types/enums';
 import { getClient } from './build-client';
+import { authErrorHandler } from './error-handler';
+import { handleUserData } from '../handle-signup-data';
 
 const projectKey = import.meta.env.VITE_PROJECT_KEY;
 
-export class ApiClient {
+class ApiClient {
   private api: ByProjectKeyRequestBuilder;
 
   constructor(user?: UserAuthOptions) {
@@ -21,27 +24,40 @@ export class ApiClient {
     return createApiBuilderFromCtpClient(getClient(user)).withProjectKey({ projectKey });
   }
 
-  public async createCustomer(email: string, password: string): Promise<void> {
+  public async createCustomer(data: UserSignUp, props: DefaultAddressProps): Promise<ApiResponse> {
+    const body = handleUserData(data, props);
     try {
-      const response = await this.api.customers().post({ body: { email, password } }).execute();
-      if (response.statusCode === 201) {
-        this.signInCustomer(email, password);
-      }
+      await this.api.customers().post({ body }).execute();
+      localStorage.removeItem(LocalStorageKeys.AnonId);
+      return { ok: true };
     } catch (error) {
-      console.log(error);
+      return authErrorHandler(error);
     }
   }
 
-  public async signInCustomer(email: string, password: string): Promise<void> {
-    const passwordFlowApi = this.newFlow({ username: email, password });
+  public async signInCustomer(user: UserAuthOptions): Promise<ApiResponse> {
+    const passwordFlowApi = this.newFlow(user);
     try {
-      const response = await passwordFlowApi.me().get().execute();
-      if (response.statusCode === 200) {
-        this.api = passwordFlowApi;
-        router.push('/');
-      }
+      await passwordFlowApi.me().get().execute();
+      this.api = passwordFlowApi;
+      return { ok: true };
     } catch (error) {
-      console.log(error);
+      return authErrorHandler(error);
+    }
+  }
+
+  public async isEmailAvailable(email: string): Promise<ApiResponse> {
+    const queryArgs = { where: `email="${email}"` };
+    try {
+      const { body } = await this.api.customers().get({ queryArgs }).execute();
+      if (body.results.length) throw new Error('email not available');
+      return { ok: true };
+    } catch (error) {
+      return authErrorHandler(error);
     }
   }
 }
+
+const api = new ApiClient();
+
+export default api;

@@ -17,7 +17,8 @@ const enum PathPages {
 }
 
 const enum LocalStorageKeys {
-  Token = 'ecommerce-shop',
+  Token = 'ecommerce-shop: refresh',
+  AnonId = 'ecommerce-shop: anonid',
 }
 
 const enum Country {
@@ -25,4 +26,6 @@ const enum Country {
   GB = 'United Kingdom',
 }
 
-export { NamePages, PathPages, LocalStorageKeys, Country };
+export {
+  NamePages, PathPages, LocalStorageKeys, Country,
+};

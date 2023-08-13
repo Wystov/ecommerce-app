@@ -24,7 +24,6 @@
 import '../../assets/styles/style.css';
 
 export default {
-  components: {},
   data(): { inputValue: string } {
     return {
       inputValue: '',
