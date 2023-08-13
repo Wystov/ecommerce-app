@@ -33,6 +33,19 @@ interface DataAuthorization {
 interface DataNavigation {
   navigation: NamePages[];
 }
+interface InputComponent {
+  inputValue: string;
+}
+interface DataLogin {
+  emailValue: string;
+  passValue: string;
+  passInputType: string;
+  emailMessageShown: boolean;
+  passMessageShown: boolean;
+  // messageTitle: string;
+  emailMessageText: string;
+  passMessageText: string;
+}
 export type {
   ButtonClasses,
   BaseMessageClasses,
@@ -40,4 +53,6 @@ export type {
   DataAuthorization,
   DataNavigation,
   TokenResponse,
+  InputComponent,
+  DataLogin,
 };

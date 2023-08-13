@@ -20,4 +20,9 @@ const enum LocalStorageKeys {
   Token = 'ecommerce-shop',
 }
 
-export { NamePages, PathPages, LocalStorageKeys };
+const enum InvalidMessage {
+  Email = 'NB! Email address must contain a domain name and an "@" symbol.',
+  Password = 'NB! Password must be at least 8 characters long and must contain at least one uppercase letter (A-Z), one lowercase letter (a-z) and one digit.',
+}
+
+export { NamePages, PathPages, LocalStorageKeys, InvalidMessage };

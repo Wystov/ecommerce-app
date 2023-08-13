@@ -6,9 +6,7 @@ import AboutUsView from '@/views/AboutUsView.vue';
 import CatalogView from '@/views/CatalogView.vue';
 import { NamePages, PathPages } from '@/types/enums';
 
-const {
-  Home, AboutUs, Catalog, Login, Logout, Registration,
-} = NamePages;
+const { Home, AboutUs, Catalog, Login, Logout, Registration } = NamePages;
 
 const routes = [
   {
