@@ -4,7 +4,7 @@
       label
     }}</label>
     <input
-      type="{{ type }}"
+      :type="type"
       id="input-field"
       :placeholder="name ? name : ''"
       v-model.trim="inputValue"
@@ -25,7 +25,6 @@
 import '../../assets/styles/style.css';
 
 export default {
-  components: {},
   data(): { inputValue: string } {
     return {
       inputValue: '',
