@@ -4,7 +4,9 @@ import BaseInput from '../shared/BaseInput.vue';
 
 describe('BaseInput tests', () => {
   it('should render', () => {
-    const wrapper = mount(BaseInput);
+    const wrapper = mount(BaseInput, {
+      props: { id: '0' },
+    });
     expect(wrapper.find('div.input-block').exists()).toBeTruthy();
     expect(wrapper.find('input').exists()).toBeTruthy();
   });
@@ -12,6 +14,7 @@ describe('BaseInput tests', () => {
     const wrapper = mount(BaseInput, {
       props: {
         isDark: true,
+        id: '1',
       },
     });
     expect(wrapper.find('input.dark-theme-input').exists()).toBeTruthy();
@@ -20,6 +23,7 @@ describe('BaseInput tests', () => {
     const wrapper = mount(BaseInput, {
       props: {
         disabled: true,
+        id: '2',
       },
     });
     const input = wrapper.find('input').element;
@@ -29,16 +33,21 @@ describe('BaseInput tests', () => {
     const wrapper = mount(BaseInput, {
       props: {
         width: '200px',
+        id: '3',
       },
     });
-    const input = wrapper.find('input').element;
-    expect(String(input.style.width) === '200px').toBeTruthy();
+    const inputBlock = wrapper.find('div.input-block').element;
+    if (inputBlock instanceof HTMLElement) {
+      expect(String(inputBlock.style.width) === '200px').toBeTruthy();
+    }
   });
 });
 
 describe('BaseInput values', () => {
   it('should update inputValue in input element', async () => {
-    const wrapper = mount(BaseInput);
+    const wrapper = mount(BaseInput, {
+      props: { id: '4' },
+    });
 
     const input = wrapper.find('input');
     await input.setValue('Hello');
@@ -49,6 +58,7 @@ describe('BaseInput values', () => {
     const wrapper = mount(BaseInput, {
       props: {
         valid: 'valid',
+        id: '5',
       },
     });
     expect(wrapper.find('input.valid-focus-decorator').exists()).toBeTruthy();
@@ -57,6 +67,7 @@ describe('BaseInput values', () => {
     const wrapper = mount(BaseInput, {
       props: {
         valid: 'invalid',
+        id: '6',
       },
     });
     expect(wrapper.find('input.invalid-focus-decorator').exists()).toBeTruthy();
@@ -68,6 +79,7 @@ describe('BaseInput label', () => {
     const wrapper = mount(BaseInput, {
       props: {
         label: 'label',
+        id: '7',
       },
     });
     expect(wrapper.find('label').exists()).toBeTruthy();
@@ -76,6 +88,7 @@ describe('BaseInput label', () => {
     const wrapper = mount(BaseInput, {
       props: {
         name: 'name',
+        id: '8',
       },
     });
     expect(wrapper.find('input').element.placeholder === 'name').toBeTruthy();

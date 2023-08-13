@@ -1,11 +1,11 @@
 <template>
-  <div class="input-block">
-    <label for="input-field" class="label" :class="{ 'dark-theme-label': isDark }" v-if="label">{{
+  <div class="input-block" :style="{ width: width }">
+    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }" v-if="label">{{
       label
     }}</label>
     <input
-      type="{{ type }}"
-      id="input-field"
+      :type="type"
+      :id="id"
       :placeholder="name ? name : ''"
       v-model.trim="inputValue"
       class="input"
@@ -15,7 +15,6 @@
         'invalid-focus-decorator': valid === 'invalid',
       }"
       :disabled="disabled"
-      :style="{ width: width }"
       ref="input"
     />
   </div>
@@ -35,6 +34,10 @@ export default {
     label: {
       type: String,
       default: '',
+    },
+    id: {
+      type: String,
+      required: true,
     },
     type: {
       type: String,
