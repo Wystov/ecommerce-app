@@ -63,7 +63,13 @@ export default {
     },
     correctEmailAddressCheck(value: string): boolean {
       const ats = value.split('').filter((el) => el === '@');
-      if (ats.length > 1) {
+      const domainArr = value.split('.');
+      const domain = domainArr[domainArr.length - 1];
+      if (
+        ats.length > 1
+        || domain.length < 2
+        || domain.search(/[!#$%^&*()-_=+'"`~?><,.|;:±§]/) !== -1
+      ) {
         return false;
       }
       const textStr = /[A-Za-z0-9\-._]+@[A-Za-z0-9]{2,}\.[A-Za-z]{2}/iu;
