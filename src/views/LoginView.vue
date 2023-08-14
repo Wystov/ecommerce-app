@@ -20,7 +20,7 @@
     />
     <BaseCheckbox label="Show password" id="show" name="show-password" @change="showPassword" />
     <BaseMessage v-if="passMessageShown" alert="danger" :text="passMessageText" />
-    <BaseButton label="Sigh in" size="medium" />
+    <BaseButton label="Sign in" size="medium" />
     <p class="footnote">
       Don't have an account yet?
       <router-link class="register-link" :to="{ name: 'Registration' }"> Sign up </router-link>
@@ -65,6 +65,10 @@ export default {
       return !value.includes(' ');
     },
     correctEmailAddressCheck(value: string): boolean {
+      const ats = value.split('').filter((el) => el === '@');
+      if (ats.length > 1) {
+        return false;
+      }
       const textStr = /[A-Za-z0-9\-._]+@[A-Za-z0-9]{2,}\.[A-Za-z]{2}/iu;
       return textStr.test(value);
     },
