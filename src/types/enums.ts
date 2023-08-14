@@ -17,7 +17,8 @@ const enum PathPages {
 }
 
 const enum LocalStorageKeys {
-  Token = 'ecommerce-shop',
+  Token = 'ecommerce-shop: refresh',
+  AnonId = 'ecommerce-shop: anonid',
 }
 
 const enum InvalidMessage {
@@ -25,4 +26,6 @@ const enum InvalidMessage {
   Password = 'NB! Password must be at least 8 characters long and must contain at least one uppercase letter (A-Z), one lowercase letter (a-z) and one digit.',
 }
 
-export { NamePages, PathPages, LocalStorageKeys, InvalidMessage };
+export {
+  NamePages, PathPages, LocalStorageKeys, InvalidMessage,
+};

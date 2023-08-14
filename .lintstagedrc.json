@@ -1,7 +1,7 @@
 {
   "*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}": [
-    "npx eslint --fix --ignore-path .gitignore",
     "npx prettier --write src/",
-    "npx vitest run --coverage --dom src/"
+    "npx eslint --fix --ignore-path .gitignore",
+    "npx vitest run src/"
   ]
 }
