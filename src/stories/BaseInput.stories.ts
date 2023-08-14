@@ -61,7 +61,7 @@ export const PasswordHide: Story = {
   args: {
     id: 'story_seven',
     type: 'password',
-    icon: 'eye-closed',
+    icon: 'eye',
     showPass: false,
   },
 };
@@ -70,7 +70,7 @@ export const PasswordShown: Story = {
   args: {
     id: 'story_eight',
     type: 'text',
-    icon: 'eye',
+    icon: 'eye-closed',
     showPass: true,
   },
 };
