@@ -61,6 +61,19 @@ interface ApiResponse {
   message?: string;
 }
 
+interface BaseInputProps {
+  label: string;
+  type: string;
+  id: string;
+  isDark: boolean;
+  name: string;
+  disabled: boolean;
+  width: string;
+  valid: string;
+  icon: string;
+  showPass: boolean;
+}
+
 export type {
   ButtonClasses,
   BaseMessageClasses,
@@ -72,4 +85,5 @@ export type {
   UserAddress,
   DefaultAddressProps,
   ApiResponse,
+  BaseInputProps,
 };
