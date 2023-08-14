@@ -61,15 +61,10 @@ interface ApiResponse {
   message?: string;
 }
 
-interface InputComponent {
-  inputValue: string;
-}
 interface DataLogin {
   emailValue: string;
   passValue: string;
   passInputType: string;
-  emailMessageShown: boolean;
-  passMessageShown: boolean;
   emailMessageText: string;
   passMessageText: string;
 }
@@ -84,6 +79,5 @@ export type {
   UserAddress,
   DefaultAddressProps,
   ApiResponse,
-  InputComponent,
   DataLogin,
 };
