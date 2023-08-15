@@ -60,13 +60,17 @@ interface ApiResponse {
   ok: boolean;
   message?: string;
 }
-
 interface DataLogin {
   emailValue: string;
   passValue: string;
   passInputType: string;
   emailMessageText: string;
   passMessageText: string;
+  wrongData: boolean;
+  wrongDataText: string;
+}
+interface BaseInputType {
+  inputValue: string;
 }
 export type {
   ButtonClasses,
@@ -80,4 +84,5 @@ export type {
   DefaultAddressProps,
   ApiResponse,
   DataLogin,
+  BaseInputType,
 };
