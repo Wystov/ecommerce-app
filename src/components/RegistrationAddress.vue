@@ -46,7 +46,6 @@ export default {
     title: { type: String, required: true },
     id: { type: String, required: true },
   },
-  // eslint-disable-next-line max-lines-per-function
   data(): RegistrationAddressData {
     return {
       fields: [
@@ -116,17 +115,21 @@ export default {
 
       if (input !== null) field.value = input.value;
       const fields = [...this.fields, this.countryField];
-      if (fields.every((fieldItem) => fieldItem.value !== '' && fieldItem.valid === 'valid')) {
+      const isAllFieldsValid = fields.every(
+        (fieldItem) => fieldItem.value !== '' && fieldItem.valid === 'valid',
+      );
+      if (isAllFieldsValid) {
         const sendFields = fields.map((elem) => {
           if (elem.label === 'Street') {
             return [toCamelCase(`${elem.label} Name`), elem.value];
           }
           return [toCamelCase(elem.label), elem.value];
         });
-        const body = { name: this.id, fields: Object.fromEntries(sendFields) };
-        this.$emit('valid-all-address-fields', body);
+        const response = { name: this.id, fields: Object.fromEntries(sendFields) };
+        this.$emit('valid-all-address-fields', { valid: true, response });
       } else {
-        this.$emit('valid-all-address-fields', null);
+        const response = { name: this.id, fields: {} };
+        this.$emit('valid-all-address-fields', { valid: false, response });
       }
     },
   },

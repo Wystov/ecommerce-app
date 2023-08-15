@@ -57,6 +57,13 @@ interface UserSignUp {
   billingAddresses?: number[];
   defaultBillingAddress?: number;
 }
+interface UserSignUpMain {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+}
 interface DefaultAddressProps {
   defaultShipping: boolean;
   defaultBilling: boolean;
@@ -111,4 +118,5 @@ export type {
   SelectOptions,
   RegistrationMainData,
   RegistrationAddressData,
+  UserSignUpMain,
 };

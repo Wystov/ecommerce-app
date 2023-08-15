@@ -14,18 +14,18 @@
             id="check-def-shipping"
             name="def-shipping"
             label="Set default shipping address"
-            @change="() => (defaultAddress.shipping = !defaultAddress.shipping)"
+            @change="!defaultAddresses.defaultShipping"
           />
           <BaseCheckbox
             id="check-only-shipping"
             name="only-shipping"
             label="Use the shipping address as the billing address"
-            @change="() => (hideBilling = !hideBilling)"
+            @change="onlyShippingToggle"
           />
         </div>
       </Transition>
       <Transition>
-        <div class="billing" v-if="showAddressBlock && !hideBilling">
+        <div class="billing" v-if="showAddressBlock && !onlyShipping">
           <RegistrationAddress
             title="Billing address"
             id="billing"
@@ -35,9 +35,14 @@
             id="check-def-billing"
             name="def-billing"
             label="Set default billing address"
-            @change="() => (defaultAddress.billing = !defaultAddress.billing)"
+            @change="() => (defaultAddresses.defaultBilling = !defaultAddresses.defaultBilling)"
           />
         </div>
+      </Transition>
+      <Transition>
+        <BaseMessage alert="warning" v-if="showMessage">
+          {{ invalidMessage }}
+        </BaseMessage>
       </Transition>
       <Transition>
         <BaseButton
@@ -56,6 +61,11 @@ import RegistrationMain from '@/components/RegistrationMain.vue';
 import RegistrationAddress from '@/components/RegistrationAddress.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
+import BaseMessage from '@/components/shared/BaseMessage.vue';
+import api from '@/utils/api/client';
+import type {
+  UserSignUp, UserAddress, DefaultAddressProps, UserSignUpMain,
+} from '../types/types';
 
 export default {
   components: {
@@ -63,57 +73,84 @@ export default {
     RegistrationAddress,
     BaseButton,
     BaseCheckbox,
+    BaseMessage,
   },
   data(): {
     showAddressBlock: Boolean;
-    hideBilling: Boolean;
-    bodyMain: {} | null;
-    bodyAddresses: Array<{}>;
-    bodyRequest: {};
-    defaultAddress: {
-      shipping: Boolean;
-      billing: Boolean;
-    };
+    onlyShipping: Boolean;
+    bodyMain: UserSignUpMain;
+    bodyAddresses: Array<UserAddress>;
+    bodyRequest: UserSignUp;
+    defaultAddresses: DefaultAddressProps;
+    showMessage: Boolean;
+    invalidMessage: String;
     } {
     return {
-      showAddressBlock: true,
-      hideBilling: false,
-      bodyMain: {},
-      bodyAddresses: [],
-      bodyRequest: {},
-      defaultAddress: {
-        shipping: false,
-        billing: false,
+      showAddressBlock: false,
+      onlyShipping: false,
+      bodyMain: {} as UserSignUpMain,
+      bodyAddresses: [] as UserAddress[],
+      bodyRequest: {} as UserSignUp,
+      defaultAddresses: {
+        defaultShipping: false,
+        defaultBilling: false,
       },
+      showMessage: false,
+      invalidMessage: '',
     };
   },
   methods: {
-    openAddressBlock(data: {}): void {
-      if (data) this.showAddressBlock = true;
-      this.bodyMain = data;
-    },
-    checkAddressFields(data: { fields: {}; name: string } | null): void {
-      if (data) {
-        if (data.name === 'shipping') this.bodyAddresses[0] = data.fields;
-        if (data.name === 'billing') {
-          this.bodyAddresses[1] = this.hideBilling ? this.bodyAddresses[0] : data.fields;
-        }
+    onlyShippingToggle(): void {
+      this.onlyShipping = !this.onlyShipping;
+      if (this.onlyShipping && this.bodyAddresses[0]) {
+        this.bodyAddresses[1] = { ...this.bodyAddresses[0] };
+        this.showMessage = false;
+      } else {
+        this.bodyAddresses.splice(1);
       }
     },
+    openAddressBlock(data: { valid: Boolean; response: UserSignUpMain }): void {
+      const { valid, response } = data;
+      if (valid) {
+        this.showMessage = false;
+        this.showAddressBlock = true;
+      }
+      this.bodyMain = response;
+    },
+    checkAddressFields(data: {
+      valid: Boolean;
+      response: { fields: UserAddress; name: string };
+    }): void {
+      const {
+        response: { name, fields },
+      } = data;
+      const { bodyAddresses } = this;
+      this.showMessage = false;
+
+      if (name === 'shipping') bodyAddresses[0] = fields;
+      if (name === 'billing') bodyAddresses[1] = fields;
+    },
     registrationUser(): void {
-      const { bodyMain, bodyAddresses, defaultAddress } = this;
+      const { bodyMain, bodyAddresses, defaultAddresses } = this;
       if (bodyMain) {
         this.bodyRequest = {
           ...bodyMain,
           addresses: bodyAddresses,
         };
       }
-      const { shipping, billing } = defaultAddress;
-      const defaultAddresses = {
-        defaultShipping: shipping,
-        defaultBilling: billing,
-      };
-      console.log(this.bodyRequest, defaultAddresses);
+      this.bodyAddresses[1] = { ...this.bodyAddresses[0] };
+      if (
+        'email' in this.bodyRequest
+        && bodyAddresses.every((item) => 'city' in item)
+        && bodyAddresses.length === 2
+      ) {
+        this.showMessage = false;
+        api.createCustomer(this.bodyRequest, defaultAddresses);
+        this.$router.push({ name: 'Home' });
+      } else {
+        this.showMessage = true;
+        this.invalidMessage = 'Please fill in all fields correctly';
+      }
     },
   },
 };

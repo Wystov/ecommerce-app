@@ -25,7 +25,7 @@ import isOlder from '@/utils/isOlder';
 import api from '@/utils/api/client';
 import { InvalidMessage } from '@/types/enums';
 import type { RegistrationMainData } from '@/types/types';
-import toCamelCase from '../utils/toCamelCase';
+import toCamelCase from '@/utils/toCamelCase';
 
 export default {
   emits: ['valid-all-main-fields'],
@@ -33,7 +33,6 @@ export default {
     BaseInput,
     BaseMessage,
   },
-  // eslint-disable-next-line max-lines-per-function
   data(): {
     fields: RegistrationMainData[];
     } {
@@ -44,7 +43,6 @@ export default {
           pattern: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,3}$/,
           placeholder: 'example@email.com',
           type: 'email',
-          value: '',
           invalidMessage: InvalidMessage.Email,
         },
         {
@@ -52,27 +50,23 @@ export default {
           pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[0-9a-zA-Z!@#$%^&*]{8,}$/,
           placeholder: 'Example1',
           type: 'password',
-          value: '',
           invalidMessage: InvalidMessage.Password,
         },
         {
           label: 'First Name',
           pattern: /^[a-zA-Z]+$/,
           placeholder: 'John',
-          value: '',
           invalidMessage: InvalidMessage.FirstName,
         },
         {
           label: 'Last Name',
           pattern: /^[a-zA-Z]+$/,
           placeholder: 'Smith',
-          value: '',
           invalidMessage: InvalidMessage.LastName,
         },
         {
           label: 'Date of birth',
           type: 'date',
-          value: '',
           invalidMessage: InvalidMessage.Date,
         },
       ],
@@ -122,9 +116,10 @@ export default {
       if (input !== null) field.value = input.value;
       if (this.fields.every((elem) => elem.value !== '' && elem.valid === 'valid')) {
         const body = this.fields.map((elem) => [toCamelCase(elem.label), elem.value]);
-        this.$emit('valid-all-main-fields', Object.fromEntries(body));
+        const response = Object.fromEntries(body);
+        this.$emit('valid-all-main-fields', { valid: true, response });
       } else {
-        this.$emit('valid-all-main-fields', null);
+        this.$emit('valid-all-main-fields', { valid: false, response: {} });
       }
     },
   },
