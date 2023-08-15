@@ -4,7 +4,7 @@
       label
     }}</label>
     <input
-      :type="type"
+      :type="currentInputType"
       :id="id"
       :placeholder="name ? name : ''"
       v-model.trim="inputValue"
@@ -17,14 +17,7 @@
       :disabled="disabled"
       ref="input"
     />
-    <img
-      v-if="icon !== ''"
-      :src="getIconUrl"
-      @click="switchVisibility"
-      @keydown.enter="switchVisibility"
-      alt="show password icon"
-      class="input-icon"
-    />
+    <img v-if="icon !== ''" :src="getIconUrl" alt="show password icon" class="input-icon" />
   </div>
 </template>
 
@@ -43,7 +36,7 @@ export default {
       type: String,
       default: '',
     },
-    type: {
+    inputType: {
       type: String,
       default: 'text',
     },
@@ -76,8 +69,8 @@ export default {
       default: '',
     },
     showPass: {
-      type: Boolean,
-      required: false,
+      type: String,
+      default: '',
     },
   },
   computed: {
@@ -85,12 +78,10 @@ export default {
       return `/${props.icon}.svg`;
     },
     currentInputType(): string {
-      return this.showPass ? 'text' : 'password';
-    },
-  },
-  methods: {
-    switchVisibility(): void {
-      this.$emit('update:showPassword', !this.showPass);
+      if (this.showPass === '' || this.showPass === 'show') {
+        return this.inputType;
+      }
+      return 'password';
     },
   },
 };
