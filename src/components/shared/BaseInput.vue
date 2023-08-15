@@ -17,15 +17,20 @@
       :disabled="disabled"
       ref="input"
     />
-    <img v-if="icon !== ''" :src="getIconUrl" alt="show password icon" class="input-icon" />
+    <EyeIcon v-if="showPass === 'hide'" class="input-icon" />
+    <EyeSlashIcon v-if="showPass === 'show'" class="input-icon" />
   </div>
 </template>
 
 <script lang="ts">
 import '../../assets/styles/style.css';
-import { type BaseInputProps } from '@/types/types';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 
 export default {
+  components: {
+    EyeIcon,
+    EyeSlashIcon,
+  },
   data(): { inputValue: string } {
     return {
       inputValue: '',
@@ -64,19 +69,12 @@ export default {
       type: String,
       default: '',
     },
-    icon: {
-      type: String,
-      default: '',
-    },
     showPass: {
       type: String,
       default: '',
     },
   },
   computed: {
-    getIconUrl(props: BaseInputProps): string {
-      return `/${props.icon}.svg`;
-    },
     currentInputType(): string {
       if (this.showPass === '' || this.showPass === 'show') {
         return this.inputType;
@@ -139,9 +137,10 @@ export default {
 
 .input-icon {
   position: absolute;
-  width: 15px;
   bottom: 0.8rem;
   right: 0.3rem;
   transform: translateY(50%);
+  fill: #5e5163;
+  height: 1em;
 }
 </style>

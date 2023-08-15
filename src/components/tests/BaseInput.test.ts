@@ -94,19 +94,19 @@ describe('Password visibility icon', () => {
     const wrapper = mount(BaseInput, {
       props: {
         id: 'story',
-        icon: 'eye',
+        showPass: 'hide',
       },
     });
-    expect(wrapper.find('img.input-icon').exists()).toBeTruthy();
+    expect(wrapper.find('svg.input-icon').exists()).toBeTruthy();
   });
   it('should render visibility icon for hide password', () => {
     const wrapper = mount(BaseInput, {
       props: {
         id: 'story',
-        icon: 'eye-closed',
+        showPass: 'show',
       },
     });
-    expect(wrapper.find('img.input-icon').exists()).toBeTruthy();
+    expect(wrapper.find('svg.input-icon').exists()).toBeTruthy();
   });
 });
 
@@ -118,7 +118,6 @@ describe('Input type password', () => {
         showPass: 'hide',
       },
     });
-    console.log('type1:', wrapper.find('input').element.type);
     expect(wrapper.find('input').element.type === 'password').toBeTruthy();
   });
   it('should render input with type text', () => {
@@ -128,7 +127,6 @@ describe('Input type password', () => {
         showPass: 'show',
       },
     });
-    console.log('type2:', wrapper.find('input').element.type);
     expect(wrapper.find('input').element.type === 'text').toBeTruthy();
   });
 });
