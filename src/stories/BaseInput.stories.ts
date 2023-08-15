@@ -60,15 +60,15 @@ export const InvalidValue: Story = {
 export const PasswordHide: Story = {
   args: {
     id: 'story_seven',
-    inputType: 'password',
-    showPass: 'hide',
+    type: 'password',
+    hidePass: 'show',
   },
 };
 
 export const PasswordShown: Story = {
   args: {
     id: 'story_eight',
-    inputType: 'text',
-    showPass: 'show',
+    type: 'text',
+    hidePass: 'hide',
   },
 };

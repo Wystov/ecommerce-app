@@ -4,7 +4,7 @@
       label
     }}</label>
     <input
-      :type="currentInputType"
+      :type="type"
       :id="id"
       :placeholder="name ? name : ''"
       v-model.trim="inputValue"
@@ -17,8 +17,8 @@
       :disabled="disabled"
       ref="input"
     />
-    <EyeIcon v-if="showPass === 'hide'" class="input-icon" />
-    <EyeSlashIcon v-if="showPass === 'show'" class="input-icon" />
+    <EyeIcon v-if="hidePass === 'show'" class="input-icon" />
+    <EyeSlashIcon v-if="hidePass === 'hide'" class="input-icon" />
   </div>
 </template>
 
@@ -41,7 +41,7 @@ export default {
       type: String,
       default: '',
     },
-    inputType: {
+    type: {
       type: String,
       default: 'text',
     },
@@ -69,17 +69,9 @@ export default {
       type: String,
       default: '',
     },
-    showPass: {
+    hidePass: {
       type: String,
       default: '',
-    },
-  },
-  computed: {
-    currentInputType(): string {
-      if (this.showPass === '' || this.showPass === 'show') {
-        return this.inputType;
-      }
-      return 'password';
     },
   },
 };

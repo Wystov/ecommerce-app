@@ -94,7 +94,7 @@ describe('Password visibility icon', () => {
     const wrapper = mount(BaseInput, {
       props: {
         id: 'story',
-        showPass: 'hide',
+        hidePass: 'hide',
       },
     });
     expect(wrapper.find('svg.input-icon').exists()).toBeTruthy();
@@ -103,7 +103,7 @@ describe('Password visibility icon', () => {
     const wrapper = mount(BaseInput, {
       props: {
         id: 'story',
-        showPass: 'show',
+        hidePass: 'show',
       },
     });
     expect(wrapper.find('svg.input-icon').exists()).toBeTruthy();
@@ -115,7 +115,8 @@ describe('Input type password', () => {
     const wrapper = mount(BaseInput, {
       props: {
         id: 'story',
-        showPass: 'hide',
+        type: 'password',
+        hidePass: 'hide',
       },
     });
     expect(wrapper.find('input').element.type === 'password').toBeTruthy();
@@ -124,7 +125,7 @@ describe('Input type password', () => {
     const wrapper = mount(BaseInput, {
       props: {
         id: 'story',
-        showPass: 'show',
+        hidePass: 'show',
       },
     });
     expect(wrapper.find('input').element.type === 'text').toBeTruthy();
