@@ -54,7 +54,7 @@ export default {
       emailMessageText: InvalidMessage.Email,
       passMessageText: InvalidMessage.Password,
       wrongData: false,
-      wrongDataText: InvalidMessage.WrongData,
+      wrongDataText: '',
     };
   },
   computed: {
@@ -135,9 +135,12 @@ export default {
       const response = await Api.signInCustomer(data);
       if (response.ok) {
         this.$router.push('/');
-      } else {
-        this.wrongData = true;
+        return;
       }
+      if (response.message) {
+        this.wrongDataText = response.message;
+      }
+      this.wrongData = true;
     },
   },
 };
