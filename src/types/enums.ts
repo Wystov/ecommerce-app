@@ -26,6 +26,17 @@ const enum Country {
   GB = 'United Kingdom',
 }
 
+const enum InvalidMessage {
+  Email = 'NB! Email address must contain a domain name and an "@" symbol.',
+  Password = 'NB! Password must be at least 8 characters long and must contain at least one uppercase letter (A-Z), one lowercase letter (a-z) and one digit.',
+  FirstName = 'First Name is not correct. Must contain at least one character and no special characters or numbers',
+  LastName = 'Last Name is not correct. Must contain at least one character and no special characters or numbers',
+  Date = 'Date of birth is not correct. A valid date input ensuring the user is above a certain age (e.g., 13 years old or older)',
+  Street = 'Street is not correct. Must contain at least one character',
+  City = 'City is not correct. Must contain at least one character and no special characters or numbers',
+  PostalCode = 'Postal Code is not correct. Must follow the format for the country',
+}
+
 export {
-  NamePages, PathPages, LocalStorageKeys, Country,
+  NamePages, PathPages, LocalStorageKeys, Country, InvalidMessage,
 };

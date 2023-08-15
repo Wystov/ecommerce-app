@@ -2,133 +2,127 @@
   <section class="container">
     <form>
       <h1>Registration</h1>
-
-      <div class="field-container" v-for="(field, i) in fields" :key="i">
-        <BaseInput
-          :label="field.label"
-          @focusout="checkValid($event, i)"
-          :valid="field.valid"
-          :type="field.type"
-          :id="'field-registration-' + field.label.toLowerCase()"
-        />
-        <Transition>
-          <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">{{
-            field.invalidMessage
-          }}</BaseMessage>
-        </Transition>
-      </div>
-      <BaseSelect label="Country" valid="valid" :options="options" />
-      <BaseButton size="large">Submit</BaseButton>
+      <RegistrationMain @valid-all-main-fields="openAddressBlock" />
+      <Transition>
+        <div class="shipping" v-if="showAddressBlock">
+          <RegistrationAddress
+            title="Shipping address"
+            id="shipping"
+            @valid-all-address-fields="checkAddressFields"
+          />
+          <BaseCheckbox
+            id="check-def-shipping"
+            name="def-shipping"
+            label="Set default shipping address"
+            @change="() => (defaultAddress.shipping = !defaultAddress.shipping)"
+          />
+          <BaseCheckbox
+            id="check-only-shipping"
+            name="only-shipping"
+            label="Use the shipping address as the billing address"
+            @change="() => (hideBilling = !hideBilling)"
+          />
+        </div>
+      </Transition>
+      <Transition>
+        <div class="billing" v-if="showAddressBlock && !hideBilling">
+          <RegistrationAddress
+            title="Billing address"
+            id="billing"
+            @valid-all-address-fields="checkAddressFields"
+          />
+          <BaseCheckbox
+            id="check-def-billing"
+            name="def-billing"
+            label="Set default billing address"
+            @change="() => (defaultAddress.billing = !defaultAddress.billing)"
+          />
+        </div>
+      </Transition>
+      <Transition>
+        <BaseButton
+          v-if="showAddressBlock"
+          @click="registrationUser"
+          size="large"
+        >Submit</BaseButton
+        >
+      </Transition>
     </form>
   </section>
 </template>
 -
 <script lang="ts">
-import BaseInput from '@/components/shared/BaseInput.vue';
+import RegistrationMain from '@/components/RegistrationMain.vue';
+import RegistrationAddress from '@/components/RegistrationAddress.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
-import BaseMessage from '@/components/shared/BaseMessage.vue';
-import BaseSelect from '@/components/shared/BaseSelect.vue';
-import isOlder from '@/utils/isOlder';
-import { Country } from '@/types/enums';
+import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 
 export default {
   components: {
+    RegistrationMain,
+    RegistrationAddress,
     BaseButton,
-    BaseInput,
-    BaseMessage,
-    BaseSelect,
+    BaseCheckbox,
   },
-  // eslint-disable-next-line max-lines-per-function
   data(): {
-    fields: {
-      label: string;
-      type?: string;
-      pattern?: RegExp;
-      valid?: 'valid' | 'invalid' | '';
-      invalidMessage?: string;
-    }[];
-    options: { text: string; value: string }[];
-  } {
+    showAddressBlock: Boolean;
+    hideBilling: Boolean;
+    bodyMain: {} | null;
+    bodyAddresses: Array<{}>;
+    bodyRequest: {};
+    defaultAddress: {
+      shipping: Boolean;
+      billing: Boolean;
+    };
+    } {
     return {
-      fields: [
-        {
-          label: 'Email',
-          pattern: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,3}$/,
-          valid: '',
-          invalidMessage:
-            'Email is not correct. A properly formatted email address (e.g., example@email.com)',
-        },
-        {
-          label: 'Password',
-          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[0-9a-zA-Z!@#$%^&*]{8,}$/,
-          type: 'password',
-          invalidMessage:
-            'Password is not correct. Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, and 1 number',
-        },
-        {
-          label: 'First Name',
-          pattern: /^[a-zA-Z]+$/,
-          invalidMessage:
-            'First Name is not correct. Must contain at least one character and no special characters or numbers',
-        },
-        {
-          label: 'Last Name',
-          pattern: /^[a-zA-Z]+$/,
-          invalidMessage:
-            'First Name is not correct. Must contain at least one character and no special characters or numbers',
-        },
-        {
-          label: 'Date of birth',
-          type: 'date',
-          invalidMessage:
-            'Date of birth is not correct. A valid date input ensuring the user is above a certain age (e.g., 13 years old or older)',
-        },
-        {
-          label: 'Street',
-          pattern: /^.*\S.*$/,
-          invalidMessage: 'Street is not correct. Must contain at least one character',
-        },
-        {
-          label: 'City',
-          pattern: /^[a-zA-Z\s]+$/,
-          invalidMessage:
-            'City is not correct. Must contain at least one character and no special characters or numbers',
-        },
-        {
-          label: 'Postal Code',
-          invalidMessage: 'Postal Code is not correct. Must follow the format for the country',
-        },
-        {
-          label: 'Country',
-          invalidMessage: 'Country is not correct. Please choose country',
-        },
-      ],
-      options: [
-        { text: Country.US, value: 'US' },
-        { text: Country.GB, value: 'GB' },
-      ],
+      showAddressBlock: true,
+      hideBilling: false,
+      bodyMain: {},
+      bodyAddresses: [],
+      bodyRequest: {},
+      defaultAddress: {
+        shipping: false,
+        billing: false,
+      },
     };
   },
   methods: {
-    checkValid(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-      if (input !== null && field.pattern) {
-        field.valid = field.pattern.test(input.value) ? 'valid' : 'invalid';
+    openAddressBlock(data: {}): void {
+      if (data) this.showAddressBlock = true;
+      this.bodyMain = data;
+    },
+    checkAddressFields(data: { fields: {}; name: string } | null): void {
+      if (data) {
+        if (data.name === 'shipping') this.bodyAddresses[0] = data.fields;
+        if (data.name === 'billing') {
+          this.bodyAddresses[1] = this.hideBilling ? this.bodyAddresses[0] : data.fields;
+        }
       }
-      if (input !== null && field.type === 'date') {
-        field.valid = isOlder(input.value, 13) ? 'valid' : 'invalid';
+    },
+    registrationUser(): void {
+      const { bodyMain, bodyAddresses, defaultAddress } = this;
+      if (bodyMain) {
+        this.bodyRequest = {
+          ...bodyMain,
+          addresses: bodyAddresses,
+        };
       }
+      const { shipping, billing } = defaultAddress;
+      const defaultAddresses = {
+        defaultShipping: shipping,
+        defaultBilling: billing,
+      };
+      console.log(this.bodyRequest, defaultAddresses);
     },
   },
 };
 </script>
-<style>
+<style scoped>
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.5s ease;
 }
-
 .v-enter-from,
 .v-leave-to {
   opacity: 0;

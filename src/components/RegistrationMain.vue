@@ -1,0 +1,142 @@
+<template>
+  <div class="registration-main">
+    <div class="field-container" v-for="(field, i) in fields" :key="i">
+      <BaseInput
+        :label="field.label"
+        :name="field.placeholder"
+        @input="[checkValid($event, i), setValue($event, i)]"
+        :valid="field.valid"
+        :type="field.type"
+        :id="'field-registration-' + field.label.toLowerCase()"
+      />
+      <Transition>
+        <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">{{
+          field.invalidMessage
+        }}</BaseMessage>
+      </Transition>
+    </div>
+  </div>
+</template>
+-
+<script lang="ts">
+import BaseInput from '@/components/shared/BaseInput.vue';
+import BaseMessage from '@/components/shared/BaseMessage.vue';
+import isOlder from '@/utils/isOlder';
+import api from '@/utils/api/client';
+import { InvalidMessage } from '@/types/enums';
+import type { RegistrationMainData } from '@/types/types';
+import toCamelCase from '../utils/toCamelCase';
+
+export default {
+  emits: ['valid-all-main-fields'],
+  components: {
+    BaseInput,
+    BaseMessage,
+  },
+  // eslint-disable-next-line max-lines-per-function
+  data(): {
+    fields: RegistrationMainData[];
+    } {
+    return {
+      fields: [
+        {
+          label: 'Email',
+          pattern: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,3}$/,
+          placeholder: 'example@email.com',
+          type: 'email',
+          value: '',
+          invalidMessage: InvalidMessage.Email,
+        },
+        {
+          label: 'Password',
+          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[0-9a-zA-Z!@#$%^&*]{8,}$/,
+          placeholder: 'Example1',
+          type: 'password',
+          value: '',
+          invalidMessage: InvalidMessage.Password,
+        },
+        {
+          label: 'First Name',
+          pattern: /^[a-zA-Z]+$/,
+          placeholder: 'John',
+          value: '',
+          invalidMessage: InvalidMessage.FirstName,
+        },
+        {
+          label: 'Last Name',
+          pattern: /^[a-zA-Z]+$/,
+          placeholder: 'Smith',
+          value: '',
+          invalidMessage: InvalidMessage.LastName,
+        },
+        {
+          label: 'Date of birth',
+          type: 'date',
+          value: '',
+          invalidMessage: InvalidMessage.Date,
+        },
+      ],
+    };
+  },
+  methods: {
+    async checkEmail(email: string, i: number): Promise<void> {
+      const field = this.fields[i];
+      const response = await api.isEmailAvailable(email);
+
+      if (field.pattern) {
+        if (!field.pattern.test(email)) {
+          field.valid = 'invalid';
+          field.invalidMessage = InvalidMessage.Email;
+          return;
+        }
+        if (!response.ok) {
+          field.valid = 'invalid';
+          field.invalidMessage = response.message;
+          return;
+        }
+        field.valid = 'valid';
+      }
+    },
+
+    checkValid(e: Event, i: number): void {
+      const input = e.target as HTMLInputElement;
+      const field = this.fields[i];
+
+      if (input !== null && field.type === 'email') {
+        const email = input.value;
+        this.checkEmail(email, i);
+      }
+      if (input !== null && field.pattern) {
+        field.valid = field.pattern.test(input.value) ? 'valid' : 'invalid';
+      }
+      if (input !== null && field.type === 'date') {
+        const date = input.value;
+        field.valid = isOlder(date, 13) ? 'valid' : 'invalid';
+      }
+    },
+
+    setValue(e: Event, i: number): void {
+      const input = e.target as HTMLInputElement;
+      const field = this.fields[i];
+
+      if (input !== null) field.value = input.value;
+      if (this.fields.every((elem) => elem.value !== '' && elem.valid === 'valid')) {
+        const body = this.fields.map((elem) => [toCamelCase(elem.label), elem.value]);
+        this.$emit('valid-all-main-fields', Object.fromEntries(body));
+      } else {
+        this.$emit('valid-all-main-fields', null);
+      }
+    },
+  },
+};
+</script>
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <div class="select-group">
     <label v-if="label" :for="id"> {{ label }}</label>
-    <select :id="id" class="select" v-model="selected" :class="classes">
+    <select :id="id" class="select" @input="checkValid" v-model="selected" :class="classes">
       <option v-for="option in options" :value="option.value" :key="option.value">
         {{ option.text }}
       </option>
@@ -15,7 +15,7 @@ import type { SelectOptions, SelectClasses } from '../../types/types';
 export default {
   data(): { selected: string } {
     return {
-      selected: this.options[0].value,
+      selected: '',
     };
   },
   props: {
@@ -39,6 +39,10 @@ export default {
       type: Array<SelectOptions>,
       required: true,
     },
+    defaultSelected: {
+      type: String,
+      required: true,
+    },
   },
   computed: {
     classes(): SelectClasses {
@@ -48,6 +52,19 @@ export default {
         'invalid-focus-decorator': this.valid === 'invalid',
       };
     },
+  },
+  methods: {
+    checkValid(e: Event): void {
+      const select = e.target as HTMLSelectElement;
+      if (select) {
+        this.$emit('selectOption', select.value);
+      }
+    },
+  },
+  created(): void {
+    if (this.selected === '') {
+      this.selected = this.defaultSelected;
+    }
   },
 };
 </script>

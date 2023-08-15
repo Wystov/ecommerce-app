@@ -69,6 +69,33 @@ interface SelectOptions {
   text: string;
   value: string;
 }
+interface RegistrationMainData {
+  label: string;
+  type?: string;
+  value?: string;
+  placeholder?: string;
+  pattern?: RegExp;
+  valid?: 'valid' | 'invalid' | '';
+  invalidMessage?: string;
+}
+interface RegistrationAddressData {
+  fields: {
+    label: string;
+    type?: string;
+    value?: string;
+    placeholder?: string;
+    pattern?: RegExp;
+    valid?: 'valid' | 'invalid' | '';
+    invalidMessage?: string;
+  }[];
+  countryField: {
+    label: string;
+    options: { text: string; value: string; placeholder: string }[];
+    defaultSelectedCountry: string;
+    valid?: 'valid' | 'invalid' | '';
+    value: string;
+  };
+}
 export type {
   ButtonClasses,
   SelectClasses,
@@ -82,4 +109,6 @@ export type {
   DefaultAddressProps,
   ApiResponse,
   SelectOptions,
+  RegistrationMainData,
+  RegistrationAddressData,
 };
