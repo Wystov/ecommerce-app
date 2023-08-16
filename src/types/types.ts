@@ -64,6 +64,7 @@ interface DataLogin {
   emailValue: string;
   passValue: string;
   passInputType: string;
+  hidePass: string;
   emailMessageText: string;
   passMessageText: string;
   wrongData: boolean;

@@ -14,11 +14,12 @@
       :type="passInputType"
       name="Password..."
       id="passInput"
+      :hidePass="hidePass"
       @input="passwordValidation"
+      @click="showPassword"
       :valid="passValue"
       ref="passInput"
     />
-    <BaseCheckbox label="Show password" id="show" name="show-password" @change="showPassword" />
     <BaseMessage v-if="passValue === 'invalid'" alert="danger" :text="passMessageText" />
     <BaseButton label="Sign in" size="medium" @click="signIn" />
     <p class="footnote">
@@ -32,7 +33,6 @@
 <script lang="ts">
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import BaseInput from '@/components/shared/BaseInput.vue';
-import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import type { DataLogin, BaseInputType } from '@/types/types';
@@ -42,7 +42,6 @@ import Api from '@/utils/api/client';
 export default {
   components: {
     BaseInput,
-    BaseCheckbox,
     BaseButton,
     BaseMessage,
   },
@@ -51,6 +50,7 @@ export default {
       emailValue: '',
       passValue: '',
       passInputType: 'password',
+      hidePass: 'show',
       emailMessageText: InvalidMessage.Email,
       passMessageText: InvalidMessage.Password,
       wrongData: false,
@@ -118,9 +118,20 @@ export default {
       }
     },
     showPassword(event: InputEvent): void {
-      if (event.target instanceof HTMLInputElement) {
-        this.passInputType = event.target.checked ? 'text' : 'password';
+      if (!event.target) {
+        return;
       }
+      const { target } = event;
+      if (!(target instanceof SVGElement)) {
+        return;
+      }
+      if (this.hidePass === 'show') {
+        this.hidePass = 'hide';
+        this.passInputType = 'text';
+        return;
+      }
+      this.hidePass = 'show';
+      this.passInputType = 'password';
     },
     async signIn(): Promise<void> {
       if (
