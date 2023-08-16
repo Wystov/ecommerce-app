@@ -72,9 +72,10 @@ export default {
   font-size: 1rem;
   height: fit-content;
 }
+
 .input {
   background: transparent;
-  border: 1.5px solid var(--main-purple);
+  border: 1.5px solid var(--main-color-outline);
   border-radius: 3px;
   font-size: 1rem;
   padding: 0.1rem 0.3rem;
