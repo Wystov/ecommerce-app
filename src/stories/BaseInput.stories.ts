@@ -20,6 +20,7 @@ export const LightMode: Story = {
     template: '<BaseInput v-bind="args" />',
   }),
   args: {
+    id: 'story_one',
     label: 'Type here:',
     name: 'Add something...',
   },
@@ -27,6 +28,7 @@ export const LightMode: Story = {
 
 export const DarkMode: Story = {
   args: {
+    id: 'story_two',
     label: 'Type here:',
     name: 'Add something...',
     isDark: true,
@@ -35,6 +37,7 @@ export const DarkMode: Story = {
 
 export const Inactive: Story = {
   args: {
+    id: 'story_three',
     label: 'Type here:',
     disabled: true,
   },
@@ -42,12 +45,30 @@ export const Inactive: Story = {
 
 export const ValidValue: Story = {
   args: {
+    id: 'story_five',
     valid: 'valid',
   },
 };
 
 export const InvalidValue: Story = {
   args: {
+    id: 'story_six',
     valid: 'invalid',
+  },
+};
+
+export const PasswordHide: Story = {
+  args: {
+    id: 'story_seven',
+    type: 'password',
+    hidePass: 'show',
+  },
+};
+
+export const PasswordShown: Story = {
+  args: {
+    id: 'story_eight',
+    type: 'text',
+    hidePass: 'hide',
   },
 };
