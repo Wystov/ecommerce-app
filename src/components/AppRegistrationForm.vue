@@ -1,125 +1,150 @@
 <template>
-  <div class="registration-main">
-    <div class="field-container" v-for="(field, i) in fields" :key="i">
-      <BaseInput
-        :label="field.label"
-        :name="field.placeholder"
-        @input="[checkValid($event, i), setValue($event, i)]"
-        :valid="field.valid"
-        :type="field.type"
-        :id="'field-registration-' + field.label.toLowerCase()"
-        max="9999-12-31"
-      />
+  <section class="container">
+    <form>
+      <h1>Registration</h1>
+      <RegistrationMain @valid-all-main-fields="openAddressBlock" />
       <Transition>
-        <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">{{
-          field.invalidMessage
-        }}</BaseMessage>
+        <div class="shipping" v-if="showAddressBlock">
+          <RegistrationAddress
+            title="Shipping address"
+            id="shipping"
+            @valid-all-address-fields="checkAddressFields"
+          />
+          <BaseCheckbox
+            id="check-def-shipping"
+            name="def-shipping"
+            label="Set default shipping address"
+            @change="() => (defaultAddresses.defaultShipping = !defaultAddresses.defaultShipping)"
+            :checked="defaultAddresses.defaultShipping"
+          />
+          <BaseCheckbox
+            id="check-def-billing"
+            name="def-billing"
+            label="Set default billing address"
+            @change="() => (defaultAddresses.defaultBilling = !defaultAddresses.defaultBilling)"
+            :checked="defaultAddresses.defaultBilling"
+          />
+          <BaseCheckbox
+            id="check-only-shipping"
+            name="only-shipping"
+            label="Use the shipping address as the billing address"
+            @change="() => (onlyShipping = !onlyShipping)"
+            :checked="onlyShipping"
+          />
+        </div>
       </Transition>
-    </div>
-  </div>
+      <Transition>
+        <div class="billing" v-if="showAddressBlock && !onlyShipping">
+          <RegistrationAddress
+            title="Billing address"
+            id="billing"
+            @valid-all-address-fields="checkAddressFields"
+          />
+        </div>
+      </Transition>
+      <Transition>
+        <BaseMessage alert="warning" v-if="showMessage">
+          {{ invalidMessage }}
+        </BaseMessage>
+      </Transition>
+      <Transition>
+        <BaseButton
+          v-if="showAddressBlock"
+          @click="registrationUser"
+          size="large"
+        >Submit</BaseButton
+        >
+      </Transition>
+    </form>
+  </section>
 </template>
-
+-
 <script lang="ts">
-import _ from 'lodash';
-import BaseInput from '@/components/shared/BaseInput.vue';
+import RegistrationMain from '@/components/RegistrationMain.vue';
+import RegistrationAddress from '@/components/RegistrationAddress.vue';
+import BaseButton from '@/components/shared/BaseButton.vue';
+import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
-import isOlder from '@/utils/isOlder';
 import api from '@/utils/api/client';
-import { InvalidMessage } from '@/types/enums';
-import type { RegistrationMainData } from '@/types/types';
-import toCamelCase from '@/utils/toCamelCase';
+import { NamePages } from '@/types/enums';
+import type {
+  UserSignUp, UserAddress, DefaultAddressProps, UserSignUpMain,
+} from '../types/types';
 
 export default {
-  emits: ['valid-all-main-fields'],
   components: {
-    BaseInput,
+    RegistrationMain,
+    RegistrationAddress,
+    BaseButton,
+    BaseCheckbox,
     BaseMessage,
   },
   data(): {
-    fields: RegistrationMainData[];
+    showAddressBlock: boolean;
+    onlyShipping: boolean;
+    bodyMain: UserSignUpMain;
+    bodyAddresses: Array<UserAddress>;
+    bodyRequest: UserSignUp;
+    defaultAddresses: DefaultAddressProps;
+    showMessage: boolean;
+    invalidMessage: string;
     } {
     return {
-      fields: [
-        {
-          label: 'Email',
-          pattern:
-            /^((?:[A-Za-z0-9!#$%&'*+\-\\/=?^_`{|}~]|(?<=^|\.)"|"(?=$|\.|@)|(?<=".*)[ .](?=.*")|(?<!\.)\.){1,64})(@)((?:[A-Za-z0-9.\\-])*(?:[A-Za-z0-9])\.(?:[A-Za-z0-9]){2,})$/,
-          placeholder: 'example@email.com',
-          type: 'email',
-          invalidMessage: InvalidMessage.Email,
-        },
-        {
-          label: 'Password',
-          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-          placeholder: 'Example1',
-          type: 'password',
-          invalidMessage: InvalidMessage.Password,
-        },
-        {
-          label: 'First Name',
-          pattern: /^[a-zA-Z]+$/,
-          placeholder: 'John',
-          invalidMessage: InvalidMessage.FirstName,
-        },
-        {
-          label: 'Last Name',
-          pattern: /^[a-zA-Z]+$/,
-          placeholder: 'Smith',
-          invalidMessage: InvalidMessage.LastName,
-        },
-        {
-          label: 'Date of birth',
-          type: 'date',
-          invalidMessage: InvalidMessage.Date,
-        },
-      ],
+      showAddressBlock: false,
+      onlyShipping: true,
+      bodyMain: {} as UserSignUpMain,
+      bodyAddresses: [{}, {}] as UserAddress[],
+      bodyRequest: {} as UserSignUp,
+      defaultAddresses: {
+        defaultShipping: true,
+        defaultBilling: true,
+      },
+      showMessage: false,
+      invalidMessage: '',
     };
   },
   methods: {
-    debounceEmail: _.debounce(
-      (email: string, fieldEmail: RegistrationMainData) => {
-        const field = fieldEmail;
-        api.isEmailAvailable(email).then((response) => {
-          if (!response.ok) {
-            field.valid = 'invalid';
-            field.invalidMessage = response.message;
-            return;
-          }
-          field.valid = 'valid';
-        });
-      },
-      1000,
-      { leading: true },
-    ),
-
-    checkValid(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-
-      if (input !== null && field.type === 'email') {
-        const email = input.value;
-        this.debounceEmail(email, field);
+    openAddressBlock(data: { valid: Boolean; response: UserSignUpMain }): void {
+      const { valid, response } = data;
+      if (valid) {
+        this.showMessage = false;
+        this.showAddressBlock = true;
       }
-      if (input !== null && field.pattern) {
-        field.valid = field.pattern.test(input.value) ? 'valid' : 'invalid';
-      }
-      if (input !== null && field.type === 'date') {
-        const date = input.value;
-        field.valid = isOlder(date, 13) ? 'valid' : 'invalid';
-      }
+      this.bodyMain = response;
     },
+    checkAddressFields(data: {
+      valid: Boolean;
+      response: { fields: UserAddress; name: string };
+    }): void {
+      const {
+        response: { name, fields },
+      } = data;
+      const { bodyAddresses } = this;
+      this.showMessage = false;
 
-    setValue(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-
-      if (input !== null) field.value = input.value;
-      if (this.fields.every((elem) => elem.value !== '' && elem.valid === 'valid')) {
-        const body = this.fields.map((elem) => [toCamelCase(elem.label), elem.value]);
-        const response = Object.fromEntries(body);
-        this.$emit('valid-all-main-fields', { valid: true, response });
+      if (name === 'shipping') bodyAddresses[0] = fields;
+      if (name === 'billing') bodyAddresses[1] = fields;
+    },
+    registrationUser(): void {
+      const {
+        bodyMain, bodyAddresses, defaultAddresses, onlyShipping,
+      } = this;
+      if (bodyMain) {
+        this.bodyRequest = {
+          ...bodyMain,
+          addresses: bodyAddresses,
+        };
+      }
+      if (onlyShipping) {
+        this.bodyAddresses[1] = { ...this.bodyAddresses[0] };
+      }
+      if ('email' in this.bodyRequest && bodyAddresses.every((address) => 'city' in address)) {
+        this.showMessage = false;
+        api.createCustomer(this.bodyRequest, defaultAddresses);
+        this.$router.push({ name: NamePages.Home });
       } else {
-        this.$emit('valid-all-main-fields', { valid: false, response: {} });
+        this.showMessage = true;
+        this.invalidMessage = 'Please fill in all fields correctly';
       }
     },
   },
