@@ -10,9 +10,9 @@
         :id="id + '-field-registration-' + field.label.toLowerCase()"
       />
       <Transition>
-        <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">{{
-          field.invalidMessage
-        }}</BaseMessage>
+        <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">
+          {{ field.invalidMessage }}</BaseMessage
+        >
       </Transition>
     </div>
     <BaseSelect
@@ -50,7 +50,7 @@ export default {
     return {
       fields: [
         {
-          label: 'Street',
+          label: 'Street Name',
           pattern: /^.*\S.*$/,
           placeholder: 'Wall Street',
           value: '',
@@ -119,12 +119,7 @@ export default {
         (fieldItem) => fieldItem.value !== '' && fieldItem.valid === 'valid',
       );
       if (isAllFieldsValid) {
-        const sendFields = fields.map((elem) => {
-          if (elem.label === 'Street') {
-            return [toCamelCase(`${elem.label} Name`), elem.value];
-          }
-          return [toCamelCase(elem.label), elem.value];
-        });
+        const sendFields = fields.map((elem) => [toCamelCase(elem.label), elem.value]);
         const response = { name: this.id, fields: Object.fromEntries(sendFields) };
         this.$emit('valid-all-address-fields', { valid: true, response });
       } else {
@@ -140,6 +135,7 @@ export default {
 .v-leave-active {
   transition: opacity 0.5s ease;
 }
+
 .v-enter-from,
 .v-leave-to {
   opacity: 0;

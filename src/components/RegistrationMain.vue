@@ -8,6 +8,7 @@
         :valid="field.valid"
         :type="field.type"
         :id="'field-registration-' + field.label.toLowerCase()"
+        max="9999-12-31"
       />
       <Transition>
         <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">{{
@@ -40,14 +41,15 @@ export default {
       fields: [
         {
           label: 'Email',
-          pattern: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,3}$/,
+          pattern:
+            /^((?:[A-Za-z0-9!#$%&'*+\-\\/=?^_`{|}~]|(?<=^|\.)"|"(?=$|\.|@)|(?<=".*)[ .](?=.*")|(?<!\.)\.){1,64})(@)((?:[A-Za-z0-9.\\-])*(?:[A-Za-z0-9])\.(?:[A-Za-z0-9]){2,})$/,
           placeholder: 'example@email.com',
           type: 'email',
           invalidMessage: InvalidMessage.Email,
         },
         {
           label: 'Password',
-          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[0-9a-zA-Z!@#$%^&*]{8,}$/,
+          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
           placeholder: 'Example1',
           type: 'password',
           invalidMessage: InvalidMessage.Password,
@@ -75,6 +77,7 @@ export default {
   methods: {
     async checkEmail(email: string, i: number): Promise<void> {
       const field = this.fields[i];
+
       const response = await api.isEmailAvailable(email);
 
       if (field.pattern) {

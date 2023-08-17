@@ -16,6 +16,7 @@
       }"
       :disabled="disabled"
       ref="input"
+      :max="max"
     />
   </div>
 </template>
@@ -59,6 +60,10 @@ export default {
       default: '100%',
     },
     valid: {
+      type: String,
+      default: '',
+    },
+    max: {
       type: String,
       default: '',
     },

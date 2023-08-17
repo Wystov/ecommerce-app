@@ -9,7 +9,6 @@
   </div>
 </template>
 <script lang="ts">
-import '../../assets/styles/style.css';
 import type { SelectOptions, SelectClasses } from '../../types/types';
 
 export default {
@@ -77,6 +76,7 @@ export default {
   font-size: 1rem;
   height: fit-content;
 }
+
 .select {
   background: transparent;
   border: 1.5px solid var(--main-purple);
@@ -86,23 +86,29 @@ export default {
   outline: none;
   width: 100%;
 }
+
 .input::placeholder {
   color: var(--placeholder-font-color);
   font-size: 0.8rem;
 }
+
 .valid-focus-decorator {
   border: 1.5px solid #3c763d;
 }
+
 .invalid-input:focus {
   border: 1.5px solid #a94442;
 }
+
 .invalid-focus-decorator {
   border: 1.5px solid #a94442;
 }
+
 .dark-theme-input {
   border: 1px solid var(--dark-theme-font-color);
   color: var(--dark-theme-font-color);
 }
+
 .dark-theme-input::placeholder {
   color: var(--dark-theme-font-color);
 }
