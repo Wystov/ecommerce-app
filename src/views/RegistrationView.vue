@@ -14,13 +14,15 @@
             id="check-def-shipping"
             name="def-shipping"
             label="Set default shipping address"
-            @change="!defaultAddresses.defaultShipping"
+            @change="() => (defaultAddresses.defaultShipping = !defaultAddresses.defaultShipping)"
+            :checked="defaultAddresses.defaultShipping"
           />
           <BaseCheckbox
             id="check-only-shipping"
             name="only-shipping"
             label="Use the shipping address as the billing address"
-            @change="onlyShippingToggle"
+            @change="() => (onlyShipping = !onlyShipping)"
+            :checked="onlyShipping"
           />
         </div>
       </Transition>
@@ -36,6 +38,7 @@
             name="def-billing"
             label="Set default billing address"
             @change="() => (defaultAddresses.defaultBilling = !defaultAddresses.defaultBilling)"
+            :checked="defaultAddresses.defaultBilling"
           />
         </div>
       </Transition>
@@ -63,6 +66,7 @@ import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import api from '@/utils/api/client';
+import { NamePages } from '@/types/enums';
 import type {
   UserSignUp, UserAddress, DefaultAddressProps, UserSignUpMain,
 } from '../types/types';
@@ -76,23 +80,23 @@ export default {
     BaseMessage,
   },
   data(): {
-    showAddressBlock: Boolean;
-    onlyShipping: Boolean;
+    showAddressBlock: boolean;
+    onlyShipping: boolean;
     bodyMain: UserSignUpMain;
     bodyAddresses: Array<UserAddress>;
     bodyRequest: UserSignUp;
     defaultAddresses: DefaultAddressProps;
-    showMessage: Boolean;
-    invalidMessage: String;
+    showMessage: boolean;
+    invalidMessage: string;
     } {
     return {
       showAddressBlock: false,
-      onlyShipping: false,
+      onlyShipping: true,
       bodyMain: {} as UserSignUpMain,
-      bodyAddresses: [] as UserAddress[],
+      bodyAddresses: [{}, {}] as UserAddress[],
       bodyRequest: {} as UserSignUp,
       defaultAddresses: {
-        defaultShipping: false,
+        defaultShipping: true,
         defaultBilling: false,
       },
       showMessage: false,
@@ -100,15 +104,6 @@ export default {
     };
   },
   methods: {
-    onlyShippingToggle(): void {
-      this.onlyShipping = !this.onlyShipping;
-      if (this.onlyShipping && this.bodyAddresses[0]) {
-        this.bodyAddresses[1] = { ...this.bodyAddresses[0] };
-        this.showMessage = false;
-      } else {
-        this.bodyAddresses.splice(1);
-      }
-    },
     openAddressBlock(data: { valid: Boolean; response: UserSignUpMain }): void {
       const { valid, response } = data;
       if (valid) {
@@ -131,22 +126,22 @@ export default {
       if (name === 'billing') bodyAddresses[1] = fields;
     },
     registrationUser(): void {
-      const { bodyMain, bodyAddresses, defaultAddresses } = this;
+      const {
+        bodyMain, bodyAddresses, defaultAddresses, onlyShipping,
+      } = this;
       if (bodyMain) {
         this.bodyRequest = {
           ...bodyMain,
           addresses: bodyAddresses,
         };
       }
-      this.bodyAddresses[1] = { ...this.bodyAddresses[0] };
-      if (
-        'email' in this.bodyRequest
-        && bodyAddresses.every((item) => 'city' in item)
-        && bodyAddresses.length === 2
-      ) {
+      if (onlyShipping) {
+        this.bodyAddresses[1] = { ...this.bodyAddresses[0] };
+      }
+      if ('email' in this.bodyRequest && bodyAddresses.every((address) => 'city' in address)) {
         this.showMessage = false;
         api.createCustomer(this.bodyRequest, defaultAddresses);
-        this.$router.push({ name: 'Home' });
+        this.$router.push({ name: NamePages.Home });
       } else {
         this.showMessage = true;
         this.invalidMessage = 'Please fill in all fields correctly';
