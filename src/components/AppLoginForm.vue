@@ -62,7 +62,7 @@ export default {
       const email = this.$refs.emailInput as BaseInputType;
       const pass = this.$refs.passInput as BaseInputType;
       return {
-        username: email.inputValue.toLocaleLowerCase(),
+        username: email.inputValue.toLowerCase(),
         password: pass.inputValue,
       };
     },

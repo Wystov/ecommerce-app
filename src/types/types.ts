@@ -73,6 +73,18 @@ interface DataLogin {
 interface BaseInputType {
   inputValue: string;
 }
+interface BaseInputProps {
+  label: string;
+  type: string;
+  id: string;
+  isDark: boolean;
+  name: string;
+  disabled: boolean;
+  width: string;
+  valid: string;
+  hidePass: string;
+  inputValue: string;
+}
 export type {
   ButtonClasses,
   BaseMessageClasses,
@@ -86,4 +98,5 @@ export type {
   ApiResponse,
   DataLogin,
   BaseInputType,
+  BaseInputProps,
 };
