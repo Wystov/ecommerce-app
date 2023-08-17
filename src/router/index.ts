@@ -4,10 +4,11 @@ import LoginView from '@/views/LoginView.vue';
 import RegistrationView from '@/views/RegistrationView.vue';
 import AboutUsView from '@/views/AboutUsView.vue';
 import CatalogView from '@/views/CatalogView.vue';
+import NotFoundView from '@/views/NotFoundView.vue';
 import { NamePages, PathPages } from '@/types/enums';
 
 const {
-  Home, AboutUs, Catalog, Login, Logout, Registration,
+  Home, AboutUs, Catalog, Login, Logout, Registration, NotFound,
 } = NamePages;
 
 const routes = [
@@ -54,6 +55,14 @@ const routes = [
     component: RegistrationView,
     meta: {
       title: Registration,
+    },
+  },
+  {
+    name: NotFound,
+    path: PathPages.NotFound,
+    component: NotFoundView,
+    meta: {
+      title: NotFound,
     },
   },
 ];
