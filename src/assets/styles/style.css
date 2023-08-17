@@ -43,3 +43,16 @@ h2 {
   padding: 0 3vw;
   margin-bottom: 2vh;
 }
+
+.wrapper {
+  margin: auto;
+  max-width: 1680px;
+  padding: 0 20px;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: center;
+}
