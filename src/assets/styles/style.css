@@ -1,20 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
 :root {
-  --main-purple: #3f2496;
-  --main-font-color: #160a3d;
+  --main-color: #eb5461;
+  --main-color-hover: #de4e5b;
+  --main-color-active: #d23a47;
+  --main-color-outline: rgba(58, 62, 63, 0.5);
+  --main-font-color: #3a3e3f;
+  --main-font-hover: #ffdede;
   --dark-theme-font-color: #f7f0fb;
   --main-font-style: sans-serif;
   --placeholder-font-color: #160a3d55;
 }
 
 * {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 400;
 }
 ul,
-li {
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   padding: 0;
   margin: 0;
   list-style-type: none;
 }
+
+h2 {
+  color: var(--main-font-color);
+  font-family: Work Sans;
+  font-size: 46px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
 .container {
   padding: 0 3vw;
   margin-bottom: 2vh;

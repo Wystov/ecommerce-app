@@ -10,7 +10,7 @@ export default {
   props: {
     label: { type: String, default: '' },
     dark: { type: Boolean, default: false },
-    size: { type: String, default: 'small' },
+    size: { type: String, default: 'medium' },
     rounded: { type: Boolean, default: false },
     circle: { type: Boolean, default: false },
     active: { type: Boolean, default: false },
@@ -44,55 +44,64 @@ export default {
   justify-content: center;
   width: auto;
   min-width: 4em;
-  padding: 0.5em 1em;
-  font-family: Arial, Helvetica, sans-serif;
   border: solid 1px transparent;
-  border-radius: 4px;
+  border-radius: 10px;
   transition: 0.3s;
   cursor: pointer;
 }
-.size-medium {
-  font-size: medium;
-}
+
 .size-large {
-  font-size: large;
+  font-size: 24px;
+  padding: 20px 36px;
 }
+
+.size-medium {
+  font-size: 18px;
+  padding: 15px 30px;
+}
+
 .size-small {
-  font-size: small;
+  font-size: 12px;
+  padding: 10px 20px;
 }
+
 .theme-dark {
   background: #4528a4;
   color: #fff;
   border: solid 1px #4528a4;
+
   &:not(:disabled):hover {
     border: solid 1px #3f2496;
     color: #d6cbf8;
     background: #3f2496;
   }
+
   &:not(:disabled):active,
   &.active {
     border: solid 1px #2f1b70;
     background: #2f1b70;
   }
 }
+
 .theme-light {
-  background: #fff;
-  color: #4a4a4a;
-  border: solid 1px #eee;
+  background: var(--main-color);
+  color: #fff;
+
   &:not(:disabled):hover {
-    color: #4a4a4a;
-    border: solid 1px #eee;
-    background: #eee;
+    color: var(--main-font-hover);
+    background: var(--main-color-hover);
   }
+
   &:not(:disabled):active,
   &.active {
-    border: solid 1px #d7d7d7;
-    background: #d7d7d7;
+    background: var(--main-color-active);
   }
 }
+
 .rounded {
   border-radius: 1em;
 }
+
 .circle {
   border-radius: 50%;
   padding: 0.5em;
@@ -100,10 +109,12 @@ export default {
   width: 2.5em;
   height: 2.5em;
 }
+
 .disabled {
   filter: contrast(0.6);
   cursor: no-drop;
 }
+
 .link {
   text-decoration: none;
 }
