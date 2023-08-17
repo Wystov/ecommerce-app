@@ -18,8 +18,9 @@
     </div>
   </div>
 </template>
--
+
 <script lang="ts">
+import _ from 'lodash';
 import BaseInput from '@/components/shared/BaseInput.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import isOlder from '@/utils/isOlder';
@@ -75,25 +76,21 @@ export default {
     };
   },
   methods: {
-    async checkEmail(email: string, i: number): Promise<void> {
-      const field = this.fields[i];
-
-      const response = await api.isEmailAvailable(email);
-
-      if (field.pattern) {
-        if (!field.pattern.test(email)) {
-          field.valid = 'invalid';
-          field.invalidMessage = InvalidMessage.Email;
-          return;
-        }
-        if (!response.ok) {
-          field.valid = 'invalid';
-          field.invalidMessage = response.message;
-          return;
-        }
-        field.valid = 'valid';
-      }
-    },
+    debounceEmail: _.debounce(
+      (email: string, fieldEmail: RegistrationMainData) => {
+        const field = fieldEmail;
+        api.isEmailAvailable(email).then((response) => {
+          if (!response.ok) {
+            field.valid = 'invalid';
+            field.invalidMessage = response.message;
+            return;
+          }
+          field.valid = 'valid';
+        });
+      },
+      1000,
+      { leading: true },
+    ),
 
     checkValid(e: Event, i: number): void {
       const input = e.target as HTMLInputElement;
@@ -101,7 +98,7 @@ export default {
 
       if (input !== null && field.type === 'email') {
         const email = input.value;
-        this.checkEmail(email, i);
+        this.debounceEmail(email, field);
       }
       if (input !== null && field.pattern) {
         field.valid = field.pattern.test(input.value) ? 'valid' : 'invalid';
