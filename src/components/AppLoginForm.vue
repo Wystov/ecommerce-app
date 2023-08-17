@@ -1,18 +1,19 @@
 <template>
   <div class="login-form">
-    <h1 class="login-header">Login</h1>
+    <h1 class="login-header">Login to Crunch</h1>
     <BaseInput
       type="email"
-      name="Email..."
+      name="email"
       id="emailInput"
       @input="emailValidation"
       :valid="emailValue"
+      class="custom-input-style"
       ref="emailInput"
     />
     <BaseMessage v-if="emailValue === 'invalid'" alert="danger" :text="emailMessageText" />
     <BaseInput
       :type="passInputType"
-      name="Password..."
+      name="password"
       id="passInput"
       :hidePass="hidePass"
       @input="passwordValidation"
@@ -164,21 +165,45 @@ export default {
   align-items: center;
   font-family: var(--main-font-style);
   color: var(--main-font-color);
-  margin: 5% auto auto;
-  width: 40%;
-  border-radius: 7px;
-  background-color: #fcebfb;
+  margin: 10% auto auto;
+  width: 420px;
   padding: 2rem 3rem 2rem 3rem;
-  gap: 15px;
+  gap: 19px;
 }
 
 .login-header {
-  margin: 0 0 0.5rem;
+  font-size: 1.65rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
 }
 
 .input-block {
   width: 100%;
   padding: 0;
+}
+
+.login-form :deep(.input) {
+  height: 2.2rem;
+  border-radius: 10px;
+  padding: 0.1rem 1.2rem;
+}
+
+.login-form :deep(.input::placeholder) {
+  font-size: 1.1rem;
+}
+
+.login-form :deep(.input-icon) {
+  height: 1.4rem;
+  bottom: 1.3rem;
+  right: 1rem;
+  cursor: pointer;
+}
+
+.button {
+  width: 100%;
+  height: 3rem;
+  border-radius: 10px;
+  margin: 0.8rem 0;
 }
 
 .checkbox-block {
@@ -190,8 +215,7 @@ export default {
 }
 
 .register-link {
-  text-decoration: none;
-  color: var(--main-purple);
+  color: var(--main-color);
   cursor: pointer;
 }
 </style>
