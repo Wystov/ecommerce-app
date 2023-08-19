@@ -69,6 +69,7 @@ interface DataLogin {
   passMessageText: string;
   wrongData: boolean;
   wrongDataText: string;
+  registration: string;
 }
 interface BaseInputType {
   inputValue: string;

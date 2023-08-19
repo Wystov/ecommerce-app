@@ -1,6 +1,6 @@
 <template>
   <div class="login-form">
-    <h1 class="login-header">Login to Crunch</h1>
+    <h1 class="main-header">Login to Crunch</h1>
     <BaseInput
       type="email"
       name="email"
@@ -23,9 +23,9 @@
     />
     <BaseMessage v-if="passValue === 'invalid'" alert="danger" :text="passMessageText" />
     <BaseButton label="Sign in" size="medium" @click="signIn" />
-    <p class="footnote">
+    <p>
       Don't have an account yet?
-      <router-link class="register-link" :to="{ name: 'Registration' }"> Sign up </router-link>
+      <router-link class="register-link" :to="{ name: registration }"> Sign up </router-link>
     </p>
     <BaseMessage v-if="wrongData" alert="danger" :text="wrongDataText" title="Ooops!" />
   </div>
@@ -37,7 +37,7 @@ import BaseInput from '@/components/shared/BaseInput.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import type { DataLogin, BaseInputType } from '@/types/types';
-import { InvalidMessage } from '@/types/enums';
+import { NamePages, InvalidMessage, PathPages } from '@/types/enums';
 import Api from '@/utils/api/client';
 
 export default {
@@ -56,6 +56,7 @@ export default {
       passMessageText: InvalidMessage.Password,
       wrongData: false,
       wrongDataText: '',
+      registration: NamePages.Registration,
     };
   },
   computed: {
@@ -146,7 +147,7 @@ export default {
       const data = this.dataForSignIn;
       const response = await Api.signInCustomer(data);
       if (response.ok) {
-        this.$router.push('/');
+        this.$router.push(PathPages.Home);
         return;
       }
       if (response.message) {
@@ -167,14 +168,8 @@ export default {
   color: var(--main-font-color);
   margin: 10% auto auto;
   width: 420px;
-  padding: 2rem 3rem 2rem 3rem;
+  padding: 1rem 3rem 2rem 3rem;
   gap: 19px;
-}
-
-.login-header {
-  font-size: 1.65rem;
-  font-weight: 600;
-  margin: 0 0 1rem;
 }
 
 .input-block {
@@ -208,10 +203,6 @@ export default {
 
 .checkbox-block {
   align-self: flex-start;
-}
-
-.footnote {
-  margin: 0;
 }
 
 .register-link {
