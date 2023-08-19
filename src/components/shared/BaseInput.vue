@@ -100,6 +100,9 @@ export default {
   font-size: 1rem;
   padding: 0.1rem 0.3rem;
   outline: none;
+  height: 2.2rem;
+  border-radius: 10px;
+  padding: 0.1rem 1.2rem;
 }
 
 .label {
@@ -108,7 +111,7 @@ export default {
 
 .input::placeholder {
   color: var(--placeholder-font-color);
-  font-size: 0.8rem;
+  font-size: 1.1rem;
 }
 
 .valid-focus-decorator {
