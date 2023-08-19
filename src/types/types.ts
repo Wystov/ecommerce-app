@@ -72,6 +72,32 @@ interface ApiResponse {
   ok: boolean;
   message?: string;
 }
+interface DataLogin {
+  emailValue: string;
+  passValue: string;
+  passInputType: string;
+  hidePass: string;
+  emailMessageText: string;
+  passMessageText: string;
+  wrongData: boolean;
+  wrongDataText: string;
+  registration: string;
+}
+interface BaseInputType {
+  inputValue: string;
+}
+interface BaseInputProps {
+  label: string;
+  type: string;
+  id: string;
+  isDark: boolean;
+  name: string;
+  disabled: boolean;
+  width: string;
+  valid: string;
+  hidePass: string;
+  inputValue: string;
+}
 interface SelectOptions {
   text: string;
   value: string;
@@ -115,6 +141,9 @@ export type {
   UserAddress,
   DefaultAddressProps,
   ApiResponse,
+  DataLogin,
+  BaseInputType,
+  BaseInputProps,
   SelectOptions,
   RegistrationMainData,
   RegistrationAddressData,

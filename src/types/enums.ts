@@ -5,6 +5,7 @@ enum NamePages {
   Login = 'Login',
   Logout = 'Logout',
   Registration = 'Registration',
+  NotFound = 'Not found',
 }
 
 const enum PathPages {
@@ -14,6 +15,7 @@ const enum PathPages {
   Login = '/login',
   Logout = '/',
   Registration = '/registration',
+  NotFound = '/:pathMatch(.*)*',
 }
 
 const enum LocalStorageKeys {

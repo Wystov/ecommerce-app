@@ -1,6 +1,6 @@
 <template>
   <div class="input-block" :style="{ width: width }">
-    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }" v-if="label">{{
+    <label for="input-field" class="label" :class="{ 'dark-theme-label': isDark }" v-if="label">{{
       label
     }}</label>
     <input
@@ -18,13 +18,20 @@
       ref="input"
       :max="max"
     />
+    <EyeIcon v-if="hidePass === 'show'" class="input-icon" />
+    <EyeSlashIcon v-if="hidePass === 'hide'" class="input-icon" />
   </div>
 </template>
 
 <script lang="ts">
 import '../../assets/styles/style.css';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/20/solid';
 
 export default {
+  components: {
+    EyeIcon,
+    EyeSlashIcon,
+  },
   data(): { inputValue: string } {
     return {
       inputValue: '',
@@ -63,6 +70,10 @@ export default {
       type: String,
       default: '',
     },
+    hidePass: {
+      type: String,
+      default: '',
+    },
     max: {
       type: String,
       default: '',
@@ -79,10 +90,12 @@ export default {
   gap: 0.5rem;
   font-size: 1rem;
   height: fit-content;
+  position: relative;
 }
+
 .input {
   background: transparent;
-  border: 1.5px solid var(--main-purple);
+  border: 1.5px solid var(--main-color-outline);
   border-radius: 3px;
   font-size: 1rem;
   padding: 0.1rem 0.3rem;
@@ -118,5 +131,14 @@ export default {
 .dark-theme-label,
 .dark-theme-input::placeholder {
   color: var(--dark-theme-font-color);
+}
+
+.input-icon {
+  position: absolute;
+  bottom: 0.8rem;
+  right: 0.3rem;
+  transform: translateY(50%);
+  fill: #5e5163;
+  height: 1em;
 }
 </style>

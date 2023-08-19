@@ -37,6 +37,7 @@ export default {
   height: fit-content;
   margin: 0.2rem 0;
 }
+
 .checkbox {
   position: absolute;
   opacity: 0;
@@ -51,6 +52,7 @@ export default {
   align-items: center;
   user-select: none;
 }
+
 .checkbox + label::before {
   content: '';
   display: inline-block;
@@ -67,12 +69,12 @@ export default {
 }
 
 .checkbox:checked + label::before {
-  border-color: var(--main-purple);
-  background-color: var(--main-purple);
+  border-color: var(--main-color-outline);
+  background-color: var(--main-color-outline);
 }
 
 .checkbox:not(:disabled):not(:checked) + label:hover::before {
-  border-color: var(--main-purple);
+  border-color: var(--main-color-outline);
 }
 
 .dark-theme-checkbox + label::before {
@@ -81,7 +83,7 @@ export default {
 
 .dark-theme-checkbox:checked + label::before {
   border-color: var(--dark-theme-font-color);
-  background-color: var(--main-purple);
+  background-color: var(--main-color-outline);
 }
 
 .dark-theme-checkbox:not(:disabled):not(:checked) + label:hover::before {
