@@ -138,10 +138,10 @@ export default {
 
 .input-icon {
   position: absolute;
-  bottom: 0.8rem;
-  right: 0.3rem;
+  bottom: 1.3rem;
+  right: 1rem;
   transform: translateY(50%);
   fill: #5e5163;
-  height: 1em;
+  height: 1.4rem;
 }
 </style>

@@ -178,9 +178,6 @@ export default {
 }
 
 .login-form :deep(.input-icon) {
-  height: 1.4rem;
-  bottom: 1.3rem;
-  right: 1rem;
   cursor: pointer;
 }
 

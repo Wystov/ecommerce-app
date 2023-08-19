@@ -3,6 +3,8 @@
     <div class="field-container" v-for="(field, i) in fields" :key="i">
       <BaseInput
         :label="field.label"
+        :hidePass="field.label === 'Password' ? hidePass : ''"
+        @click="showPassword($event, i)"
         :name="field.placeholder"
         @input="[checkValid($event, i), setValue($event, i)]"
         :valid="field.valid"
@@ -50,12 +52,14 @@ export default {
   // eslint-disable-next-line max-lines-per-function
   data(): {
     LOGIN: string;
+    hidePass: string;
     showButton: boolean;
     mainFields: MainFields;
     fields: RegistrationMainData[];
     } {
     return {
       LOGIN: NamePages.Login,
+      hidePass: 'show',
       showButton: true,
       mainFields: {} as MainFields,
       fields: [
@@ -95,6 +99,20 @@ export default {
     };
   },
   methods: {
+    showPassword(e: InputEvent, i: number): void {
+      const input = e.target as HTMLInputElement;
+      const field = this.fields[i];
+      if (!(input instanceof SVGElement)) {
+        return;
+      }
+      if (this.hidePass === 'show') {
+        this.hidePass = 'hide';
+        field.type = 'text';
+        return;
+      }
+      this.hidePass = 'show';
+      field.type = 'password';
+    },
     debounceEmail: _.debounce(
       (email: string, fieldEmail: RegistrationMainData) => {
         const field = fieldEmail;
@@ -153,6 +171,9 @@ export default {
 };
 </script>
 <style scoped>
+.field-container :deep(.input-icon) {
+  cursor: pointer;
+}
 .registration-main {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
