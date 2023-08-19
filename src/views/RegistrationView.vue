@@ -16,10 +16,17 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  color: #3a3e3f;
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0;
+}
 .registration {
   display: flex;
   flex-direction: column;
   gap: 34px;
+  margin: 50px auto;
 }
 .container {
   max-width: 740px;

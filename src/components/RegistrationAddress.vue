@@ -1,20 +1,6 @@
 <template>
   <h3>{{ title }}</h3>
   <div class="registration-address">
-    <div class="field-container" v-for="(field, i) in fields" :key="i">
-      <BaseInput
-        :label="field.label"
-        :name="field.placeholder"
-        @input="[checkValid($event, i), setValue($event, i)]"
-        :valid="field.valid"
-        :id="id + '-field-registration-' + field.label.toLowerCase()"
-      />
-      <Transition>
-        <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">
-          {{ field.invalidMessage }}</BaseMessage
-        >
-      </Transition>
-    </div>
     <BaseSelect
       @selectOption="selectCountry"
       :defaultSelected="countryField.defaultSelectedCountry"
@@ -23,6 +9,24 @@
       valid="valid"
       :options="countryField.options"
     />
+    <div class="field-container" v-for="(field, i) in fields" :key="i">
+      <BaseInput
+        :label="field.label.replace('Name', '')"
+        :name="field.placeholder"
+        @input="[checkValid($event, i), setValue($event, i)]"
+        :valid="field.valid"
+        :id="id + '-field-registration-' + field.label.toLowerCase()"
+      />
+      <Transition>
+        <BaseMessage
+          absolute
+          v-if="field.invalidMessage && field.valid === 'invalid'"
+          alert="danger"
+        >
+          {{ field.invalidMessage }}</BaseMessage
+        >
+      </Transition>
+    </div>
   </div>
 </template>
 
@@ -48,28 +52,6 @@ export default {
   },
   data(): RegistrationAddressData {
     return {
-      fields: [
-        {
-          label: 'Street Name',
-          pattern: /^.*\S.*$/,
-          placeholder: 'Wall Street',
-          value: '',
-          invalidMessage: InvalidMessage.Street,
-        },
-        {
-          label: 'City',
-          pattern: /^[a-zA-Z\s]+$/,
-          placeholder: 'New York',
-          value: '',
-          invalidMessage: InvalidMessage.City,
-        },
-        {
-          label: 'Postal Code',
-          placeholder: '10001',
-          value: '',
-          invalidMessage: InvalidMessage.PostalCode,
-        },
-      ],
       countryField: {
         label: 'Country',
         options: [
@@ -80,6 +62,28 @@ export default {
         value: 'US',
         valid: 'valid',
       },
+      fields: [
+        {
+          label: 'City',
+          pattern: /^[a-zA-Z\s]+$/,
+          placeholder: 'New York',
+          value: '',
+          invalidMessage: InvalidMessage.City,
+        },
+        {
+          label: 'Street Name',
+          pattern: /^.*\S.*$/,
+          placeholder: 'Wall Street',
+          value: '',
+          invalidMessage: InvalidMessage.Street,
+        },
+        {
+          label: 'Postal Code',
+          placeholder: '10001',
+          value: '',
+          invalidMessage: InvalidMessage.PostalCode,
+        },
+      ],
     };
   },
   methods: {
@@ -131,6 +135,15 @@ export default {
 };
 </script>
 <style scoped>
+.field-container {
+  position: relative;
+}
+.registration-address {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+}
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.5s ease;
@@ -139,5 +152,11 @@ export default {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+@media (max-width: 768px) {
+  .registration-address {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>

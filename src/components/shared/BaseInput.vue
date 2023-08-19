@@ -96,9 +96,7 @@ export default {
 .input {
   background: transparent;
   border: 1.5px solid var(--main-color-outline);
-  border-radius: 3px;
   font-size: 1rem;
-  padding: 0.1rem 0.3rem;
   outline: none;
   height: 2.2rem;
   border-radius: 10px;
@@ -107,6 +105,8 @@ export default {
 
 .label {
   color: var(--main-font-color);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .input::placeholder {

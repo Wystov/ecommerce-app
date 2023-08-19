@@ -13,6 +13,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    absolute: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     classes(): BaseMessageClasses {
@@ -22,6 +26,7 @@ export default {
         warning: this.alert === 'warning',
         success: this.alert === 'success',
         rounded: this.rounded,
+        absolute: this.absolute,
       };
     },
   },
@@ -46,6 +51,10 @@ export default {
   border: 1px solid transparent;
   border-radius: 4px;
   font-family: Arial, Helvetica, sans-serif;
+}
+.message-field.absolute {
+  position: absolute;
+  z-index: 1;
 }
 .title,
 .message {

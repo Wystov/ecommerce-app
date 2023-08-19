@@ -23,6 +23,7 @@ interface BaseMessageClasses {
   warning: boolean;
   success: boolean;
   rounded: boolean;
+  absolute: boolean;
 }
 interface TokenResponse {
   refresh_token?: string;

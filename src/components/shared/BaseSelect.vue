@@ -68,6 +68,11 @@ export default {
 };
 </script>
 <style scoped>
+label {
+  color: var(--main-font-color);
+  font-size: 16px;
+  font-weight: 500;
+}
 .select-group {
   display: flex;
   flex-direction: column;
@@ -78,18 +83,20 @@ export default {
 }
 
 .select {
-  background: transparent;
-  border: 1.5px solid var(--main-purple);
-  border-radius: 3px;
+  border: 1.5px solid var(--main-color-outline);
   font-size: 1rem;
-  padding: 0.1rem 0.3rem;
   outline: none;
-  width: 100%;
+  height: 2.6rem;
+  border-radius: 10px;
+  padding: 0.1rem 1.2rem;
+  appearance: none;
+  background: url('../../assets/icons/arrow_down.svg') no-repeat right;
+  background-position-x: calc(100% - 16px);
 }
 
 .input::placeholder {
   color: var(--placeholder-font-color);
-  font-size: 0.8rem;
+  font-size: 1.1rem;
 }
 
 .valid-focus-decorator {

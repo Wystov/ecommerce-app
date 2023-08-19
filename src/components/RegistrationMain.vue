@@ -13,17 +13,16 @@
         max="9999-12-31"
       />
       <Transition>
-        <BaseMessage v-if="field.invalidMessage && field.valid === 'invalid'" alert="danger">{{
-          field.invalidMessage
-        }}</BaseMessage>
+        <BaseMessage
+          absolute
+          v-if="field.invalidMessage && field.valid === 'invalid'"
+          alert="danger"
+        >{{ field.invalidMessage }}</BaseMessage
+        >
       </Transition>
     </div>
   </div>
   <BaseButton v-if="showButton" @click="nextStep" class="btn-continue">Continue</BaseButton>
-  <p class="footnote">
-    Already have an account?
-    <router-link class="register-link" :to="{ name: LOGIN }"> Log in </router-link>
-  </p>
 </template>
 
 <script lang="ts">
@@ -32,7 +31,7 @@ import BaseInput from '@/components/shared/BaseInput.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import isOlder from '@/utils/isOlder';
 import api from '@/utils/api/client';
-import { InvalidMessage, NamePages } from '@/types/enums';
+import { InvalidMessage } from '@/types/enums';
 import type { RegistrationMainData } from '@/types/types';
 import toCamelCase from '@/utils/toCamelCase';
 import BaseButton from './shared/BaseButton.vue';
@@ -51,14 +50,12 @@ export default {
   },
   // eslint-disable-next-line max-lines-per-function
   data(): {
-    LOGIN: string;
     hidePass: string;
     showButton: boolean;
     mainFields: MainFields;
     fields: RegistrationMainData[];
     } {
     return {
-      LOGIN: NamePages.Login,
       hidePass: 'show',
       showButton: true,
       mainFields: {} as MainFields,
@@ -181,6 +178,7 @@ export default {
   gap: 20px;
 }
 .field-container {
+  position: relative;
   &:nth-child(1),
   &:nth-child(2) {
     grid-column: span 3;
@@ -203,5 +201,11 @@ export default {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+@media (max-width: 768px) {
+  .registration-main {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>

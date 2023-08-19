@@ -2,12 +2,26 @@
   <form class="registration-form">
     <RegistrationMain @valid-all-main-fields="checkMainFields" />
     <Transition>
-      <div class="shipping" v-if="showAddressBlock">
+      <div class="address shipping" v-if="showAddressBlock">
+        <hr />
         <RegistrationAddress
           title="Shipping address"
           id="shipping"
           @valid-all-address-fields="checkAddressFields"
         />
+      </div>
+    </Transition>
+    <Transition>
+      <div class="address billing" v-if="showAddressBlock && !onlyShipping">
+        <RegistrationAddress
+          title="Billing address"
+          id="billing"
+          @valid-all-address-fields="checkAddressFields"
+        />
+      </div>
+    </Transition>
+    <Transition>
+      <div class="checkboxes" v-if="showAddressBlock">
         <BaseCheckbox
           id="check-def-shipping"
           name="def-shipping"
@@ -32,22 +46,22 @@
       </div>
     </Transition>
     <Transition>
-      <div class="billing" v-if="showAddressBlock && !onlyShipping">
-        <RegistrationAddress
-          title="Billing address"
-          id="billing"
-          @valid-all-address-fields="checkAddressFields"
-        />
-      </div>
-    </Transition>
-    <Transition>
       <BaseMessage alert="warning" v-if="showMessage">
         {{ invalidMessage }}
       </BaseMessage>
     </Transition>
     <Transition>
-      <BaseButton v-if="showAddressBlock" @click="registrationUser" size="large">Submit</BaseButton>
+      <BaseButton
+        class="btn-create-account"
+        v-if="showAddressBlock"
+        @click="registrationUser"
+      >Create account</BaseButton
+      >
     </Transition>
+    <p class="footnote">
+      Already have an account?
+      <router-link class="login-link" :to="{ name: LOGIN }"> Log in </router-link>
+    </p>
   </form>
 </template>
 
@@ -72,6 +86,7 @@ export default {
     BaseMessage,
   },
   data(): {
+    LOGIN: string;
     showAddressBlock: boolean;
     onlyShipping: boolean;
     bodyMain: UserSignUpMain;
@@ -82,6 +97,7 @@ export default {
     invalidMessage: string;
     } {
     return {
+      LOGIN: NamePages.Login,
       showAddressBlock: false,
       onlyShipping: true,
       bodyMain: {} as UserSignUpMain,
@@ -153,6 +169,22 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 34px;
+}
+.address {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.btn-create-account {
+  width: max-content;
+}
+.login-link {
+  color: var(--main-color);
 }
 .v-enter-active,
 .v-leave-active {
