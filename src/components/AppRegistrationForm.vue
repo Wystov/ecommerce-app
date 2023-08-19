@@ -1,64 +1,56 @@
 <template>
-  <section class="container">
-    <form>
-      <h1>Registration</h1>
-      <RegistrationMain @valid-all-main-fields="openAddressBlock" />
-      <Transition>
-        <div class="shipping" v-if="showAddressBlock">
-          <RegistrationAddress
-            title="Shipping address"
-            id="shipping"
-            @valid-all-address-fields="checkAddressFields"
-          />
-          <BaseCheckbox
-            id="check-def-shipping"
-            name="def-shipping"
-            label="Set default shipping address"
-            @change="() => (defaultAddresses.defaultShipping = !defaultAddresses.defaultShipping)"
-            :checked="defaultAddresses.defaultShipping"
-          />
-          <BaseCheckbox
-            id="check-def-billing"
-            name="def-billing"
-            label="Set default billing address"
-            @change="() => (defaultAddresses.defaultBilling = !defaultAddresses.defaultBilling)"
-            :checked="defaultAddresses.defaultBilling"
-          />
-          <BaseCheckbox
-            id="check-only-shipping"
-            name="only-shipping"
-            label="Use the shipping address as the billing address"
-            @change="() => (onlyShipping = !onlyShipping)"
-            :checked="onlyShipping"
-          />
-        </div>
-      </Transition>
-      <Transition>
-        <div class="billing" v-if="showAddressBlock && !onlyShipping">
-          <RegistrationAddress
-            title="Billing address"
-            id="billing"
-            @valid-all-address-fields="checkAddressFields"
-          />
-        </div>
-      </Transition>
-      <Transition>
-        <BaseMessage alert="warning" v-if="showMessage">
-          {{ invalidMessage }}
-        </BaseMessage>
-      </Transition>
-      <Transition>
-        <BaseButton
-          v-if="showAddressBlock"
-          @click="registrationUser"
-          size="large"
-        >Submit</BaseButton
-        >
-      </Transition>
-    </form>
-  </section>
+  <form class="registration-form">
+    <RegistrationMain @valid-all-main-fields="checkMainFields" />
+    <Transition>
+      <div class="shipping" v-if="showAddressBlock">
+        <RegistrationAddress
+          title="Shipping address"
+          id="shipping"
+          @valid-all-address-fields="checkAddressFields"
+        />
+        <BaseCheckbox
+          id="check-def-shipping"
+          name="def-shipping"
+          label="Set default shipping address"
+          @change="() => (defaultAddresses.defaultShipping = !defaultAddresses.defaultShipping)"
+          :checked="defaultAddresses.defaultShipping"
+        />
+        <BaseCheckbox
+          id="check-def-billing"
+          name="def-billing"
+          label="Set default billing address"
+          @change="() => (defaultAddresses.defaultBilling = !defaultAddresses.defaultBilling)"
+          :checked="defaultAddresses.defaultBilling"
+        />
+        <BaseCheckbox
+          id="check-only-shipping"
+          name="only-shipping"
+          label="Use the shipping address as the billing address"
+          @change="toggleOnlyShipping"
+          :checked="onlyShipping"
+        />
+      </div>
+    </Transition>
+    <Transition>
+      <div class="billing" v-if="showAddressBlock && !onlyShipping">
+        <RegistrationAddress
+          title="Billing address"
+          id="billing"
+          @valid-all-address-fields="checkAddressFields"
+        />
+      </div>
+    </Transition>
+    <Transition>
+      <BaseMessage alert="warning" v-if="showMessage">
+        {{ invalidMessage }}
+      </BaseMessage>
+    </Transition>
+    <Transition>
+      <BaseButton v-if="showAddressBlock" @click="registrationUser" size="large">Submit</BaseButton>
+    </Transition>
+  </form>
 </template>
--
+
 <script lang="ts">
 import RegistrationMain from '@/components/RegistrationMain.vue';
 import RegistrationAddress from '@/components/RegistrationAddress.vue';
@@ -100,20 +92,27 @@ export default {
         defaultBilling: true,
       },
       showMessage: false,
-      invalidMessage: '',
+      invalidMessage: 'Please fill in all fields correctly',
     };
   },
   methods: {
-    openAddressBlock(data: { valid: Boolean; response: UserSignUpMain }): void {
-      const { valid, response } = data;
-      if (valid) {
-        this.showMessage = false;
-        this.showAddressBlock = true;
-      }
+    toggleOnlyShipping(): void {
+      this.showMessage = false;
+      this.onlyShipping = !this.onlyShipping;
+    },
+    checkMainFields(data: {
+      valid: boolean;
+      response: UserSignUpMain;
+      nextStepClick: boolean;
+    }): void {
+      const { valid, response, nextStepClick } = data;
+      this.showMessage = false;
+      if (nextStepClick && valid) this.showAddressBlock = true;
+      if (nextStepClick && !valid) this.showMessage = true;
       this.bodyMain = response;
     },
     checkAddressFields(data: {
-      valid: Boolean;
+      valid: boolean;
       response: { fields: UserAddress; name: string };
     }): void {
       const {
@@ -144,13 +143,17 @@ export default {
         this.$router.push({ name: NamePages.Home });
       } else {
         this.showMessage = true;
-        this.invalidMessage = 'Please fill in all fields correctly';
       }
     },
   },
 };
 </script>
 <style scoped>
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.5s ease;

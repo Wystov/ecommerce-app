@@ -17,6 +17,11 @@
       </Transition>
     </div>
   </div>
+  <BaseButton v-if="showButton" @click="nextStep" class="btn-continue">Continue</BaseButton>
+  <p class="footnote">
+    Already have an account?
+    <router-link class="register-link" :to="{ name: LOGIN }"> Log in </router-link>
+  </p>
 </template>
 
 <script lang="ts">
@@ -25,20 +30,34 @@ import BaseInput from '@/components/shared/BaseInput.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import isOlder from '@/utils/isOlder';
 import api from '@/utils/api/client';
-import { InvalidMessage } from '@/types/enums';
+import { InvalidMessage, NamePages } from '@/types/enums';
 import type { RegistrationMainData } from '@/types/types';
 import toCamelCase from '@/utils/toCamelCase';
+import BaseButton from './shared/BaseButton.vue';
+
+interface MainFields {
+  valid: boolean;
+  response: {};
+}
 
 export default {
   emits: ['valid-all-main-fields'],
   components: {
     BaseInput,
     BaseMessage,
+    BaseButton,
   },
+  // eslint-disable-next-line max-lines-per-function
   data(): {
+    LOGIN: string;
+    showButton: boolean;
+    mainFields: MainFields;
     fields: RegistrationMainData[];
     } {
     return {
+      LOGIN: NamePages.Login,
+      showButton: true,
+      mainFields: {} as MainFields,
       fields: [
         {
           label: 'Email',
@@ -117,15 +136,45 @@ export default {
       if (this.fields.every((elem) => elem.value !== '' && elem.valid === 'valid')) {
         const body = this.fields.map((elem) => [toCamelCase(elem.label), elem.value]);
         const response = Object.fromEntries(body);
-        this.$emit('valid-all-main-fields', { valid: true, response });
+        this.mainFields = { valid: true, response };
       } else {
-        this.$emit('valid-all-main-fields', { valid: false, response: {} });
+        this.mainFields = { valid: false, response: {} };
       }
+      this.$emit('valid-all-main-fields', this.mainFields);
+    },
+
+    nextStep(): void {
+      if (this.mainFields.valid) {
+        this.showButton = false;
+      }
+      this.$emit('valid-all-main-fields', { ...this.mainFields, nextStepClick: true });
     },
   },
 };
 </script>
 <style scoped>
+.registration-main {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+}
+.field-container {
+  &:nth-child(1),
+  &:nth-child(2) {
+    grid-column: span 3;
+    grid-row: 1;
+  }
+  &:nth-child(3),
+  &:nth-child(4),
+  &:nth-child(5) {
+    grid-column: span 2;
+    grid-row: 2;
+  }
+}
+.btn-continue {
+  width: max-content;
+}
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.5s ease;
