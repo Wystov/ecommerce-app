@@ -38,7 +38,7 @@ export default {
 }
 .navigation-link {
   color: var(--main-font-color);
-  font-size: 24px;
+  font-size: 1.5rem;
   text-decoration: none;
   text-transform: uppercase;
   transition: 0.3s;
@@ -53,5 +53,11 @@ export default {
 }
 .router-link-exact-active {
   color: var(--main-color);
+}
+
+@media (max-width: 1000px) {
+  .navigation-link {
+    font-size: 1.1rem;
+  }
 }
 </style>
