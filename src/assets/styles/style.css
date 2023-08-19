@@ -39,6 +39,11 @@ h2 {
   line-height: normal;
 }
 
+.main-header {
+  font-size: 1.65rem;
+  font-weight: 600;
+}
+
 .container {
   padding: 0 3vw;
   margin-bottom: 2vh;
