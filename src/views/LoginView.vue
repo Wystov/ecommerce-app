@@ -1,7 +1,13 @@
-<template><h1 class="container">Login</h1></template>
+<template>
+  <AppLogin />
+</template>
 
 <script lang="ts">
+import AppLogin from '@/components/AppLoginForm.vue';
+
 export default {
-  components: {},
+  components: {
+    AppLogin,
+  },
 };
 </script>
