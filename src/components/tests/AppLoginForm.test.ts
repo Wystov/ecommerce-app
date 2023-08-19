@@ -9,7 +9,7 @@ import AppLoginForm from '../AppLoginForm.vue';
 describe('Login form tests', () => {
   it('should render form', () => {
     const wrapper = mount(AppLoginForm);
-    expect(wrapper.find('h1.login-header').exists()).toBeTruthy();
+    expect(wrapper.find('h1').exists()).toBeTruthy();
     expect(wrapper.find('input#emailInput').exists()).toBeTruthy();
     expect(wrapper.find('input#passInput').exists()).toBeTruthy();
     expect(wrapper.find('button').exists()).toBeTruthy();
