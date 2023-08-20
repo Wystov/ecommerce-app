@@ -1,6 +1,5 @@
 {
   "*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}": [
-    "npx prettier --write src/",
     "npx eslint --fix --ignore-path .gitignore",
     "npx vitest run src/"
   ]

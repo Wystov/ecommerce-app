@@ -1,6 +1,8 @@
 <template>
-  <h1 class="container">Account</h1>
-  <BaseButton @click="logOut" label="Log out" />
+  <div class="center">
+    <h1 class="container">Account</h1>
+    <BaseButton @click="logOut" label="Log out" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -25,3 +27,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.center {
+  display: grid;
+  place-items: center;
+  margin-top: 50px;
+  gap: 25px;
+}
+</style>
