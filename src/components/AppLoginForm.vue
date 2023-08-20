@@ -10,7 +10,9 @@
       class="custom-input-style"
       ref="emailInput"
     />
-    <BaseMessage v-if="emailValue === 'invalid'" alert="danger" :text="emailMessageText" />
+    <Transition>
+      <BaseMessage v-if="emailValue === 'invalid'" alert="danger" :text="emailMessageText" />
+    </Transition>
     <BaseInput
       :type="passInputType"
       name="password"
@@ -21,13 +23,17 @@
       :valid="passValue"
       ref="passInput"
     />
-    <BaseMessage v-if="passValue === 'invalid'" alert="danger" :text="passMessageText" />
+    <Transition>
+      <BaseMessage v-if="passValue === 'invalid'" alert="danger" :text="passMessageText" />
+    </Transition>
     <BaseButton label="Sign in" size="medium" @click="signIn" />
     <p>
       Don't have an account yet?
       <router-link class="register-link" :to="{ name: registration }"> Sign up </router-link>
     </p>
-    <BaseMessage v-if="wrongData" alert="danger" :text="wrongDataText" title="Ooops!" />
+    <Transition>
+      <BaseMessage v-if="wrongData" alert="danger" :text="wrongDataText" title="Ooops!" />
+    </Transition>
   </div>
 </template>
 
@@ -175,29 +181,32 @@ export default {
   padding: 1rem 3rem 2rem 3rem;
   gap: 19px;
 }
-
 .input-block {
   width: 100%;
   padding: 0;
 }
-
 .login-form :deep(.input-icon) {
   cursor: pointer;
 }
-
 .button {
   width: 100%;
   height: 3rem;
   border-radius: 10px;
   margin: 0.8rem 0;
 }
-
 .checkbox-block {
   align-self: flex-start;
 }
-
 .register-link {
   color: var(--main-color);
   cursor: pointer;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
