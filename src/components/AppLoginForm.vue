@@ -33,6 +33,8 @@
 
 <script lang="ts">
 import type { UserAuthOptions } from '@commercetools/sdk-client-v2';
+import { mapStores } from 'pinia';
+import { useUserStore } from '@/stores/user';
 import BaseInput from '@/components/shared/BaseInput.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
@@ -60,6 +62,7 @@ export default {
     };
   },
   computed: {
+    ...mapStores(useUserStore),
     dataForSignIn(): UserAuthOptions {
       const email = this.$refs.emailInput as BaseInputType;
       const pass = this.$refs.passInput as BaseInputType;
@@ -147,6 +150,7 @@ export default {
       const data = this.dataForSignIn;
       const response = await Api.signInCustomer(data);
       if (response.ok) {
+        this.userStore.loginUser();
         this.$router.push(PathPages.Home);
         return;
       }

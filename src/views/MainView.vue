@@ -40,10 +40,10 @@
         label="Log in"
       />
       <BaseButton
-        @click="$router.push({ name: logout })"
+        @click="$router.push({ name: signup })"
         size="large"
         class="button button-link"
-        label="Log out"
+        label="Sign up"
       />
     </div>
   </main>
@@ -58,7 +58,7 @@ export default {
   data(): Record<string, string> {
     return {
       login: NamePages.Login,
-      logout: NamePages.Logout,
+      signup: NamePages.Registration,
     };
   },
 };

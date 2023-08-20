@@ -56,6 +56,10 @@ class ApiClient {
       return authErrorHandler(error);
     }
   }
+
+  public signOut(): void {
+    this.api = this.newFlow();
+  }
 }
 
 const api = new ApiClient();
