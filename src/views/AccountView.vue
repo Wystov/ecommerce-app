@@ -1,9 +1,27 @@
 <template>
   <h1 class="container">Account</h1>
+  <BaseButton @click="logOut" label="Log out" />
 </template>
 
 <script lang="ts">
+import { mapStores } from 'pinia';
+import { useUserStore } from '@/stores/user';
+import BaseButton from '@/components/shared/BaseButton.vue';
+import { LocalStorageKeys } from '@/types/enums';
+import api from '@/utils/api/client';
+
 export default {
-  components: {},
+  components: { BaseButton },
+  computed: {
+    ...mapStores(useUserStore),
+  },
+  methods: {
+    logOut(): void {
+      localStorage.removeItem(LocalStorageKeys.Token);
+      api.signOut();
+      this.userStore.logoutUser();
+      this.$router.push({ name: 'Home' });
+    },
+  },
 };
 </script>
