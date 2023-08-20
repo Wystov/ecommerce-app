@@ -11,11 +11,14 @@
         :type="field.type"
         :id="'field-registration-' + field.label.toLowerCase()"
         max="9999-12-31"
+        @focusin="field.showMessage = true"
+        @focusout="field.showMessage = false"
       />
       <Transition>
         <BaseMessage
           absolute
-          v-if="field.invalidMessage && field.valid === 'invalid'"
+          arrow="top"
+          v-if="field.showMessage && field.valid === 'invalid'"
           alert="danger"
         >{{ field.invalidMessage }}</BaseMessage
         >
@@ -67,6 +70,7 @@ export default {
           placeholder: 'example@email.com',
           type: 'email',
           invalidMessage: InvalidMessage.Email,
+          showMessage: false,
         },
         {
           label: 'Password',
@@ -74,23 +78,27 @@ export default {
           placeholder: 'Example1',
           type: 'password',
           invalidMessage: InvalidMessage.Password,
+          showMessage: false,
         },
         {
           label: 'First Name',
           pattern: /^[a-zA-Z]+$/,
           placeholder: 'John',
           invalidMessage: InvalidMessage.FirstName,
+          showMessage: false,
         },
         {
           label: 'Last Name',
           pattern: /^[a-zA-Z]+$/,
           placeholder: 'Smith',
           invalidMessage: InvalidMessage.LastName,
+          showMessage: false,
         },
         {
           label: 'Date of birth',
           type: 'date',
           invalidMessage: InvalidMessage.Date,
+          showMessage: false,
         },
       ],
     };

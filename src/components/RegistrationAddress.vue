@@ -16,11 +16,14 @@
         @input="[checkValid($event, i), setValue($event, i)]"
         :valid="field.valid"
         :id="id + '-field-registration-' + field.label.toLowerCase()"
+        @focusin="field.showMessage = true"
+        @focusout="field.showMessage = false"
       />
       <Transition>
         <BaseMessage
           absolute
-          v-if="field.invalidMessage && field.valid === 'invalid'"
+          arrow="top"
+          v-if="field.showMessage && field.valid === 'invalid'"
           alert="danger"
         >
           {{ field.invalidMessage }}</BaseMessage
@@ -69,6 +72,7 @@ export default {
           placeholder: 'New York',
           value: '',
           invalidMessage: InvalidMessage.City,
+          showMessage: false,
         },
         {
           label: 'Street Name',
@@ -76,12 +80,14 @@ export default {
           placeholder: 'Wall Street',
           value: '',
           invalidMessage: InvalidMessage.Street,
+          showMessage: false,
         },
         {
           label: 'Postal Code',
           placeholder: '10001',
           value: '',
           invalidMessage: InvalidMessage.PostalCode,
+          showMessage: false,
         },
       ],
     };

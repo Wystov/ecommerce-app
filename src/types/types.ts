@@ -24,6 +24,7 @@ interface BaseMessageClasses {
   success: boolean;
   rounded: boolean;
   absolute: boolean;
+  arrowTop: boolean;
 }
 interface TokenResponse {
   refresh_token?: string;
@@ -111,6 +112,7 @@ interface RegistrationMainData {
   pattern?: RegExp;
   valid?: 'valid' | 'invalid' | '';
   invalidMessage?: string;
+  showMessage: boolean;
 }
 interface RegistrationAddressData {
   fields: {
@@ -121,6 +123,7 @@ interface RegistrationAddressData {
     pattern?: RegExp;
     valid?: 'valid' | 'invalid' | '';
     invalidMessage?: string;
+    showMessage: boolean;
   }[];
   countryField: {
     label: string;
