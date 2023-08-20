@@ -32,14 +32,35 @@
         </div>
       </div>
     </div>
+    <div class="links-list">
+      <BaseButton
+        @click="$router.push({ name: login })"
+        size="large"
+        class="button button-link"
+        label="Log in"
+      />
+      <BaseButton
+        @click="$router.push({ name: logout })"
+        size="large"
+        class="button button-link"
+        label="Log out"
+      />
+    </div>
   </main>
 </template>
 
 <script lang="ts">
 import BaseButton from '@/components/shared/BaseButton.vue';
+import { NamePages } from '@/types/enums';
 
 export default {
   components: { BaseButton },
+  data(): Record<string, string> {
+    return {
+      login: NamePages.Login,
+      logout: NamePages.Logout,
+    };
+  },
 };
 </script>
 
@@ -98,6 +119,26 @@ export default {
   right: 20px;
   top: 20px;
 }
+.links-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 3rem;
+}
+.button-link {
+  display: block;
+  padding: 15px 30px;
+  border: 2px solid var(--main-font-color);
+  border-radius: 10px;
+  color: var(--main-font-color);
+  font-size: 18px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.button-link:hover {
+  border: 2px solid var(--main-color);
+}
 @media (max-width: 1500px) {
   .title {
     font-size: 3rem;
@@ -141,12 +182,15 @@ export default {
   .hero-text-container {
     width: 100%;
   }
-  .button {
+  .button :not(.button-link) {
     font-size: 1.5rem;
   }
   .promo-image {
     top: auto;
     bottom: 20px;
+  }
+  .links-list {
+    margin-top: 1rem;
   }
 }
 </style>
