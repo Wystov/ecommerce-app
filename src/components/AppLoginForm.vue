@@ -167,7 +167,7 @@ export default {
   font-family: var(--main-font-style);
   color: var(--main-font-color);
   margin: 10% auto auto;
-  width: 420px;
+  max-width: 420px;
   padding: 1rem 3rem 2rem 3rem;
   gap: 19px;
 }

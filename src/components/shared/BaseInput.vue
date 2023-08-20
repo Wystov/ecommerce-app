@@ -86,6 +86,7 @@ export default {
   font-size: 1rem;
   height: fit-content;
   position: relative;
+  z-index: -1;
 }
 
 .input {

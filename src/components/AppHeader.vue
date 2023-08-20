@@ -1,42 +1,42 @@
 <template>
   <header class="header">
+    <transition name="slide">
+      <div v-if="isOpen" class="menu-block">
+        <AppBurgerMenu />
+      </div>
+    </transition>
     <div class="wrapper container-header">
       <RouterLink :to="{ name: 'Home' }">
-        <img :src="logoIcon" alt="logo" />
+        <img :src="logoIcon" alt="logo" class="logo" />
       </RouterLink>
-      <Push right width="390" :isOpen="isOpen" @closeMenu="isOpen = false">
-        <a id="home" href="#">
-          <span>Home</span>
-        </a>
-      </Push>
       <BaseNavigation />
       <div class="flex">
         <BaseAuthorization />
-        <img :src="dividerIcon" alt="" />
+        <img :src="dividerIcon" alt="" class="divider" />
         <RouterLink :to="{ name: 'Cart' }">
           <img class="cart-link" :src="cartIcon" alt="cart" />
         </RouterLink>
       </div>
-      <BaseBurger v-if="!isOpen" @click="openMenu" />
+      <BaseBurger @click="openMenu" :open="isOpen" />
     </div>
   </header>
 </template>
 
 <script lang="ts">
-import Push from 'vue3-burger-menu';
 import logoIcon from '@/assets/icons/logo.svg';
 import dividerIcon from '@/assets/icons/divider.svg';
 import cartIcon from '@/assets/icons/cart.svg';
 import BaseBurger from '@/components/shared/BaseBurger.vue';
 import BaseAuthorization from './BaseAuthorization.vue';
 import BaseNavigation from './BaseNavigation.vue';
+import AppBurgerMenu from './AppBurgerMenu.vue';
 
 export default {
   components: {
     BaseAuthorization,
     BaseNavigation,
     BaseBurger,
-    Push,
+    AppBurgerMenu,
   },
   data(): { logoIcon: string; dividerIcon: string; cartIcon: string; isOpen: boolean } {
     return {
@@ -49,7 +49,11 @@ export default {
   methods: {
     openMenu(): void {
       console.log(1);
-      this.isOpen = true;
+      if (this.isOpen === false) {
+        this.isOpen = true;
+        return;
+      }
+      this.isOpen = false;
     },
   },
 };
@@ -84,6 +88,15 @@ export default {
   display: none;
 }
 
+.slide-enter-active,
+.slide-leave-active {
+  transform: translateY(0%);
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateY(-100%);
+}
+
 @media (max-width: 900px) {
   .container-header {
     grid-template-columns: auto 1fr auto;
@@ -97,6 +110,16 @@ export default {
   }
   .header :deep(.burger) {
     display: flex;
+  }
+}
+
+@media (max-width: 600px) {
+  .authorization-list,
+  .divider {
+    display: none;
+  }
+  .logo {
+    width: 120px;
   }
 }
 </style>

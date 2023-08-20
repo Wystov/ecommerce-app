@@ -1,39 +1,45 @@
 <template>
-  <div v-if="!open" class="burger">
-    <div class="burger-line" />
-    <div class="burger-line" />
-    <div class="burger-line" />
-  </div>
-  <div v-if="open" class="burger-closed">
-    <div class="close-line" />
-    <div class="close-line" />
+  <div :class="getBurgerClass">
+    <div :class="getBarClass" />
+    <div v-if="!open" class="burger-line" />
+    <div :class="getBarClass" />
   </div>
 </template>
 
 <script lang="ts">
 export default {
-  emits: ['click'],
   props: {
     open: {
       type: Boolean,
       default: false,
     },
   },
+  computed: {
+    getBurgerClass(): string {
+      return this.open ? 'burger-closed' : 'burger';
+    },
+    getBarClass(): string {
+      return this.open ? 'close-line' : 'burger-line';
+    },
+  },
 };
 </script>
 
 <style scoped>
-.burger {
-  display: flex;
+.burger,
+.burger-closed {
   cursor: pointer;
-  flex-direction: column;
-  justify-content: space-between;
   position: relative;
   margin: 0 0.5rem;
   width: 30px;
-  height: 22px;
   z-index: 5;
   transition: 0.3s;
+}
+.burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 22px;
 }
 .burger-line {
   display: block;
@@ -44,11 +50,8 @@ export default {
 
 .burger-closed {
   display: block;
-  cursor: pointer;
-  position: relative;
-  width: 30px;
   height: 30px;
-  z-index: 5;
+  top: 5%;
 }
 
 .close-line {
