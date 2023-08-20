@@ -28,6 +28,10 @@ export default {
 <style scoped>
 .burger,
 .burger-closed {
+  display: none;
+}
+.burger,
+.burger-closed {
   cursor: pointer;
   position: relative;
   margin: 0 0.5rem;
@@ -36,7 +40,6 @@ export default {
   transition: 0.3s;
 }
 .burger {
-  display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 22px;
@@ -49,7 +52,6 @@ export default {
 }
 
 .burger-closed {
-  display: block;
   height: 30px;
   top: 5%;
 }
@@ -68,5 +70,13 @@ export default {
 
 .close-line:last-child {
   transform: translateY(400%) rotate(-45deg);
+}
+@media (max-width: 900px) {
+  .burger {
+    display: flex;
+  }
+  .burger-closed {
+    display: block;
+  }
 }
 </style>

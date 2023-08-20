@@ -33,18 +33,18 @@ export default {
 
 <style scoped>
 .menu {
+  display: none;
   position: absolute;
-  padding: 30px 0 0 30px;
   right: 0;
   background-color: #ffffff;
-  width: 390px;
+  width: 400px;
   height: 100vh;
-  z-index: 2;
 }
 .menu-list {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin: 30px 0 0 30px;
   gap: 25px;
 }
 .menu-link {
@@ -64,5 +64,15 @@ export default {
 }
 .router-link-exact-active {
   color: var(--main-color);
+}
+@media (max-width: 900px) {
+  .menu {
+    display: block;
+  }
+}
+@media (max-width: 400px) {
+  .menu {
+    width: 100vw;
+  }
 }
 </style>

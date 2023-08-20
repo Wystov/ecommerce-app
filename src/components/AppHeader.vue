@@ -66,6 +66,7 @@ export default {
   height: 100px;
   background: #ffffff;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }
 .container-header {
   height: 100%;
