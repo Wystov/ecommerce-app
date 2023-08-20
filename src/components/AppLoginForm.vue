@@ -177,20 +177,7 @@ export default {
   padding: 0;
 }
 
-.login-form :deep(.input) {
-  height: 2.2rem;
-  border-radius: 10px;
-  padding: 0.1rem 1.2rem;
-}
-
-.login-form :deep(.input::placeholder) {
-  font-size: 1.1rem;
-}
-
 .login-form :deep(.input-icon) {
-  height: 1.4rem;
-  bottom: 1.3rem;
-  right: 1rem;
   cursor: pointer;
 }
 

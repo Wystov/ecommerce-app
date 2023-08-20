@@ -16,6 +16,7 @@
       }"
       :disabled="disabled"
       ref="input"
+      :max="max"
     />
     <EyeIcon v-if="hidePass === 'show'" class="input-icon" />
     <EyeSlashIcon v-if="hidePass === 'hide'" class="input-icon" />
@@ -41,13 +42,13 @@ export default {
       type: String,
       default: '',
     },
-    type: {
-      type: String,
-      default: 'text',
-    },
     id: {
       type: String,
       required: true,
+    },
+    type: {
+      type: String,
+      default: 'text',
     },
     isDark: {
       type: Boolean,
@@ -73,6 +74,10 @@ export default {
       type: String,
       default: '',
     },
+    max: {
+      type: String,
+      default: '',
+    },
   },
 };
 </script>
@@ -91,19 +96,22 @@ export default {
 .input {
   background: transparent;
   border: 1.5px solid var(--main-color-outline);
-  border-radius: 3px;
   font-size: 1rem;
-  padding: 0.1rem 0.3rem;
   outline: none;
+  height: 2.2rem;
+  border-radius: 10px;
+  padding: 0.1rem 1.2rem;
 }
 
 .label {
   color: var(--main-font-color);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .input::placeholder {
   color: var(--placeholder-font-color);
-  font-size: 0.8rem;
+  font-size: 1.1rem;
 }
 
 .valid-focus-decorator {
@@ -130,10 +138,10 @@ export default {
 
 .input-icon {
   position: absolute;
-  bottom: 0.8rem;
-  right: 0.3rem;
+  bottom: 1.3rem;
+  right: 1rem;
   transform: translateY(50%);
   fill: #5e5163;
-  height: 1em;
+  height: 1.4rem;
 }
 </style>
