@@ -1,5 +1,5 @@
 <template>
-  <form class="registration-form">
+  <form v-if="!showSuccessMessage" class="registration-form">
     <RegistrationMain @valid-all-main-fields="checkMainFields" />
     <Transition>
       <div class="address shipping" v-if="showAddressBlock">
@@ -63,6 +63,13 @@
       <router-link class="login-link" :to="{ name: LOGIN }"> Log in </router-link>
     </p>
   </form>
+  <BaseMessage
+    class="success-message-container"
+    v-if="showSuccessMessage"
+    :alert="createCustomerMessage.alert"
+  ><div v-if="loading" class="spinner" />
+    <p class="success-message">{{ createCustomerMessage.text }}</p>
+  </BaseMessage>
 </template>
 
 <script lang="ts">
@@ -97,6 +104,9 @@ export default {
     defaultAddresses: DefaultAddressProps;
     showMessage: boolean;
     invalidMessage: string;
+    showSuccessMessage: boolean;
+    loading: boolean;
+    createCustomerMessage: { text: string; alert: string };
     } {
     return {
       LOGIN: NamePages.Login,
@@ -111,6 +121,9 @@ export default {
       },
       showMessage: false,
       invalidMessage: 'Please fill in all fields correctly',
+      showSuccessMessage: false,
+      loading: false,
+      createCustomerMessage: { text: '', alert: 'success' },
     };
   },
   computed: {
@@ -121,6 +134,7 @@ export default {
       this.showMessage = false;
       this.onlyShipping = !this.onlyShipping;
     },
+
     checkMainFields(data: {
       valid: boolean;
       response: UserSignUpMain;
@@ -132,6 +146,7 @@ export default {
       if (nextStepClick && !valid) this.showMessage = true;
       this.bodyMain = response;
     },
+
     checkAddressFields(data: {
       valid: boolean;
       response: { fields: UserAddress; name: string };
@@ -145,10 +160,11 @@ export default {
       if (name === 'shipping') bodyAddresses[0] = fields;
       if (name === 'billing') bodyAddresses[1] = fields;
     },
+
     async registrationUser(): Promise<void> {
-      const {
-        bodyMain, bodyAddresses, defaultAddresses, onlyShipping,
-      } = this;
+      this.showSuccessMessage = true;
+      this.loading = true;
+      const { bodyMain, bodyAddresses, onlyShipping } = this;
       if (bodyMain) {
         this.bodyRequest = {
           ...bodyMain,
@@ -159,15 +175,33 @@ export default {
         this.bodyAddresses[1] = { ...this.bodyAddresses[0] };
       }
       if ('email' in this.bodyRequest && bodyAddresses.every((address) => 'city' in address)) {
-        this.showMessage = false;
-        await api.createCustomer(this.bodyRequest, defaultAddresses);
-        const { email, password } = this.bodyRequest;
-        await api.signInCustomer({ username: email, password });
-        this.userStore.loginUser();
-        this.$router.push(PathPages.Home);
+        await this.createCustomer();
       } else {
         this.showMessage = true;
       }
+    },
+
+    async createCustomer(): Promise<void> {
+      this.showMessage = false;
+      const createCustomer = await api.createCustomer(this.bodyRequest, this.defaultAddresses);
+      if (createCustomer.ok) {
+        await this.signInUser();
+        this.loading = false;
+        this.createCustomerMessage.text = `Registration completed successfully!
+         Redirect to home page after a few seconds...`;
+        setTimeout(() => {
+          this.$router.push(PathPages.Home);
+        }, 4000);
+      } else {
+        this.createCustomerMessage.alert = 'danger';
+        this.createCustomerMessage.text = `Oops... ${createCustomer.message}`;
+      }
+    },
+
+    async signInUser(): Promise<void> {
+      const { email, password } = this.bodyRequest;
+      await api.signInCustomer({ username: email, password });
+      this.userStore.loginUser();
     },
   },
 };
@@ -193,6 +227,20 @@ export default {
 }
 .login-link {
   color: var(--main-color);
+}
+.loading {
+  display: flex;
+  justify-content: center;
+}
+.success-message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 280px;
+  margin: 0 auto;
+}
+.success-message {
+  font-size: 22px;
 }
 .v-enter-active,
 .v-leave-active {
