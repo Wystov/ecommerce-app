@@ -2,6 +2,7 @@ import {
   describe, it, expect, vi,
 } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { setActivePinia, createPinia } from 'pinia';
 import { type BaseInputProps } from '@/types/types';
 import Api from '@/utils/api/client';
 import AppLoginForm from '../AppLoginForm.vue';
@@ -113,6 +114,7 @@ describe('Show password method', () => {
 
 describe('Sing in function succeeded', () => {
   it('should redirect to main page if sign in is successful', async () => {
+    setActivePinia(createPinia());
     const signInCustomerMock = vi.fn().mockResolvedValue({ ok: true });
     Api.signInCustomer = signInCustomerMock;
     const pushMock = vi.fn();
