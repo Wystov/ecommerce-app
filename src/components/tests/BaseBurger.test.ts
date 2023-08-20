@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { NamePages } from '@/types/enums';
 import BaseBurger from '../shared/BaseBurger.vue';
 
 describe('Base burger logo tests', () => {

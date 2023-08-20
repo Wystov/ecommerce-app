@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     openMenu(): void {
-      console.log(1);
       if (this.isOpen === false) {
         this.isOpen = true;
         return;
