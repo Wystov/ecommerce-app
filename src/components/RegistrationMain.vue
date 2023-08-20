@@ -130,6 +130,7 @@ export default {
       this.hidePass = 'show';
       field.type = 'password';
     },
+
     debounceEmail: _.debounce(
       (email: string, fieldEmail: RegistrationMainData) => {
         const field = fieldEmail;
@@ -147,6 +148,13 @@ export default {
       { leading: true },
     ),
 
+    setValue(e: Event, i: number): void {
+      const input = e.target as HTMLInputElement;
+      const field = this.fields[i];
+
+      field.value = input.value.trim();
+    },
+
     checkValid(i: number): void {
       const field = this.fields[i];
 
@@ -161,13 +169,6 @@ export default {
         const date = field.value;
         field.valid = isOlder(date, 13) ? 'valid' : 'invalid';
       }
-    },
-
-    setValue(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-
-      field.value = input.value.trim();
     },
 
     readyData(): void {

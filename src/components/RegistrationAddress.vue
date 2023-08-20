@@ -13,7 +13,7 @@
       <BaseInput
         :label="field.label.replace('Name', '')"
         :name="field.placeholder"
-        @input="[checkValid($event, i), setValue($event, i)]"
+        @input="handleInput($event, i)"
         :valid="field.valid"
         :id="id + '-field-registration-' + field.label.toLowerCase()"
         @focusin="field.showMessage = true"
@@ -93,6 +93,12 @@ export default {
     };
   },
   methods: {
+    handleInput(event: Event, index: number): void {
+      this.setValue(event, index);
+      this.checkValid(index);
+      this.readyData();
+    },
+
     selectCountry(value: string): void {
       this.countryField.value = value;
       const field = this.fields.find((elem) => elem.label === 'Postal Code');
@@ -106,24 +112,28 @@ export default {
           ?.placeholder;
       }
     },
-    checkValid(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
 
-      if (input !== null && field.pattern) {
-        field.valid = field.pattern.test(input.value) ? 'valid' : 'invalid';
-      }
-      if (input !== null && field.label === 'Postal Code') {
-        const postCode = input.value;
-        field.valid = postcodeValidator(postCode, this.countryField.value) ? 'valid' : 'invalid';
-        field.value = input.value;
-      }
-    },
     setValue(e: Event, i: number): void {
       const input = e.target as HTMLInputElement;
       const field = this.fields[i];
 
-      if (input !== null) field.value = input.value;
+      field.value = input.value.trim();
+    },
+
+    checkValid(i: number): void {
+      const field = this.fields[i];
+
+      if (field.value && field.pattern) {
+        const inputText = field.value;
+        field.valid = field.pattern.test(inputText) ? 'valid' : 'invalid';
+      }
+      if (field.value && field.label === 'Postal Code') {
+        const postCode = field.value;
+        field.valid = postcodeValidator(postCode, this.countryField.value) ? 'valid' : 'invalid';
+      }
+    },
+
+    readyData(): void {
       const fields = [...this.fields, this.countryField];
       const isAllFieldsValid = fields.every(
         (fieldItem) => fieldItem.value !== '' && fieldItem.valid === 'valid',
