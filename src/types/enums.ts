@@ -2,10 +2,12 @@ enum NamePages {
   Home = 'Home',
   AboutUs = 'About us',
   Catalog = 'Catalog',
-  Login = 'Login',
-  Logout = 'Logout',
-  Registration = 'Registration',
+  Login = 'Log in',
+  Logout = 'Log out',
+  Registration = 'Sign Up',
   NotFound = 'Not found',
+  Account = 'Account',
+  Cart = 'Cart',
 }
 
 const enum PathPages {
@@ -16,6 +18,8 @@ const enum PathPages {
   Logout = '/',
   Registration = '/registration',
   NotFound = '/:pathMatch(.*)*',
+  Account = '/account',
+  Cart = '/cart',
 }
 
 const enum LocalStorageKeys {

@@ -51,8 +51,8 @@ export default {
 }
 
 .size-large {
-  font-size: 24px;
-  padding: 20px 36px;
+  font-size: 30px;
+  padding: 15px 30px;
 }
 
 .size-medium {

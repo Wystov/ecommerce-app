@@ -31,14 +31,12 @@ interface TokenResponse {
 }
 interface AuthorizationList {
   name: NamePages;
-  authorization: Boolean;
-  icon: {};
+  authorization: boolean;
+  class?: string;
+  icon?: {};
 }
 interface DataAuthorization {
   authorizationList: AuthorizationList[];
-}
-interface DataNavigation {
-  navigation: NamePages[];
 }
 interface UserAddress {
   country: 'US' | 'GB';
@@ -139,7 +137,6 @@ export type {
   BaseMessageClasses,
   AuthorizationList,
   DataAuthorization,
-  DataNavigation,
   TokenResponse,
   UserSignUp,
   UserAddress,

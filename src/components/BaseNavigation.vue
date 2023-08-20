@@ -1,36 +1,63 @@
 <template>
-  <div class="navigation">
+  <nav class="navigation">
     <ul class="navigation-list">
-      <li class="navigation-link" v-for="(page, i) in navigation" :key="i">
-        <BaseButton dark rounded @click="$router.push({ name: page })">{{ page }}</BaseButton>
-      </li>
+      <template v-for="(page, i) in navigation" :key="i">
+        <li class="navigation-item">
+          <RouterLink :to="{ name: page }" class="navigation-link">
+            {{ page }}
+          </RouterLink>
+        </li>
+        <li class="decoration-item" v-if="i < navigation.length - 1">
+          <img :src="decoration" class="decoration-svg" alt="decoration" />
+        </li>
+      </template>
     </ul>
-  </div>
+  </nav>
 </template>
+
 <script lang="ts">
+import decoration from '@/assets/icons/round.svg';
 import { NamePages } from '@/types/enums';
-import { type DataNavigation } from '@/types/types';
-import BaseButton from '@/components/shared/BaseButton.vue';
 
 export default {
-  components: {
-    BaseButton,
-  },
-  data(): DataNavigation {
-    const { Home, AboutUs, Catalog } = NamePages;
-    return { navigation: [Home, AboutUs, Catalog] };
+  data(): { navigation: NamePages[]; decoration: string } {
+    const { Home, Catalog, AboutUs } = NamePages;
+    return { navigation: [Home, Catalog, AboutUs], decoration };
   },
 };
 </script>
+
 <style scoped>
 .navigation {
-  display: flex;
+  justify-self: center;
 }
 .navigation-list {
   display: flex;
-  gap: 0.2em;
+  align-items: center;
+  gap: 25px;
 }
 .navigation-link {
-  display: flex;
+  color: var(--main-font-color);
+  font-size: 1.5rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: 0.3s;
+
+  &:hover {
+    color: var(--main-color);
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+.router-link-exact-active {
+  color: var(--main-color);
+}
+
+@media (max-width: 1000px) {
+  .navigation-link {
+    font-size: 1.1rem;
+  }
 }
 </style>

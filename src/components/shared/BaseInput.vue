@@ -90,7 +90,6 @@ export default {
   gap: 0.5rem;
   font-size: 1rem;
   height: fit-content;
-  position: relative;
 }
 
 .input {

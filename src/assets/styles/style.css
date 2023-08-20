@@ -10,6 +10,7 @@
   --dark-theme-font-color: #f7f0fb;
   --main-font-style: sans-serif;
   --placeholder-font-color: #160a3d55;
+  --secondary-color: #f6b82f;
 }
 
 * {
@@ -61,4 +62,17 @@ hr {
 .container {
   padding: 0 3vw;
   margin: 0 auto;
+}
+
+.wrapper {
+  margin: auto;
+  max-width: 1680px;
+  padding: 0 20px;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: center;
 }

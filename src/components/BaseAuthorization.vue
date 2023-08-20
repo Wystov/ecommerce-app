@@ -1,52 +1,41 @@
 <template>
   <div class="authorization-list">
-    <BaseButton
+    <RouterLink
       v-for="(link, i) in updateAuthorizationList"
       :key="i"
-      @click="$router.push({ name: link.name })"
+      :class="link.class"
+      :to="{ name: link.name }"
     >
-      <component :is="link.icon" class="icon" />
-      {{ link.name }}
-    </BaseButton>
+      <template v-if="link.name !== 'Account'">{{ link.name }}</template>
+    </RouterLink>
   </div>
 </template>
+
 <script lang="ts">
-import {
-  ArrowLeftOnRectangleIcon,
-  ArrowRightOnRectangleIcon,
-  UserPlusIcon,
-} from '@heroicons/vue/20/solid';
 import { mapStores } from 'pinia';
 import type { DataAuthorization, AuthorizationList } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 import { NamePages } from '@/types/enums';
-import BaseButton from './shared/BaseButton.vue';
 
 export default {
-  components: {
-    ArrowLeftOnRectangleIcon,
-    ArrowRightOnRectangleIcon,
-    UserPlusIcon,
-    BaseButton,
-  },
   data(): DataAuthorization {
-    const { Login, Registration, Logout } = NamePages;
+    const { Login, Registration, Account } = NamePages;
     return {
       authorizationList: [
         {
-          name: Login,
-          authorization: false,
-          icon: ArrowLeftOnRectangleIcon,
-        },
-        {
           name: Registration,
           authorization: false,
-          icon: UserPlusIcon,
+          class: 'signup-link',
         },
         {
-          name: Logout,
+          name: Login,
+          authorization: false,
+          class: 'login-link',
+        },
+        {
+          name: Account,
           authorization: true,
-          icon: ArrowRightOnRectangleIcon,
+          class: 'account-link',
         },
       ],
     };
@@ -55,7 +44,7 @@ export default {
     ...mapStores(useUserStore),
     updateAuthorizationList(): AuthorizationList[] {
       return this.authorizationList.filter(
-        (link) => this.userStore.authorized === link.authorization
+        (link) => this.userStore.authorized === link.authorization,
       );
     },
   },
@@ -64,9 +53,50 @@ export default {
 <style scoped>
 .authorization-list {
   display: flex;
-  gap: 0.2em;
+  align-items: center;
+  gap: 15px;
 }
 .icon {
   height: 1em;
+}
+.signup-link {
+  color: var(--main-color);
+  font-size: 18px;
+  text-decoration: none;
+  transition: 0.3s;
+
+  &:hover {
+    color: var(--main-font-color);
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+.login-link {
+  display: block;
+  padding: 15px 30px;
+  border: 2px solid var(--main-font-color);
+  border-radius: 10px;
+  color: var(--main-font-color);
+  font-size: 18px;
+  text-decoration: none;
+  transition: 0.3s;
+
+  &:hover {
+    color: white;
+    background-color: var(--main-color);
+    border: 2px solid var(--main-color);
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+.account-link {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background: url(@/assets/icons/account.svg) no-repeat;
 }
 </style>
