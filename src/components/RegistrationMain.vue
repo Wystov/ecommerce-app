@@ -131,23 +131,6 @@ export default {
       field.type = 'password';
     },
 
-    debounceEmail: _.debounce(
-      (email: string, fieldEmail: RegistrationMainData) => {
-        const field = fieldEmail;
-        api.isEmailAvailable(email).then((response) => {
-          if (!response.ok) {
-            field.valid = 'invalid';
-            field.invalidMessage = response.message;
-          } else {
-            field.invalidMessage = InvalidMessage.Email;
-            field.valid = 'valid';
-          }
-        });
-      },
-      1000,
-      { leading: true },
-    ),
-
     setValue(e: Event, i: number): void {
       const input = e.target as HTMLInputElement;
       const field = this.fields[i];
@@ -158,18 +141,37 @@ export default {
     checkValid(i: number): void {
       const field = this.fields[i];
 
-      if (field.value && field.label === 'Email') {
-        const email = field.value;
-        this.debounceEmail(email, field);
-      }
       if (field.value && field.pattern) {
         field.valid = field.pattern.test(field.value) ? 'valid' : 'invalid';
       }
+
+      if (field.value && field.label === 'Email') {
+        const email = field.value;
+        if (field.valid === 'valid') this.debounceEmail(email, field);
+        if (field.valid === 'invalid') field.invalidMessage = InvalidMessage.Email;
+      }
+
       if (field.value && field.type === 'date') {
         const date = field.value;
         field.valid = isOlder(date, 13) ? 'valid' : 'invalid';
       }
     },
+
+    debounceEmail: _.debounce(
+      (email: string, fieldEmail: RegistrationMainData) => {
+        const field = fieldEmail;
+        api.isEmailAvailable(email).then((response) => {
+          if (!response.ok) {
+            field.valid = 'invalid';
+            field.invalidMessage = response.message;
+          } else {
+            field.invalidMessage = InvalidMessage.Email;
+          }
+        });
+      },
+      1000,
+      { leading: true },
+    ),
 
     readyData(): void {
       if (this.fields.every((elem) => elem.value !== '' && elem.valid === 'valid')) {
