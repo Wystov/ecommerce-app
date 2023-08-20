@@ -2,7 +2,7 @@
   <header class="header">
     <transition name="slide">
       <div v-if="isOpen" class="menu-block">
-        <AppBurgerMenu />
+        <AppBurgerMenu :openMenu="openMenu" />
       </div>
     </transition>
     <div class="wrapper container-header">
