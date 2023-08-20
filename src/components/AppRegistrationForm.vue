@@ -66,13 +66,15 @@
 </template>
 
 <script lang="ts">
+import { mapStores } from 'pinia';
+import { useUserStore } from '@/stores/user';
 import RegistrationMain from '@/components/RegistrationMain.vue';
 import RegistrationAddress from '@/components/RegistrationAddress.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import api from '@/utils/api/client';
-import { NamePages } from '@/types/enums';
+import { NamePages, PathPages } from '@/types/enums';
 import type {
   UserSignUp, UserAddress, DefaultAddressProps, UserSignUpMain,
 } from '../types/types';
@@ -111,6 +113,9 @@ export default {
       invalidMessage: 'Please fill in all fields correctly',
     };
   },
+  computed: {
+    ...mapStores(useUserStore),
+  },
   methods: {
     toggleOnlyShipping(): void {
       this.showMessage = false;
@@ -140,7 +145,7 @@ export default {
       if (name === 'shipping') bodyAddresses[0] = fields;
       if (name === 'billing') bodyAddresses[1] = fields;
     },
-    registrationUser(): void {
+    async registrationUser(): Promise<void> {
       const {
         bodyMain, bodyAddresses, defaultAddresses, onlyShipping,
       } = this;
@@ -155,8 +160,11 @@ export default {
       }
       if ('email' in this.bodyRequest && bodyAddresses.every((address) => 'city' in address)) {
         this.showMessage = false;
-        api.createCustomer(this.bodyRequest, defaultAddresses);
-        this.$router.push({ name: NamePages.Home });
+        await api.createCustomer(this.bodyRequest, defaultAddresses);
+        const { email, password } = this.bodyRequest;
+        await api.signInCustomer({ username: email, password });
+        this.userStore.loginUser();
+        this.$router.push(PathPages.Home);
       } else {
         this.showMessage = true;
       }
