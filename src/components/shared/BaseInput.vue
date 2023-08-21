@@ -86,6 +86,7 @@ export default {
 .input-block {
   display: flex;
   flex-direction: column;
+  position: relative;
   font-family: var(--main-font-style);
   gap: 0.5rem;
   font-size: 1rem;

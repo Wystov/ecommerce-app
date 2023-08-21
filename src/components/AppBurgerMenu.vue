@@ -2,7 +2,7 @@
   <nav class="menu">
     <ul class="menu-list">
       <div v-for="(name, i) in navigation" :key="i">
-        <li class="menu-item">
+        <li class="menu-item" @click="openMenu()" @keydown="openMenu()">
           <RouterLink :to="{ name: name }" class="menu-link">
             {{ name }}
           </RouterLink>
@@ -20,6 +20,10 @@ export default {
     open: {
       type: Boolean,
       default: false,
+    },
+    openMenu: {
+      type: Function,
+      required: true,
     },
   },
   data(): { navigation: NamePages[] } {

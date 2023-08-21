@@ -1,10 +1,10 @@
 <template>
   <header class="header">
-    <transition name="slide">
+    <Transition name="slide">
       <div v-if="isOpen" class="menu-block">
-        <AppBurgerMenu />
+        <AppBurgerMenu :openMenu="openMenu" />
       </div>
-    </transition>
+    </Transition>
     <div class="wrapper container-header">
       <RouterLink :to="{ name: 'Home' }">
         <img :src="logoIcon" alt="logo" class="logo" />
@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     openMenu(): void {
-      console.log(1);
       if (this.isOpen === false) {
         this.isOpen = true;
         return;
@@ -87,6 +86,9 @@ export default {
 }
 .header :deep(.burger) {
   display: none;
+}
+.menu-block {
+  transition: transform 0.5s;
 }
 
 .slide-enter-active,
