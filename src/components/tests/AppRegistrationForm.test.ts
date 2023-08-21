@@ -1,10 +1,16 @@
-import { mount } from '@vue/test-utils';
+import { mount, RouterLinkStub } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { it, expect } from 'vitest';
 import AppRegistrationForm from '@/components/AppRegistrationForm.vue';
 import RegistrationMain from '@/components/RegistrationMain.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import type { UserAddress } from '@/types/types';
+
+const global = {
+  components: {
+    RouterLink: RouterLinkStub,
+  },
+};
 
 const validFields: UserAddress = {
   country: 'US',
@@ -14,12 +20,12 @@ const validFields: UserAddress = {
 };
 
 it('renders correctly', () => {
-  const wrapper = mount(AppRegistrationForm);
+  const wrapper = mount(AppRegistrationForm, { global });
   expect(wrapper.exists()).toBe(true);
 });
 
 it('show invalid message after click on button Continue', async () => {
-  const wrapper = mount(AppRegistrationForm);
+  const wrapper = mount(AppRegistrationForm, { global });
   const registration = wrapper.findComponent(RegistrationMain);
 
   await registration.vm.$emit('valid-all-main-fields', {
@@ -33,7 +39,7 @@ it('show invalid message after click on button Continue', async () => {
 });
 
 it('displays address blocks after main fields are valid', async () => {
-  const wrapper = mount(AppRegistrationForm);
+  const wrapper = mount(AppRegistrationForm, { global });
   const registration = wrapper.findComponent(RegistrationMain);
   const response = {
     fields: validFields,
@@ -56,7 +62,7 @@ it('displays address blocks after main fields are valid', async () => {
 });
 
 it('updates bodyAddresses and showMessage when address fields are checked', () => {
-  const wrapper = mount(AppRegistrationForm);
+  const wrapper = mount(AppRegistrationForm, { global });
   const registrationForm = wrapper.vm;
 
   expect(registrationForm.bodyAddresses).toEqual([{}, {}]);
