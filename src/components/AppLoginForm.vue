@@ -7,6 +7,7 @@
       id="emailInput"
       @input="emailValidation"
       @change="emailValidation"
+      @keydown.enter="blurInput"
       :valid="emailValue"
       class="custom-input-style"
       ref="emailInput"
@@ -22,6 +23,7 @@
       @input="passwordValidation"
       @change="passwordValidation"
       @click="showPassword"
+      @keydown.enter="blurInput"
       :valid="passValue"
       ref="passInput"
     />
@@ -166,6 +168,13 @@ export default {
         this.wrongDataText = response.message;
       }
       this.wrongData = true;
+    },
+    blurInput(event: KeyboardEvent): void {
+      console.log('event type:', event.target);
+      if (event.key === 'Enter' && event.target instanceof HTMLInputElement) {
+        event.target.blur();
+        this.signIn();
+      }
     },
   },
 };
