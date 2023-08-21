@@ -88,8 +88,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const { authorized } = useUserStore();
-  const isNeedRedirect = authorized
-  && (to.name === Login || to.name === Registration);
+  const isNeedRedirect = (authorized && (to.name === Login || to.name === Registration))
+  || (!authorized && to.name === Account);
+
   if (isNeedRedirect) {
     next(PathPages.Home);
   } else {

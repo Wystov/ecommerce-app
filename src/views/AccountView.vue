@@ -25,6 +25,13 @@ export default {
       this.$router.push({ name: 'Home' });
     },
   },
+  created(): void {
+    if (this.userStore.fetching) {
+      this.$watch(() => this.userStore.fetching, () => {
+        if (this.userStore.authorized) this.$router.push({ name: 'Home' });
+      });
+    }
+  },
 };
 </script>
 

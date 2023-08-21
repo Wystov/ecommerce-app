@@ -33,18 +33,13 @@
       </div>
     </div>
     <div class="links-list">
-      <BaseButton
-        @click="$router.push({ name: login })"
-        size="large"
+      <RouterLink
+        v-for="link, i in sitemap"
+        :to="{ name: link }"
         class="button button-link"
-        label="Log in"
-      />
-      <BaseButton
-        @click="$router.push({ name: signup })"
-        size="large"
-        class="button button-link"
-        label="Sign up"
-      />
+        v-bind:key="i">
+        {{ link }}
+      </RouterLink>
     </div>
   </main>
 </template>
@@ -55,10 +50,14 @@ import { NamePages } from '@/types/enums';
 
 export default {
   components: { BaseButton },
-  data(): Record<string, string> {
+  data(): { sitemap: Record<string, string> } {
     return {
-      login: NamePages.Login,
-      signup: NamePages.Registration,
+      sitemap: {
+        login: NamePages.Login,
+        signup: NamePages.Registration,
+        account: NamePages.Account,
+      },
+
     };
   },
 };
