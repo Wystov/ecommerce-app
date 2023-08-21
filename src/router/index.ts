@@ -8,9 +8,10 @@ import NotFoundView from '@/views/NotFoundView.vue';
 import CartView from '@/views/CartView.vue';
 import { NamePages, PathPages } from '@/types/enums';
 import AccountView from '@/views/AccountView.vue';
+import { useUserStore } from '@/stores/user';
 
 const {
-  Home, AboutUs, Catalog, Login, Logout, Registration, NotFound, Cart, Account,
+  Home, AboutUs, Catalog, Login, Registration, NotFound, Cart, Account,
 } = NamePages;
 
 const routes = [
@@ -45,11 +46,6 @@ const routes = [
     meta: {
       title: Login,
     },
-  },
-  {
-    name: Logout,
-    path: PathPages.Logout,
-    redirect: { name: NamePages.Home },
   },
   {
     name: Registration,
@@ -91,8 +87,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  document.title = `eCommerce app - ${to.meta.title} page`;
-  next();
+  const { authorized } = useUserStore();
+  const isNeedRedirect = authorized
+  && (to.name === Login || to.name === Registration);
+  if (isNeedRedirect) {
+    next(PathPages.Home);
+  } else {
+    document.title = `eCommerce app - ${to.meta.title} page`;
+    next();
+  }
 });
 
 export default router;
