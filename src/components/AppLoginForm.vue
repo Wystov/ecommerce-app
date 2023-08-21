@@ -2,10 +2,11 @@
   <div class="login-form">
     <h1 class="main-header">Login to Crunch</h1>
     <BaseInput
-      type="email"
+      type="text"
       name="email"
       id="emailInput"
       @input="emailValidation"
+      @change="emailValidation"
       :valid="emailValue"
       class="custom-input-style"
       ref="emailInput"
@@ -19,6 +20,7 @@
       id="passInput"
       :hidePass="hidePass"
       @input="passwordValidation"
+      @change="passwordValidation"
       @click="showPassword"
       :valid="passValue"
       ref="passInput"
@@ -93,7 +95,7 @@ export default {
       ) {
         return false;
       }
-      const textStr = /[A-Za-z0-9\-._]+@[A-Za-z0-9]{2,}\.[A-Za-z]{2}/iu;
+      const textStr = /^[A-Za-z0-9\-._]+@[A-Za-z0-9]{2,}\.[A-Za-z]{2}/iu;
       return textStr.test(value);
     },
     emailValidation(event: InputEvent): void {
@@ -104,7 +106,7 @@ export default {
         this.emailValue = '';
         return;
       }
-      if (this.correctEmailAddressCheck(val) && this.whiteSpacesCheck(val)) {
+      if (this.whiteSpacesCheck(val) && this.correctEmailAddressCheck(val)) {
         this.emailValue = 'valid';
       } else {
         this.emailValue = 'invalid';
