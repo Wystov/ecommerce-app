@@ -205,7 +205,10 @@ export default {
         this.createCustomerMessage.show = true;
         this.createCustomerMessage.title = 'Registration completed successfully!';
         this.createCustomerMessage.text = 'Redirect to home page after a few seconds...';
-        setTimeout(() => this.$router.push(PathPages.Home), 4000);
+        setTimeout(() => {
+          document.body.style.overflow = '';
+          this.$router.push(PathPages.Home);
+        }, 4000);
       } else {
         this.loading = false;
         this.createCustomerMessage.show = true;
@@ -213,7 +216,6 @@ export default {
         this.createCustomerMessage.alert = 'danger';
         this.createCustomerMessage.text = `Oops... ${createCustomer.message}`;
       }
-      document.body.style.overflow = '';
     },
 
     async signInUser(): Promise<void> {
