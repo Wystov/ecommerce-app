@@ -68,6 +68,7 @@
       <div v-if="loading" class="spinner" />
       <Transition
       ><BaseMessage
+        rounded
         class="success-base-message"
         v-if="createCustomerMessage.show"
         :title="createCustomerMessage.title"
@@ -188,6 +189,8 @@ export default {
         this.showMessageInvalid = false;
         this.showMessageSignIn = true;
         this.loading = true;
+        window.scrollTo(2000, 0);
+        document.body.style.overflow = 'hidden';
         await this.createCustomer();
       } else {
         this.showMessageInvalid = true;
@@ -202,7 +205,10 @@ export default {
         this.createCustomerMessage.show = true;
         this.createCustomerMessage.title = 'Registration completed successfully!';
         this.createCustomerMessage.text = 'Redirect to home page after a few seconds...';
-        setTimeout(() => this.$router.push(PathPages.Home), 4000);
+        setTimeout(() => {
+          document.body.style.overflow = '';
+          this.$router.push(PathPages.Home);
+        }, 4000);
       } else {
         this.loading = false;
         this.createCustomerMessage.show = true;
@@ -267,6 +273,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 40px 40px;
 }
 .success-message {
   font-size: 22px;

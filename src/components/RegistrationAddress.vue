@@ -123,6 +123,8 @@ export default {
     checkValid(i: number): void {
       const field = this.fields[i];
 
+      if (field.value === '') field.valid = '';
+
       if (field.value && field.pattern) {
         const inputText = field.value;
         field.valid = field.pattern.test(inputText) ? 'valid' : 'invalid';
