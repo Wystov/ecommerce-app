@@ -15,7 +15,6 @@ const global = {
 
 describe('Header tests', () => {
   it('should render header', () => {
-    // setActivePinia(createPinia());
     const wrapper = mount(AppHeader, { global });
     expect(wrapper.find('header').exists()).toBeTruthy();
     expect(wrapper.find('div.wrapper').exists()).toBeTruthy();
