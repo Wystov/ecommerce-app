@@ -54,6 +54,10 @@ hr {
   opacity: 0.5;
 }
 
+.app {
+  overflow: hidden;
+}
+
 .main-header {
   font-size: 1.65rem;
   font-weight: 600;

@@ -93,11 +93,11 @@ export default {
 
 .slide-enter-active,
 .slide-leave-active {
-  transform: translateY(0%);
+  transform: translateX(0%);
 }
 .slide-enter-from,
 .slide-leave-to {
-  transform: translateY(-100%);
+  transform: translateX(100%);
 }
 
 @media (max-width: 900px) {
