@@ -2,10 +2,12 @@
   <div class="login-form">
     <h1 class="main-header">Login to Crunch</h1>
     <BaseInput
-      type="email"
+      type="text"
       name="email"
       id="emailInput"
       @input="emailValidation"
+      @change="emailValidation"
+      @keydown.enter="blurInput"
       :valid="emailValue"
       class="custom-input-style"
       ref="emailInput"
@@ -19,7 +21,9 @@
       id="passInput"
       :hidePass="hidePass"
       @input="passwordValidation"
+      @change="passwordValidation"
       @click="showPassword"
+      @keydown.enter="blurInput"
       :valid="passValue"
       ref="passInput"
     />
@@ -93,7 +97,7 @@ export default {
       ) {
         return false;
       }
-      const textStr = /[A-Za-z0-9\-._]+@[A-Za-z0-9]{2,}\.[A-Za-z]{2}/iu;
+      const textStr = /^[A-Za-z0-9\-._]+@[A-Za-z0-9]{2,}\.[A-Za-z]{2}/iu;
       return textStr.test(value);
     },
     emailValidation(event: InputEvent): void {
@@ -104,7 +108,7 @@ export default {
         this.emailValue = '';
         return;
       }
-      if (this.correctEmailAddressCheck(val) && this.whiteSpacesCheck(val)) {
+      if (this.whiteSpacesCheck(val) && this.correctEmailAddressCheck(val)) {
         this.emailValue = 'valid';
       } else {
         this.emailValue = 'invalid';
@@ -165,6 +169,12 @@ export default {
       }
       this.wrongData = true;
     },
+    blurInput(event: KeyboardEvent): void {
+      if (event.key === 'Enter' && event.target instanceof HTMLInputElement) {
+        event.target.blur();
+        this.signIn();
+      }
+    },
   },
 };
 </script>
@@ -177,7 +187,7 @@ export default {
   font-family: var(--main-font-style);
   color: var(--main-font-color);
   margin: 10% auto auto;
-  max-width: 420px;
+  width: 420px;
   padding: 1rem 3rem 2rem 3rem;
   gap: 19px;
 }
@@ -208,5 +218,11 @@ export default {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+@media(max-width: 550px) {
+  .login-form {
+    width: 90%;
+    padding: 1rem 0 2rem 0;
+  }
 }
 </style>
