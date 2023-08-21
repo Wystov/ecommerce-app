@@ -66,6 +66,7 @@
   <BaseMessage
     class="success-message-container"
     v-if="showSuccessMessage"
+    :title="createCustomerMessage.title"
     :alert="createCustomerMessage.alert"
   ><div v-if="loading" class="spinner" />
     <p class="success-message">{{ createCustomerMessage.text }}</p>
@@ -106,7 +107,7 @@ export default {
     invalidMessage: string;
     showSuccessMessage: boolean;
     loading: boolean;
-    createCustomerMessage: { text: string; alert: string };
+    createCustomerMessage: { text: string; alert: string; title: string };
     } {
     return {
       LOGIN: NamePages.Login,
@@ -123,7 +124,7 @@ export default {
       invalidMessage: 'Please fill in all fields correctly',
       showSuccessMessage: false,
       loading: false,
-      createCustomerMessage: { text: '', alert: 'success' },
+      createCustomerMessage: { text: '', alert: 'success', title: '' },
     };
   },
   computed: {
@@ -187,12 +188,11 @@ export default {
       if (createCustomer.ok) {
         await this.signInUser();
         this.loading = false;
-        this.createCustomerMessage.text = `Registration completed successfully!
-         Redirect to home page after a few seconds...`;
-        setTimeout(() => {
-          this.$router.push(PathPages.Home);
-        }, 4000);
+        this.createCustomerMessage.title = 'Registration completed successfully!';
+        this.createCustomerMessage.text = 'Redirect to home page after a few seconds...';
+        setTimeout(() => this.$router.push(PathPages.Home), 4000);
       } else {
+        this.createCustomerMessage.title = 'Registration was not successful';
         this.createCustomerMessage.alert = 'danger';
         this.createCustomerMessage.text = `Oops... ${createCustomer.message}`;
       }
