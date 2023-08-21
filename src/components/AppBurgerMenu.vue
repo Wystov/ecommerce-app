@@ -1,10 +1,10 @@
 <template>
   <nav class="menu">
     <ul class="menu-list">
-      <div v-for="(name, i) in navigation" :key="i">
+      <div v-for="(item, i) in updateAuthorizationList" :key="i">
         <li class="menu-item" @click="openMenu()" @keydown="openMenu()">
-          <RouterLink :to="{ name: name }" class="menu-link">
-            {{ name }}
+          <RouterLink :to="{ name: item.name }" class="menu-link">
+            {{ item.name }}
           </RouterLink>
         </li>
       </div>
@@ -13,7 +13,10 @@
 </template>
 
 <script lang="ts">
+import { mapStores } from 'pinia';
+import { useUserStore } from '@/stores/user';
 import { NamePages } from '@/types/enums';
+import type { AuthorizationList, DataAuthorization } from '@/types/types';
 
 export default {
   props: {
@@ -26,11 +29,44 @@ export default {
       required: true,
     },
   },
-  data(): { navigation: NamePages[] } {
+  data(): DataAuthorization {
     const {
-      Home, Catalog, AboutUs, Login, Registration,
+      Home, Catalog, AboutUs, Login, Registration, Account,
     } = NamePages;
-    return { navigation: [Home, Catalog, AboutUs, Login, Registration] };
+    return {
+      authorizationList: [
+        {
+          name: Home,
+        },
+        {
+          name: Catalog,
+        },
+        {
+          name: AboutUs,
+        },
+        {
+          name: Registration,
+          authorization: false,
+        },
+        {
+          name: Login,
+          authorization: false,
+        },
+        {
+          name: Account,
+          authorization: true,
+        },
+      ],
+    };
+  },
+  computed: {
+    ...mapStores(useUserStore),
+    updateAuthorizationList(): AuthorizationList[] {
+      return this.authorizationList.filter(
+        (link) => this.userStore.authorized === link.authorization
+        || link.authorization === undefined,
+      );
+    },
   },
 };
 </script>
