@@ -221,4 +221,11 @@ export default {
     margin-top: 1rem;
   }
 }
+@media(max-width: 470px) {
+  .button-link {
+    padding: 15px 0;
+    width: 33%;
+    text-align: center;
+  }
+}
 </style>
