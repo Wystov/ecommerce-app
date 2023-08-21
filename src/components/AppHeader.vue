@@ -1,9 +1,11 @@
 <template>
   <header class="header">
     <Transition name="slide">
-      <div v-if="isOpen" class="menu-block">
-        <AppBurgerMenu :openMenu="openMenu" />
-      </div>
+      <AppBurgerMenu
+        v-show="isBurgerOpen"
+        @closeMenu="toggleMenu"
+        :isOpen="isBurgerOpen"
+        class="menu-block" />
     </Transition>
     <div class="wrapper container-header">
       <RouterLink :to="{ name: 'Home' }">
@@ -17,7 +19,7 @@
           <img class="cart-link" :src="cartIcon" alt="cart" />
         </RouterLink>
       </div>
-      <BaseBurger @click="openMenu" :open="isOpen" />
+      <BaseBurger @click.stop="toggleMenu" :isOpen="isBurgerOpen" />
     </div>
   </header>
 </template>
@@ -38,21 +40,17 @@ export default {
     BaseBurger,
     AppBurgerMenu,
   },
-  data(): { logoIcon: string; dividerIcon: string; cartIcon: string; isOpen: boolean } {
+  data(): { logoIcon: string; dividerIcon: string; cartIcon: string; isBurgerOpen: boolean } {
     return {
       logoIcon,
       dividerIcon,
       cartIcon,
-      isOpen: false,
+      isBurgerOpen: false,
     };
   },
   methods: {
-    openMenu(): void {
-      if (this.isOpen === false) {
-        this.isOpen = true;
-        return;
-      }
-      this.isOpen = false;
+    toggleMenu(): void {
+      this.isBurgerOpen = !this.isBurgerOpen;
     },
   },
 };

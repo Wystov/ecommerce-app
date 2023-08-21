@@ -21,11 +21,11 @@ describe('Header tests', () => {
     const burgerIcon = wrapper.find('.burger');
     burgerIcon.trigger('click');
     await wrapper.vm.$nextTick();
-    expect(wrapper.vm.isOpen).toBe(true);
-    expect(wrapper.find('div.menu-block').exists()).toBeTruthy();
+    expect(wrapper.vm.isBurgerOpen).toBe(true);
+    expect(wrapper.find('.menu-block').exists()).toBeTruthy();
     const burgerCloseIcon = wrapper.find('.burger-closed');
     burgerCloseIcon.trigger('click');
     await wrapper.vm.$nextTick();
-    expect(wrapper.vm.isOpen).toBe(false);
+    expect(wrapper.vm.isBurgerOpen).toBe(false);
   });
 });

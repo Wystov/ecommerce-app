@@ -6,7 +6,7 @@ describe('Base burger logo tests', () => {
   it('should render burger logo in closed menu state', () => {
     const wrapper = mount(BaseBurger, {
       props: {
-        open: false,
+        isOpen: false,
       },
     });
     expect(wrapper.find('div.burger').exists()).toBeTruthy();
@@ -17,7 +17,7 @@ describe('Base burger logo tests', () => {
   it('should render burger logo in open menu state', () => {
     const wrapper = mount(BaseBurger, {
       props: {
-        open: true,
+        isOpen: true,
       },
     });
     expect(wrapper.find('div.burger-closed').exists()).toBeTruthy();

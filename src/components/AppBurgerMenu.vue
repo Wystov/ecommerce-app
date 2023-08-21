@@ -1,13 +1,11 @@
 <template>
-  <nav class="menu">
+  <nav ref="burger" class="menu">
     <ul class="menu-list">
-      <div v-for="(item, i) in updateAuthorizationList" :key="i">
-        <li class="menu-item" @click="openMenu()" @keydown="openMenu()">
-          <RouterLink :to="{ name: item.name }" class="menu-link">
-            {{ item.name }}
-          </RouterLink>
-        </li>
-      </div>
+      <li v-for="(item, i) in updateAuthorizationList" :key="i" class="menu-item">
+        <RouterLink :to="{ name: item.name }" @click="$emit('close-menu')" class="menu-link">
+          {{ item.name }}
+        </RouterLink>
+      </li>
     </ul>
   </nav>
 </template>
@@ -20,13 +18,9 @@ import type { AuthorizationList, DataAuthorization } from '@/types/types';
 
 export default {
   props: {
-    open: {
+    isOpen: {
       type: Boolean,
       default: false,
-    },
-    openMenu: {
-      type: Function,
-      required: true,
     },
   },
   data(): DataAuthorization {
@@ -67,6 +61,17 @@ export default {
         || link.authorization === undefined,
       );
     },
+  },
+  methods: {
+    handleBurgerClick(e: MouseEvent): void {
+      const burger = this.$refs.burger as HTMLElement;
+      if (e.target instanceof HTMLElement && this.isOpen && !burger.contains(e.target)) {
+        this.$emit('close-menu');
+      }
+    },
+  },
+  created(): void {
+    document.addEventListener('click', this.handleBurgerClick);
   },
 };
 </script>
