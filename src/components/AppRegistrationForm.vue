@@ -202,7 +202,7 @@ export default {
         this.createCustomerMessage.show = true;
         this.createCustomerMessage.title = 'Registration completed successfully!';
         this.createCustomerMessage.text = 'Redirect to home page after a few seconds...';
-        setTimeout(() => this.$router.push(PathPages.Home), 40000000);
+        setTimeout(() => this.$router.push(PathPages.Home), 4000);
       } else {
         this.loading = false;
         this.createCustomerMessage.show = true;
@@ -251,17 +251,22 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  margin: 0 auto;
+  padding: 0 20px;
   backdrop-filter: blur(4px);
-  scale: 1.2;
   z-index: 1;
+  box-sizing: border-box;
 }
 .success-base-message {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 .success-message {
   font-size: 22px;

@@ -41,7 +41,6 @@ export default {
 .registration {
   display: flex;
   flex-direction: column;
-  position: relative;
   gap: 34px;
   margin: 50px auto;
   overflow: hidden;
