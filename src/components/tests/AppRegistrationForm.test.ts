@@ -66,7 +66,7 @@ it('updates bodyAddresses and showMessage when address fields are checked', () =
   const registrationForm = wrapper.vm;
 
   expect(registrationForm.bodyAddresses).toEqual([{}, {}]);
-  expect(registrationForm.showMessage).toBe(false);
+  expect(registrationForm.showMessageInvalid).toBe(false);
 
   registrationForm.checkAddressFields({
     valid: true,
@@ -83,5 +83,5 @@ it('updates bodyAddresses and showMessage when address fields are checked', () =
     },
   });
   expect(registrationForm.bodyAddresses).toEqual([validFields, validFields]);
-  expect(registrationForm.showMessage).toBe(false);
+  expect(registrationForm.showMessageInvalid).toBe(false);
 });

@@ -12,6 +12,7 @@
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import AppRegistration from '@/components/AppRegistrationForm.vue';
+import { NamePages } from '@/types/enums';
 
 export default {
   components: {
@@ -22,9 +23,12 @@ export default {
   },
   created(): void {
     if (this.userStore.fetching) {
-      this.$watch(() => this.userStore.fetching, () => {
-        if (this.userStore.authorized) this.$router.push({ name: 'Home' });
-      });
+      this.$watch(
+        () => this.userStore.fetching,
+        () => {
+          if (this.userStore.authorized) this.$router.push({ name: NamePages.Home });
+        },
+      );
     }
   },
 };
@@ -42,6 +46,7 @@ export default {
   flex-direction: column;
   gap: 34px;
   margin: 50px auto;
+  overflow: hidden;
 }
 .container {
   max-width: 740px;

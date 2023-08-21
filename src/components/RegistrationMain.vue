@@ -1,5 +1,5 @@
 <template>
-  <div class="registration-main">
+  <div class="registration-main" @keydown.enter="showButton && nextStep()">
     <div class="field-container" v-for="(field, i) in fields" :key="i">
       <BaseInput
         :label="field.label"
