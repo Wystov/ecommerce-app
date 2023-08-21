@@ -94,7 +94,7 @@ router.beforeEach((to, from, next) => {
   if (isNeedRedirect) {
     next(PathPages.Home);
   } else {
-    document.title = `eCommerce app - ${to.meta.title} page`;
+    document.title = `Crunch! ${to.meta.title}`;
     next();
   }
 });
