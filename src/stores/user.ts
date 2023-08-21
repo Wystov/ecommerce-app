@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import type { ClientResponse } from '@commercetools/platform-sdk';
 import api from '@/utils/api/client';
+import { initErrorHandler } from '@/utils/api/error-handler';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -13,7 +13,8 @@ export const useUserStore = defineStore('user', {
         const response = await api.call().me().get().execute();
         if (response.statusCode === 200) this.loginUser();
       } catch (error) {
-        if ((error as ClientResponse).statusCode === 403) this.logoutUser();
+        this.logoutUser();
+        initErrorHandler(error);
       } finally {
         this.fetching = false;
       }
