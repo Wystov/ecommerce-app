@@ -24,42 +24,63 @@
           </div>
           <p class="description">Enjoy special promocodes for registered customers</p>
           <BaseButton
+            v-if="!authorized"
             @click="$router.push({ name: 'Sign Up' })"
             size="large"
             class="button"
             label="Join us"
           />
+          <template v-else>
+            <div class="promocode">CROSS-CHECK</div>
+            <BaseButton
+              @click="copyPromo"
+              ref="copyButton"
+              size="large"
+              class="button"
+              :label="promoBtnText"
+            />
+          </template>
         </div>
       </div>
     </div>
     <div class="links-list">
-      <BaseButton
-        @click="$router.push({ name: login })"
-        size="large"
+      <RouterLink
+        v-for="link, i in sitemap"
+        :to="{ name: link }"
         class="button button-link"
-        label="Log in"
-      />
-      <BaseButton
-        @click="$router.push({ name: signup })"
-        size="large"
-        class="button button-link"
-        label="Sign up"
-      />
+        v-bind:key="i">
+        {{ link }}
+      </RouterLink>
     </div>
   </main>
 </template>
 
 <script lang="ts">
+import { mapState } from 'pinia';
+import { useUserStore } from '@/stores/user';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import { NamePages } from '@/types/enums';
 
 export default {
   components: { BaseButton },
-  data(): Record<string, string> {
+  data(): { sitemap: Record<string, string>, promoBtnText: string } {
     return {
-      login: NamePages.Login,
-      signup: NamePages.Registration,
+      sitemap: {
+        login: NamePages.Login,
+        signup: NamePages.Registration,
+        account: NamePages.Account,
+      },
+      promoBtnText: 'Copy',
     };
+  },
+  computed: {
+    ...mapState(useUserStore, ['authorized']),
+  },
+  methods: {
+    copyPromo(): void {
+      navigator.clipboard.writeText('CROSS-CHECK');
+      this.promoBtnText = '✓';
+    },
   },
 };
 </script>
@@ -118,6 +139,13 @@ export default {
   position: absolute;
   right: 20px;
   top: 20px;
+}
+.promocode {
+  width: fit-content;
+  color: white;
+  padding: 5px 10px;
+  border: 2px solid white;
+  border-radius: 10px;
 }
 .links-list {
   display: flex;

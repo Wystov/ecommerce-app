@@ -4,7 +4,13 @@ import BaseCheckbox from '../shared/BaseCheckbox.vue';
 
 describe('BaseCheckbox tests', () => {
   it('should render', () => {
-    const wrapper = mount(BaseCheckbox);
+    const wrapper = mount(BaseCheckbox, {
+      props: {
+        label: 'Option',
+        id: 'checkbox-id',
+        name: 'checkbox-name',
+      },
+    });
     expect(wrapper.find('div.checkbox-block').exists()).toBeTruthy();
     expect(wrapper.find('input.checkbox').exists()).toBeTruthy();
   });

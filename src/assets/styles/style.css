@@ -54,6 +54,13 @@ hr {
   opacity: 0.5;
 }
 
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
 .main-header {
   font-size: 1.65rem;
   font-weight: 600;
@@ -65,7 +72,7 @@ hr {
 }
 
 .wrapper {
-  margin: auto;
+  margin: 0 auto;
   max-width: 1680px;
   padding: 0 20px;
 }

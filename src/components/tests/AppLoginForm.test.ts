@@ -1,15 +1,21 @@
 import {
   describe, it, expect, vi,
 } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, RouterLinkStub } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import { type BaseInputProps } from '@/types/types';
 import Api from '@/utils/api/client';
 import AppLoginForm from '../AppLoginForm.vue';
 
+const global = {
+  components: {
+    RouterLink: RouterLinkStub,
+  },
+};
+
 describe('Login form tests', () => {
   it('should render form', () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     expect(wrapper.find('h1').exists()).toBeTruthy();
     expect(wrapper.find('input#emailInput').exists()).toBeTruthy();
     expect(wrapper.find('input#passInput').exists()).toBeTruthy();
@@ -19,7 +25,7 @@ describe('Login form tests', () => {
 
 describe('Login form computed method', () => {
   it('should return correct UserAuthOptions when dataForSignIn method is called', () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     const mockEmailInput = wrapper.vm.$refs.emailInput as BaseInputProps;
     const mockPassInput = wrapper.vm.$refs.passInput as BaseInputProps;
     const result = wrapper.vm.dataForSignIn;
@@ -30,7 +36,7 @@ describe('Login form computed method', () => {
 
 describe('Validation email methods', () => {
   it('should validate email value correctly', () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     const mockCorrectEmail = 'hello@world.com';
     const mockIncorrectEmailWithDoubleAt = 'hello@world@test.com';
     const mockIncorrectEmailWithRandomChar = 'hello@test%#@%.c$&#om';
@@ -39,7 +45,7 @@ describe('Validation email methods', () => {
     expect(wrapper.vm.correctEmailAddressCheck(mockIncorrectEmailWithRandomChar)).toBeFalsy();
   });
   it('should validate valid email correctly', () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     const mockInputElement = document.createElement('input');
     const mockInputEvent = new Event('input') as InputEvent;
     Object.defineProperty(mockInputEvent, 'target', { value: mockInputElement, writable: false });
@@ -48,7 +54,7 @@ describe('Validation email methods', () => {
     expect(wrapper.vm.emailValue).toBe('valid');
   });
   it('should validate invalid email and empty email value correctly', () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     const mockInputElement = document.createElement('input');
     const mockInputEvent = new Event('input') as InputEvent;
     Object.defineProperty(mockInputEvent, 'target', { value: mockInputElement, writable: false });
@@ -63,7 +69,7 @@ describe('Validation email methods', () => {
 
 describe('Validation password methods', () => {
   it('should validate password value correctly', () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     const mockCorrectPasswordValue = 'asdLj7d3';
     const mockIncorrectPasswordValue = 'фывdfe5q';
     const mockTooShortPasswordValue = 'd5Idf';
@@ -72,7 +78,7 @@ describe('Validation password methods', () => {
     expect(wrapper.vm.correctPasswordCheck(mockTooShortPasswordValue)).toBeFalsy();
   });
   it('should validate valid password correctly', () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     const mockInputElement = document.createElement('input');
     const mockInputEvent = new Event('input') as InputEvent;
     Object.defineProperty(mockInputEvent, 'target', { value: mockInputElement, writable: false });
@@ -81,7 +87,7 @@ describe('Validation password methods', () => {
     expect(wrapper.vm.passValue).toBe('valid');
   });
   it('should validate invalid password and empty password value correctly', () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     const mockInputElement = document.createElement('input');
     const mockInputEvent = new Event('input') as InputEvent;
     Object.defineProperty(mockInputEvent, 'target', { value: mockInputElement, writable: false });
@@ -96,7 +102,7 @@ describe('Validation password methods', () => {
 
 describe('Show password method', () => {
   it('It should change input type by click on the eye icon', async () => {
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     const passInput = wrapper.findComponent({ ref: 'passInput' });
     const eyeIcon = passInput.find('.input-icon');
     await wrapper.vm.$nextTick();
@@ -126,6 +132,7 @@ describe('Sing in function succeeded', () => {
         mocks: {
           $router: mockRouter,
         },
+        ...global,
       },
     });
     wrapper.vm.passValue = 'valid';
@@ -140,7 +147,7 @@ describe('Sign in function not successful', () => {
   it('should set wrongDataText and wrongData if sign in fails', async () => {
     const signInCustomerMock = vi.fn().mockResolvedValue({ ok: false, message: 'Error message' });
     Api.signInCustomer = signInCustomerMock;
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     wrapper.vm.passValue = 'valid';
     wrapper.vm.emailValue = 'valid';
     await wrapper.vm.signIn();
@@ -152,7 +159,7 @@ describe('Sign in function not successful', () => {
   it('should not call signInCustomer if emailValue or passValue is invalid', async () => {
     const signInCustomerMock = vi.fn().mockResolvedValue({ ok: true });
     Api.signInCustomer = signInCustomerMock;
-    const wrapper = mount(AppLoginForm);
+    const wrapper = mount(AppLoginForm, { global });
     wrapper.vm.passValue = 'invalid';
     wrapper.vm.emailValue = 'invalid';
     await wrapper.vm.signIn();

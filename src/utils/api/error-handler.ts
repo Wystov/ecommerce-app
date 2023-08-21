@@ -1,4 +1,6 @@
+import { LocalStorageKeys } from '@/types/enums';
 import type { ApiResponse } from '@/types/types';
+import api from './client';
 
 const authErrors: Record<string, string> = {
   'Customer account with the given credentials not found.':
@@ -6,6 +8,9 @@ const authErrors: Record<string, string> = {
 
   'email not available':
     'Account with this email address already exists. Please try again with a different email.',
+
+  'Failed to fetch':
+    'Server doesn\'t respond. Check your internet connection or try later',
 };
 
 export const authErrorHandler = (error: unknown): ApiResponse => {
@@ -17,4 +22,11 @@ export const authErrorHandler = (error: unknown): ApiResponse => {
   }
   response.message = 'Unexpected error occurred';
   return response;
+};
+
+export const initErrorHandler = (error:unknown): void => {
+  if ((error as Error).message === 'The refresh token was not found. It may have expired.') {
+    localStorage.removeItem(LocalStorageKeys.Token);
+    api.signOut();
+  }
 };

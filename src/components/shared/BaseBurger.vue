@@ -1,7 +1,7 @@
 <template>
   <div :class="getBurgerClass">
     <div :class="getBarClass" />
-    <div v-if="!open" class="burger-line" />
+    <div v-if="!isOpen" class="burger-line" />
     <div :class="getBarClass" />
   </div>
 </template>
@@ -9,17 +9,17 @@
 <script lang="ts">
 export default {
   props: {
-    open: {
+    isOpen: {
       type: Boolean,
       default: false,
     },
   },
   computed: {
     getBurgerClass(): string {
-      return this.open ? 'burger-closed' : 'burger';
+      return this.isOpen ? 'burger-closed' : 'burger';
     },
     getBarClass(): string {
-      return this.open ? 'close-line' : 'burger-line';
+      return this.isOpen ? 'close-line' : 'burger-line';
     },
   },
 };

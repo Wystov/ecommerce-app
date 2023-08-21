@@ -4,7 +4,11 @@ import BaseInput from '../shared/BaseInput.vue';
 
 describe('BaseInput tests', () => {
   it('should render', () => {
-    const wrapper = mount(BaseInput);
+    const wrapper = mount(BaseInput, {
+      props: {
+        id: 'input',
+      },
+    });
     expect(wrapper.find('div.input-block').exists()).toBeTruthy();
     expect(wrapper.find('input').exists()).toBeTruthy();
   });
@@ -41,7 +45,11 @@ describe('BaseInput tests', () => {
 
 describe('BaseInput values', () => {
   it('should update inputValue in input element', async () => {
-    const wrapper = mount(BaseInput);
+    const wrapper = mount(BaseInput, {
+      props: {
+        id: 'input',
+      },
+    });
 
     const input = wrapper.find('input');
     await input.setValue('Hello');

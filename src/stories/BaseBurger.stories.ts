@@ -20,7 +20,7 @@ export const ClosedMenu: Story = {
     template: '<BaseBurger v-bind="args" />',
   }),
   args: {
-    open: false,
+    isOpen: false,
   },
 };
 
@@ -33,6 +33,6 @@ export const OpenMenu: Story = {
     template: '<BaseBurger v-bind="args" />',
   }),
   args: {
-    open: true,
+    isOpen: true,
   },
 };

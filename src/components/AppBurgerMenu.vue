@@ -1,36 +1,77 @@
 <template>
-  <nav class="menu">
+  <nav ref="burger" class="menu">
     <ul class="menu-list">
-      <div v-for="(name, i) in navigation" :key="i">
-        <li class="menu-item" @click="openMenu()" @keydown="openMenu()">
-          <RouterLink :to="{ name: name }" class="menu-link">
-            {{ name }}
-          </RouterLink>
-        </li>
-      </div>
+      <li v-for="(item, i) in updateAuthorizationList" :key="i" class="menu-item">
+        <RouterLink :to="{ name: item.name }" @click="$emit('close-menu')" class="menu-link">
+          {{ item.name }}
+        </RouterLink>
+      </li>
     </ul>
   </nav>
 </template>
 
 <script lang="ts">
+import { mapStores } from 'pinia';
+import { useUserStore } from '@/stores/user';
 import { NamePages } from '@/types/enums';
+import type { AuthorizationList, DataAuthorization } from '@/types/types';
 
 export default {
   props: {
-    open: {
+    isOpen: {
       type: Boolean,
       default: false,
     },
-    openMenu: {
-      type: Function,
-      required: true,
+  },
+  data(): DataAuthorization {
+    const {
+      Home, Catalog, AboutUs, Login, Registration, Account,
+    } = NamePages;
+    return {
+      authorizationList: [
+        {
+          name: Home,
+        },
+        {
+          name: Catalog,
+        },
+        {
+          name: AboutUs,
+        },
+        {
+          name: Registration,
+          authorization: false,
+        },
+        {
+          name: Login,
+          authorization: false,
+        },
+        {
+          name: Account,
+          authorization: true,
+        },
+      ],
+    };
+  },
+  computed: {
+    ...mapStores(useUserStore),
+    updateAuthorizationList(): AuthorizationList[] {
+      return this.authorizationList.filter(
+        (link) => this.userStore.authorized === link.authorization
+        || link.authorization === undefined,
+      );
     },
   },
-  data(): { navigation: NamePages[] } {
-    const {
-      Home, Catalog, AboutUs, Login, Registration,
-    } = NamePages;
-    return { navigation: [Home, Catalog, AboutUs, Login, Registration] };
+  methods: {
+    handleBurgerClick(e: MouseEvent): void {
+      const burger = this.$refs.burger as HTMLElement;
+      if (e.target instanceof HTMLElement && this.isOpen && !burger.contains(e.target)) {
+        this.$emit('close-menu');
+      }
+    },
+  },
+  created(): void {
+    document.addEventListener('click', this.handleBurgerClick);
   },
 };
 </script>

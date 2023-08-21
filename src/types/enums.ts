@@ -23,8 +23,8 @@ const enum PathPages {
 }
 
 const enum LocalStorageKeys {
-  Token = 'ecommerce-shop: refresh',
-  AnonId = 'ecommerce-shop: anonid',
+  Token = 'crunch-shop: refresh',
+  AnonId = 'crunch-shop: anonid',
 }
 
 const enum Country {

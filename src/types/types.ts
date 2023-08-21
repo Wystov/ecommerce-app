@@ -31,7 +31,7 @@ interface TokenResponse {
 }
 interface AuthorizationList {
   name: NamePages;
-  authorization: boolean;
+  authorization?: boolean;
   class?: string;
   icon?: {};
 }

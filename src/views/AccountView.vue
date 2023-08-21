@@ -25,13 +25,21 @@ export default {
       this.$router.push({ name: 'Home' });
     },
   },
+  created(): void {
+    if (this.userStore.fetching) {
+      this.$watch(() => this.userStore.fetching, () => {
+        if (this.userStore.authorized) this.$router.push({ name: 'Home' });
+      });
+    }
+  },
 };
 </script>
 
 <style scoped>
 .center {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 50px;
   gap: 25px;
 }
