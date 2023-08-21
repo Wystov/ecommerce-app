@@ -1,5 +1,8 @@
 <template>
-  <AppLogin />
+  <div v-if="userStore.fetching" class="spinner-container">
+    <div class="spinner" />
+  </div>
+  <AppLogin v-else />
 </template>
 
 <script lang="ts">
@@ -23,3 +26,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.spinner-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.spinner {
+  border-top-color: var(--main-color);
+}
+</style>

@@ -37,8 +37,9 @@ export default {
 
 <style scoped>
 .center {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 50px;
   gap: 25px;
 }

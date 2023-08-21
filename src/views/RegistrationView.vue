@@ -1,5 +1,8 @@
 <template>
-  <section class="registration container">
+  <div v-if="userStore.fetching" class="spinner-container">
+    <div class="spinner" />
+  </div>
+  <section v-else class="registration container">
     <h1 class="title">Sign up to Crunch</h1>
     <AppRegistration />
   </section>
@@ -42,5 +45,14 @@ export default {
 }
 .container {
   max-width: 740px;
+}
+.spinner-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.spinner {
+  border-top-color: var(--main-color);
 }
 </style>
