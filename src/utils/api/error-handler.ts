@@ -6,6 +6,9 @@ const authErrors: Record<string, string> = {
 
   'email not available':
     'Account with this email address already exists. Please try again with a different email.',
+
+  'Failed to fetch':
+    'Server doesn\'t respond. Check your internet connection or try later',
 };
 
 export const authErrorHandler = (error: unknown): ApiResponse => {
