@@ -1,4 +1,6 @@
 {
-  "*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}": "eslint --fix --ignore-path .gitignore",
-  "src/*": "prettier --write"
+  "*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}": [
+    "npx eslint --fix --ignore-path .gitignore",
+    "npx vitest run src/"
+  ]
 }

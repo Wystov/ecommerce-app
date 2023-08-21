@@ -1,3 +1,26 @@
 <script lang="ts">
-export default {};
+import './assets/styles/style.css';
+import { mapActions } from 'pinia';
+import { useUserStore } from '@/stores/user';
+import AppHeader from '@/components/AppHeader.vue';
+import AppFooter from '@/components/AppFooter.vue';
+
+export default {
+  components: {
+    AppHeader,
+    AppFooter,
+  },
+  methods: {
+    ...mapActions(useUserStore, ['init']),
+  },
+  created(): void {
+    this.init();
+  },
+};
 </script>
+
+<template>
+  <AppHeader />
+  <RouterView />
+  <AppFooter />
+</template>
