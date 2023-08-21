@@ -14,6 +14,7 @@ describe('BaseSelect test', () => {
         label: 'Select Label',
         id: 'first-select',
         options,
+        defaultSelected: 'option1',
       },
     });
 
