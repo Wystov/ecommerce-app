@@ -6,8 +6,9 @@
         :hidePass="field.label === 'Password' ? hidePass : ''"
         @click="showPassword($event, i)"
         :name="field.placeholder"
-        @input="[checkValid($event, i), setValue($event, i)]"
+        @input="handleInput($event, i)"
         :valid="field.valid"
+        :value="field.value"
         :type="field.type"
         :id="'field-registration-' + field.label.toLowerCase()"
         max="9999-12-31"
@@ -68,9 +69,10 @@ export default {
           pattern:
             /^((?:[A-Za-z0-9!#$%&'*+\-\\/=?^_`{|}~]|(?<=^|\.)"|"(?=$|\.|@)|(?<=".*)[ .](?=.*")|(?<!\.)\.){1,64})(@)((?:[A-Za-z0-9.\\-])*(?:[A-Za-z0-9])\.(?:[A-Za-z0-9]){2,})$/,
           placeholder: 'example@email.com',
-          type: 'email',
+          type: 'text',
           invalidMessage: InvalidMessage.Email,
           showMessage: false,
+          value: '',
         },
         {
           label: 'Password',
@@ -79,6 +81,7 @@ export default {
           type: 'password',
           invalidMessage: InvalidMessage.Password,
           showMessage: false,
+          value: '',
         },
         {
           label: 'First Name',
@@ -86,6 +89,7 @@ export default {
           placeholder: 'John',
           invalidMessage: InvalidMessage.FirstName,
           showMessage: false,
+          value: '',
         },
         {
           label: 'Last Name',
@@ -93,17 +97,25 @@ export default {
           placeholder: 'Smith',
           invalidMessage: InvalidMessage.LastName,
           showMessage: false,
+          value: '',
         },
         {
           label: 'Date of birth',
           type: 'date',
           invalidMessage: InvalidMessage.Date,
           showMessage: false,
+          value: '',
         },
       ],
     };
   },
   methods: {
+    handleInput(event: Event, index: number): void {
+      this.setValue(event, index);
+      this.checkValid(index);
+      this.readyData();
+    },
+
     showPassword(e: InputEvent, i: number): void {
       const input = e.target as HTMLInputElement;
       const field = this.fields[i];
@@ -118,6 +130,33 @@ export default {
       this.hidePass = 'show';
       field.type = 'password';
     },
+
+    setValue(e: Event, i: number): void {
+      const input = e.target as HTMLInputElement;
+      const field = this.fields[i];
+
+      field.value = input.value.trim();
+    },
+
+    checkValid(i: number): void {
+      const field = this.fields[i];
+
+      if (field.value && field.pattern) {
+        field.valid = field.pattern.test(field.value) ? 'valid' : 'invalid';
+      }
+
+      if (field.value && field.label === 'Email') {
+        const email = field.value;
+        if (field.valid === 'valid') this.debounceEmail(email, field);
+        if (field.valid === 'invalid') field.invalidMessage = InvalidMessage.Email;
+      }
+
+      if (field.value && field.type === 'date') {
+        const date = field.value;
+        field.valid = isOlder(date, 13) ? 'valid' : 'invalid';
+      }
+    },
+
     debounceEmail: _.debounce(
       (email: string, fieldEmail: RegistrationMainData) => {
         const field = fieldEmail;
@@ -134,28 +173,7 @@ export default {
       { leading: true },
     ),
 
-    checkValid(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-
-      if (input !== null && field.type === 'email') {
-        const email = input.value;
-        this.debounceEmail(email, field);
-      }
-      if (input !== null && field.pattern) {
-        field.valid = field.pattern.test(input.value) ? 'valid' : 'invalid';
-      }
-      if (input !== null && field.type === 'date') {
-        const date = input.value;
-        field.valid = isOlder(date, 13) ? 'valid' : 'invalid';
-      }
-    },
-
-    setValue(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-
-      if (input !== null) field.value = input.value;
+    readyData(): void {
       if (this.fields.every((elem) => elem.value !== '' && elem.valid === 'valid')) {
         const body = this.fields.map((elem) => [toCamelCase(elem.label), elem.value]);
         const response = Object.fromEntries(body);
