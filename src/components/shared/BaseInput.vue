@@ -1,6 +1,6 @@
 <template>
   <div class="input-block" :style="{ width: width }">
-    <label for="input-field" class="label" :class="{ 'dark-theme-label': isDark }" v-if="label">{{
+    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }" v-if="label">{{
       label
     }}</label>
     <input
