@@ -141,6 +141,8 @@ export default {
     checkValid(i: number): void {
       const field = this.fields[i];
 
+      if (field.value === '') field.valid = '';
+
       if (field.value && field.pattern) {
         field.valid = field.pattern.test(field.value) ? 'valid' : 'invalid';
       }

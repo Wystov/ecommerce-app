@@ -68,6 +68,7 @@
       <div v-if="loading" class="spinner" />
       <Transition
       ><BaseMessage
+        rounded
         class="success-base-message"
         v-if="createCustomerMessage.show"
         :title="createCustomerMessage.title"
@@ -188,6 +189,8 @@ export default {
         this.showMessageInvalid = false;
         this.showMessageSignIn = true;
         this.loading = true;
+        window.scrollTo(2000, 0);
+        document.body.style.overflow = 'hidden';
         await this.createCustomer();
       } else {
         this.showMessageInvalid = true;
@@ -210,6 +213,7 @@ export default {
         this.createCustomerMessage.alert = 'danger';
         this.createCustomerMessage.text = `Oops... ${createCustomer.message}`;
       }
+      document.body.style.overflow = '';
     },
 
     async signInUser(): Promise<void> {
@@ -267,6 +271,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 40px 40px;
 }
 .success-message {
   font-size: 22px;
