@@ -1,5 +1,5 @@
 <template>
-  <form class="registration-form">
+  <form class="registration-form" @keydown.enter="!showMessageSignIn && registrationUser()">
     <RegistrationMain @valid-all-main-fields="checkMainFields" />
     <Transition>
       <div class="address shipping" v-if="showAddressBlock">
