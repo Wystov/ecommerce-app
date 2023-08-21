@@ -1,5 +1,5 @@
 <template>
-  <form v-if="!showSuccessMessage" class="registration-form">
+  <form class="registration-form">
     <RegistrationMain @valid-all-main-fields="checkMainFields" />
     <Transition>
       <div class="address shipping" v-if="showAddressBlock">
@@ -46,7 +46,7 @@
       </div>
     </Transition>
     <Transition>
-      <BaseMessage alert="warning" v-if="showMessage">
+      <BaseMessage alert="warning" v-if="showMessageInvalid">
         {{ invalidMessage }}
       </BaseMessage>
     </Transition>
@@ -63,14 +63,20 @@
       <router-link class="login-link" :to="{ name: LOGIN }"> Log in </router-link>
     </p>
   </form>
-  <BaseMessage
-    class="success-message-container"
-    v-if="showSuccessMessage"
-    :title="createCustomerMessage.title"
-    :alert="createCustomerMessage.alert"
-  ><div v-if="loading" class="spinner" />
-    <p class="success-message">{{ createCustomerMessage.text }}</p>
-  </BaseMessage>
+  <Transition>
+    <div v-if="showMessageSignIn" class="success-message-container">
+      <div v-if="loading" class="spinner" />
+      <Transition
+      ><BaseMessage
+        class="success-base-message"
+        v-if="createCustomerMessage.show"
+        :title="createCustomerMessage.title"
+        :alert="createCustomerMessage.alert"
+      ><p class="success-message">{{ createCustomerMessage.text }}</p>
+      </BaseMessage>
+      </Transition>
+    </div>
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -103,11 +109,11 @@ export default {
     bodyAddresses: Array<UserAddress>;
     bodyRequest: UserSignUp;
     defaultAddresses: DefaultAddressProps;
-    showMessage: boolean;
+    showMessageInvalid: boolean;
     invalidMessage: string;
-    showSuccessMessage: boolean;
+    showMessageSignIn: boolean;
     loading: boolean;
-    createCustomerMessage: { text: string; alert: string; title: string };
+    createCustomerMessage: { text: string; alert: string; title: string; show: boolean };
     } {
     return {
       LOGIN: NamePages.Login,
@@ -120,11 +126,16 @@ export default {
         defaultShipping: true,
         defaultBilling: true,
       },
-      showMessage: false,
+      showMessageInvalid: false,
       invalidMessage: 'Please fill in all fields correctly',
-      showSuccessMessage: false,
+      showMessageSignIn: false,
       loading: false,
-      createCustomerMessage: { text: '', alert: 'success', title: '' },
+      createCustomerMessage: {
+        text: '',
+        alert: 'success',
+        title: '',
+        show: false,
+      },
     };
   },
   computed: {
@@ -132,7 +143,7 @@ export default {
   },
   methods: {
     toggleOnlyShipping(): void {
-      this.showMessage = false;
+      this.showMessageInvalid = false;
       this.onlyShipping = !this.onlyShipping;
     },
 
@@ -142,9 +153,9 @@ export default {
       nextStepClick: boolean;
     }): void {
       const { valid, response, nextStepClick } = data;
-      this.showMessage = false;
+      this.showMessageInvalid = false;
       if (nextStepClick && valid) this.showAddressBlock = true;
-      if (nextStepClick && !valid) this.showMessage = true;
+      if (nextStepClick && !valid) this.showMessageInvalid = true;
       this.bodyMain = response;
     },
 
@@ -156,15 +167,13 @@ export default {
         response: { name, fields },
       } = data;
       const { bodyAddresses } = this;
-      this.showMessage = false;
+      this.showMessageInvalid = false;
 
       if (name === 'shipping') bodyAddresses[0] = fields;
       if (name === 'billing') bodyAddresses[1] = fields;
     },
 
     async registrationUser(): Promise<void> {
-      this.showSuccessMessage = true;
-      this.loading = true;
       const { bodyMain, bodyAddresses, onlyShipping } = this;
       if (bodyMain) {
         this.bodyRequest = {
@@ -176,22 +185,27 @@ export default {
         this.bodyAddresses[1] = { ...this.bodyAddresses[0] };
       }
       if ('email' in this.bodyRequest && bodyAddresses.every((address) => 'city' in address)) {
+        this.showMessageInvalid = false;
+        this.showMessageSignIn = true;
+        this.loading = true;
         await this.createCustomer();
       } else {
-        this.showMessage = true;
+        this.showMessageInvalid = true;
       }
     },
 
     async createCustomer(): Promise<void> {
-      this.showMessage = false;
       const createCustomer = await api.createCustomer(this.bodyRequest, this.defaultAddresses);
       if (createCustomer.ok) {
         await this.signInUser();
         this.loading = false;
+        this.createCustomerMessage.show = true;
         this.createCustomerMessage.title = 'Registration completed successfully!';
         this.createCustomerMessage.text = 'Redirect to home page after a few seconds...';
-        setTimeout(() => this.$router.push(PathPages.Home), 4000);
+        setTimeout(() => this.$router.push(PathPages.Home), 40000000);
       } else {
+        this.loading = false;
+        this.createCustomerMessage.show = true;
         this.createCustomerMessage.title = 'Registration was not successful';
         this.createCustomerMessage.alert = 'danger';
         this.createCustomerMessage.text = `Oops... ${createCustomer.message}`;
@@ -236,8 +250,18 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 280px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
+  backdrop-filter: blur(4px);
+  scale: 1.2;
+  z-index: 1;
+}
+.success-base-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .success-message {
   font-size: 22px;
