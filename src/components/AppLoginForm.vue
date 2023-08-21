@@ -170,7 +170,6 @@ export default {
       this.wrongData = true;
     },
     blurInput(event: KeyboardEvent): void {
-      console.log('event type:', event.target);
       if (event.key === 'Enter' && event.target instanceof HTMLInputElement) {
         event.target.blur();
         this.signIn();
@@ -188,7 +187,7 @@ export default {
   font-family: var(--main-font-style);
   color: var(--main-font-color);
   margin: 10% auto auto;
-  max-width: 420px;
+  width: 420px;
   padding: 1rem 3rem 2rem 3rem;
   gap: 19px;
 }
@@ -219,5 +218,11 @@ export default {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+@media(max-width: 550px) {
+  .login-form {
+    width: 90%;
+    padding: 1rem 0 2rem 0;
+  }
 }
 </style>
