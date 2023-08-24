@@ -5,7 +5,8 @@
         v-show="isBurgerOpen"
         @closeMenu="toggleMenu"
         :isOpen="isBurgerOpen"
-        class="menu-block" />
+        class="menu-block"
+      />
     </Transition>
     <div class="wrapper container-header">
       <RouterLink :to="{ name: 'Home' }">
@@ -61,6 +62,7 @@ export default {
   position: sticky;
   top: 0;
   height: 100px;
+  margin-bottom: 50px;
   background: #ffffff;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2);
   z-index: 2;

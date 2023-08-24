@@ -45,10 +45,11 @@
     </div>
     <div class="links-list">
       <RouterLink
-        v-for="link, i in sitemap"
+        v-for="(link, i) in sitemap"
         :to="{ name: link }"
         class="button button-link"
-        v-bind:key="i">
+        v-bind:key="i"
+      >
         {{ link }}
       </RouterLink>
     </div>
@@ -63,7 +64,7 @@ import { NamePages } from '@/types/enums';
 
 export default {
   components: { BaseButton },
-  data(): { sitemap: Record<string, string>, promoBtnText: string } {
+  data(): { sitemap: Record<string, string>; promoBtnText: string } {
     return {
       sitemap: {
         login: NamePages.Login,
@@ -92,7 +93,6 @@ export default {
   justify-content: space-between;
   justify-items: stretch;
   width: 100%;
-  margin-top: 50px;
 }
 .hero {
   display: flex;
@@ -221,7 +221,7 @@ export default {
     margin-top: 1rem;
   }
 }
-@media(max-width: 470px) {
+@media (max-width: 470px) {
   .button-link {
     padding: 15px 0;
     width: 33%;
