@@ -1,7 +1,15 @@
-<template><h1 class="container">Catalog</h1></template>
+<template>
+  <div class="wrapper mt-50 w-100">
+    <AppProductList />
+  </div>
+</template>
 
 <script lang="ts">
+import AppProductList from '@/components/AppProductList.vue';
+
 export default {
-  components: {},
+  components: {
+    AppProductList,
+  },
 };
 </script>

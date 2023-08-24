@@ -25,6 +25,7 @@ const enum PathPages {
 const enum LocalStorageKeys {
   Token = 'crunch-shop: refresh',
   AnonId = 'crunch-shop: anonid',
+  Country = 'crunch-shop: country',
 }
 
 const enum Country {

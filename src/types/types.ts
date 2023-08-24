@@ -16,6 +16,7 @@ interface SelectClasses {
   'dark-theme-input': boolean;
   'valid-focus-decorator': boolean;
   'invalid-focus-decorator': boolean;
+  'plain-input': boolean;
 }
 interface BaseMessageClasses {
   primary: boolean;
@@ -29,6 +30,10 @@ interface BaseMessageClasses {
 interface TokenResponse {
   refresh_token?: string;
 }
+interface SelectOptions {
+  text: string;
+  value: string;
+}
 interface AuthorizationList {
   name: NamePages;
   authorization?: boolean;
@@ -37,6 +42,9 @@ interface AuthorizationList {
 }
 interface DataAuthorization {
   authorizationList: AuthorizationList[];
+}
+interface BaseDataAuthorization extends DataAuthorization {
+  country: SelectOptions[];
 }
 interface UserAddress {
   country: 'US' | 'GB';
@@ -98,10 +106,6 @@ interface BaseInputProps {
   hidePass: string;
   inputValue: string;
 }
-interface SelectOptions {
-  text: string;
-  value: string;
-}
 interface RegistrationMainData {
   label: string;
   type?: string;
@@ -131,6 +135,8 @@ interface RegistrationAddressData {
     value: string;
   };
 }
+type Country = 'US' | 'GB';
+
 export type {
   ButtonClasses,
   SelectClasses,
@@ -149,4 +155,6 @@ export type {
   RegistrationMainData,
   RegistrationAddressData,
   UserSignUpMain,
+  BaseDataAuthorization,
+  Country,
 };

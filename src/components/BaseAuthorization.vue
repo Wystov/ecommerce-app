@@ -1,26 +1,49 @@
 <template>
   <div class="authorization-list">
+    <BaseSelect
+      v-if="!userStore.authorized"
+      @selectOption="userStore.changeCountry"
+      class="country-select"
+      id="country"
+      :isPlain="true"
+      :options="country"
+      :default-selected="userStore.data.country" />
     <RouterLink
       v-for="(link, i) in updateAuthorizationList"
       :key="i"
       :class="link.class"
-      :to="{ name: link.name }"
-    >
-      <template v-if="link.name !== 'Account'">{{ link.name }}</template>
+      :to="{ name: link.name }">
+      <template
+        v-if="link.name !== 'Account'">{{ link.name }}
+      </template>
     </RouterLink>
   </div>
 </template>
 
 <script lang="ts">
 import { mapStores } from 'pinia';
-import type { DataAuthorization, AuthorizationList } from '@/types/types';
+import type { BaseDataAuthorization, AuthorizationList } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 import { NamePages } from '@/types/enums';
+import BaseSelect from './shared/BaseSelect.vue';
 
 export default {
-  data(): DataAuthorization {
+  components: {
+    BaseSelect,
+  },
+  data(): BaseDataAuthorization {
     const { Login, Registration, Account } = NamePages;
     return {
+      country: [
+        {
+          text: 'US',
+          value: 'US',
+        },
+        {
+          text: 'GB',
+          value: 'GB',
+        },
+      ],
       authorizationList: [
         {
           name: Registration,
@@ -43,9 +66,8 @@ export default {
   computed: {
     ...mapStores(useUserStore),
     updateAuthorizationList(): AuthorizationList[] {
-      return this.authorizationList.filter(
-        (link) => this.userStore.authorized === link.authorization,
-      );
+      return this.authorizationList
+        .filter((link) => this.userStore.authorized === link.authorization);
     },
   },
 };
@@ -98,5 +120,8 @@ export default {
   width: 40px;
   height: 40px;
   background: url(@/assets/icons/account.svg) no-repeat;
+}
+.country-select {
+  border: none;
 }
 </style>

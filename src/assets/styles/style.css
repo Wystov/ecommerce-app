@@ -117,3 +117,11 @@ hr {
 @keyframes db3-2 {
   100% {top:-0.1px}
 }
+
+.mt-50 {
+  margin-top: 50px;
+}
+
+.w-100 {
+  width: 100%;
+}

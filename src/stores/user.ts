@@ -1,11 +1,16 @@
 import { defineStore } from 'pinia';
 import api from '@/utils/api/client';
 import { initErrorHandler } from '@/utils/api/error-handler';
+import { LocalStorageKeys } from '@/types/enums';
+import type { Country } from '@/types/types';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     authorized: false,
     fetching: true,
+    data: {
+      country: localStorage.getItem(LocalStorageKeys.Country) ?? 'US',
+    },
   }),
   actions: {
     async init() {
@@ -24,6 +29,10 @@ export const useUserStore = defineStore('user', {
     },
     logoutUser() {
       this.authorized = false;
+    },
+    changeCountry(country: Country) {
+      this.data.country = country;
+      localStorage.setItem(LocalStorageKeys.Country, this.data.country);
     },
   },
 });

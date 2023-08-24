@@ -30,6 +30,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    isPlain: {
+      type: Boolean,
+      default: false,
+    },
     valid: {
       type: String,
       default: '',
@@ -49,6 +53,7 @@ export default {
         'dark-theme-input': this.isDark,
         'valid-focus-decorator': this.valid === 'valid',
         'invalid-focus-decorator': this.valid === 'invalid',
+        'plain-input': this.isPlain,
       };
     },
   },
@@ -56,6 +61,7 @@ export default {
     checkValid(e: Event): void {
       const select = e.target as HTMLSelectElement;
       if (select) {
+        this.selected = select.value;
         this.$emit('selectOption', select.value);
       }
     },
@@ -118,5 +124,9 @@ label {
 
 .dark-theme-input::placeholder {
   color: var(--dark-theme-font-color);
+}
+.plain-input {
+  border: none;
+  background-position-x: right;
 }
 </style>

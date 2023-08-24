@@ -1,0 +1,112 @@
+<template>
+  <div class="card">
+    <img class="product-image w-100" :src="image" alt="product image" />
+    <div class="product-content">
+      <p class="product-name">{{ name }}</p>
+      <p class="product-description">{{ description }}</p>
+      <div class="product-price">
+        <span v-if="salePrice" class="old-price">{{ price }}</span>
+        <span :class="salePrice ? 'new-price' : 'price'">
+          {{ salePrice ?? price }}
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import type { Price, Product, ProductData } from '@commercetools/platform-sdk';
+import { defineComponent, type PropType } from 'vue';
+import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
+
+export default defineComponent({
+  props: {
+    product: {
+      type: Object as PropType<Product>,
+      required: true,
+    },
+    currency: {
+      type: String,
+      required: true,
+    },
+    currencyTag: {
+      type: String,
+      required: true,
+    },
+  },
+  data: () => ({ imgPlaceholder }),
+  computed: {
+    data(): ProductData {
+      return this.product.masterData.current;
+    },
+    image(): string {
+      return this.data.masterVariant.images?.[0].url ?? imgPlaceholder;
+    },
+    brand(): string {
+      const attribute = this.data.masterVariant.attributes
+        ?.find((attr) => attr.name === 'brand');
+      return attribute?.value;
+    },
+    name(): string {
+      return `${this.brand} ${this.data.name.en}`;
+    },
+    description(): string {
+      const DESCRIPTION_MAX_LENGTH = 40;
+      const description = this.data.description?.en ?? '';
+      if (description.length > DESCRIPTION_MAX_LENGTH) {
+        return `${description.slice(0, DESCRIPTION_MAX_LENGTH)}...`;
+      }
+      return description;
+    },
+    priceForCountry(): Price | undefined {
+      return this.data.masterVariant.prices
+        ?.filter((price) => price.value.currencyCode === this.currency)[0];
+    },
+    price(): string | undefined {
+      const normalPrice = this.priceForCountry?.value?.centAmount;
+      return normalPrice ? this.formattedPrice(normalPrice) : undefined;
+    },
+    salePrice(): string | undefined {
+      const salePrice = this.priceForCountry?.discounted?.value.centAmount;
+      return salePrice ? this.formattedPrice(salePrice) : undefined;
+    },
+  },
+  methods: {
+    formattedPrice(cents: number): string {
+      return `${this.currencyTag}${cents / 100}`;
+    },
+  },
+});
+</script>
+
+<style scoped>
+.card {
+  width: 20%;
+  padding: 20px;
+
+  @media (max-width: 1000px) {
+    width: 30%;
+  }
+}
+.product-content {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.product-name {
+  font-weight: 600;
+}
+.old-price {
+  display: block;
+  text-decoration: line-through;
+}
+.price,
+.new-price {
+  display: block;
+  font-size: 24px;
+}
+.new-price {
+  color: var(--main-color);
+}
+</style>
