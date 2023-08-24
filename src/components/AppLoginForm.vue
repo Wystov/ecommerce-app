@@ -186,10 +186,11 @@ export default {
   align-items: center;
   font-family: var(--main-font-style);
   color: var(--main-font-color);
-  margin: 10% auto auto;
+  margin: 6% auto;
   width: 420px;
   padding: 1rem 3rem 2rem 3rem;
   gap: 19px;
+  box-sizing: content-box;
 }
 .input-block {
   width: 100%;
@@ -219,7 +220,7 @@ export default {
 .v-leave-to {
   opacity: 0;
 }
-@media(max-width: 550px) {
+@media (max-width: 550px) {
   .login-form {
     width: 90%;
     padding: 1rem 0 2rem 0;

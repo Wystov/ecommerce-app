@@ -5,7 +5,8 @@
         v-show="isBurgerOpen"
         @closeMenu="toggleMenu"
         :isOpen="isBurgerOpen"
-        class="menu-block" />
+        class="menu-block"
+      />
     </Transition>
     <div class="wrapper container-header">
       <RouterLink :to="{ name: 'Home' }">
@@ -61,6 +62,7 @@ export default {
   position: sticky;
   top: 0;
   height: 100px;
+  margin-bottom: 50px;
   background: #ffffff;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2);
   z-index: 2;
@@ -80,7 +82,11 @@ export default {
   grid-area: user;
 }
 .cart-link {
-  vertical-align: bottom;
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .header :deep(.burger) {
   display: none;
@@ -96,6 +102,16 @@ export default {
 .slide-enter-from,
 .slide-leave-to {
   transform: translateX(100%);
+}
+
+@media (max-width: 1680px) {
+  .header {
+    height: 80px;
+  }
+  .cart-link {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 @media (max-width: 900px) {
@@ -114,7 +130,12 @@ export default {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1280px) {
+  .logo {
+    width: 140px;
+  }
+}
+@media (max-width: 700px) {
   .authorization-list,
   .divider {
     display: none;

@@ -14,7 +14,8 @@
       :key="product.id"
       :productData="product"
       :currency="currency"
-      :currencyTag="currencyTag" />
+      :currencyTag="currencyTag"
+    />
   </div>
 </template>
 
@@ -89,6 +90,7 @@ export default {
 .catalog {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .sort-select {
   flex-direction: row;

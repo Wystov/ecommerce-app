@@ -7,15 +7,16 @@
       id="country"
       :isPlain="true"
       :options="country"
-      :default-selected="userStore.data.country" />
+      :default-selected="userStore.data.country"
+    />
     <RouterLink
       v-for="(link, i) in updateAuthorizationList"
       :key="i"
       :class="link.class"
-      :to="{ name: link.name }">
-      <template
-        v-if="link.name !== 'Account'">{{ link.name }}
-      </template>
+      class="link"
+      :to="{ name: link.name }"
+    >
+      <template v-if="link.name !== 'Account'">{{ link.name }} </template>
     </RouterLink>
   </div>
 </template>
@@ -66,8 +67,9 @@ export default {
   computed: {
     ...mapStores(useUserStore),
     updateAuthorizationList(): AuthorizationList[] {
-      return this.authorizationList
-        .filter((link) => this.userStore.authorized === link.authorization);
+      return this.authorizationList.filter(
+        (link) => this.userStore.authorized === link.authorization,
+      );
     },
   },
 };
@@ -81,9 +83,11 @@ export default {
 .icon {
   height: 1em;
 }
+.link {
+  font-size: 18px;
+}
 .signup-link {
   color: var(--main-color);
-  font-size: 18px;
   text-decoration: none;
   transition: 0.3s;
 
@@ -97,13 +101,12 @@ export default {
 }
 .login-link {
   display: block;
-  padding: 15px 30px;
   border: 2px solid var(--main-font-color);
   border-radius: 10px;
   color: var(--main-font-color);
-  font-size: 18px;
   text-decoration: none;
   transition: 0.3s;
+  padding: 15px 30px;
 
   &:hover {
     color: white;
@@ -119,9 +122,24 @@ export default {
   display: block;
   width: 40px;
   height: 40px;
-  background: url(@/assets/icons/account.svg) no-repeat;
+  background-image: url(/src/assets/icons/account.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .country-select {
   border: none;
+}
+@media (max-width: 1680px) {
+  .link {
+    font-size: 1rem;
+  }
+  .login-link {
+    padding: 10px 20px;
+  }
+
+  .account-link {
+    width: 30px;
+    height: 30px;
+  }
 }
 </style>

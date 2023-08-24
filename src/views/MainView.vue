@@ -7,7 +7,7 @@
           <p class="description">Order today, crunch tomorrow. Choose yours!</p>
           <BaseButton
             @click="$router.push({ name: 'Catalog' })"
-            size="large"
+            size="medium"
             class="button"
             label="Explore"
           />
@@ -26,7 +26,7 @@
           <BaseButton
             v-if="!authorized"
             @click="$router.push({ name: 'Sign Up' })"
-            size="large"
+            size="medium"
             class="button"
             label="Join us"
           />
@@ -35,7 +35,7 @@
             <BaseButton
               @click="copyPromo"
               ref="copyButton"
-              size="large"
+              size="medium"
               class="button"
               :label="promoBtnText"
             />
@@ -45,10 +45,11 @@
     </div>
     <div class="links-list">
       <RouterLink
-        v-for="link, i in sitemap"
+        v-for="(link, i) in sitemap"
         :to="{ name: link }"
         class="button button-link"
-        v-bind:key="i">
+        v-bind:key="i"
+      >
         {{ link }}
       </RouterLink>
     </div>
@@ -63,7 +64,7 @@ import { NamePages } from '@/types/enums';
 
 export default {
   components: { BaseButton },
-  data(): { sitemap: Record<string, string>, promoBtnText: string } {
+  data(): { sitemap: Record<string, string>; promoBtnText: string } {
     return {
       sitemap: {
         login: NamePages.Login,
@@ -92,7 +93,6 @@ export default {
   justify-content: space-between;
   justify-items: stretch;
   width: 100%;
-  margin-top: 50px;
 }
 .hero {
   display: flex;
@@ -111,7 +111,7 @@ export default {
 }
 .title {
   color: white;
-  font-size: 62px;
+  font-size: 2.5rem;
   font-weight: 600;
   margin: 0;
 }
@@ -125,6 +125,8 @@ export default {
   color: var(--main-font-color);
 }
 .promo {
+  display: flex;
+  align-items: center;
   position: relative;
   border-radius: 10px;
   background-color: var(--main-color);
@@ -168,9 +170,6 @@ export default {
   border: 2px solid var(--main-color);
 }
 @media (max-width: 1500px) {
-  .title {
-    font-size: 3rem;
-  }
   .description {
     font-size: 1.6rem;
   }
@@ -221,7 +220,7 @@ export default {
     margin-top: 1rem;
   }
 }
-@media(max-width: 470px) {
+@media (max-width: 470px) {
   .button-link {
     padding: 15px 0;
     width: 33%;
