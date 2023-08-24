@@ -55,9 +55,18 @@ export default {
   color: var(--main-color);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1680px) {
   .navigation-link {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  .navigation-link {
+    font-size: 1rem;
+  }
+  .navigation-list {
+    gap: 12px;
   }
 }
 </style>

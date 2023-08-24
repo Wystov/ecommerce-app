@@ -5,7 +5,8 @@
       :key="product.id"
       :product="product"
       :currency="currency"
-      :currencyTag="currencyTag" />
+      :currencyTag="currencyTag"
+    />
   </div>
 </template>
 
@@ -48,5 +49,6 @@ export default {
 .catalog {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 </style>

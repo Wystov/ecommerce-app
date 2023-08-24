@@ -1,6 +1,6 @@
 <template>
-  <div class="center">
-    <h1 class="container">Account</h1>
+  <div class="wrapper center">
+    <h1>Account</h1>
     <BaseButton @click="logOut" label="Log out" />
   </div>
 </template>
@@ -27,9 +27,12 @@ export default {
   },
   created(): void {
     if (this.userStore.fetching) {
-      this.$watch(() => this.userStore.fetching, () => {
-        if (this.userStore.authorized) this.$router.push({ name: 'Home' });
-      });
+      this.$watch(
+        () => this.userStore.fetching,
+        () => {
+          if (this.userStore.authorized) this.$router.push({ name: 'Home' });
+        },
+      );
     }
   },
 };
@@ -40,7 +43,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
   gap: 25px;
 }
 </style>
