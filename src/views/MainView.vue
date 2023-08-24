@@ -111,7 +111,7 @@ export default {
 }
 .title {
   color: white;
-  font-size: 62px;
+  font-size: 2.5rem;
   font-weight: 600;
   margin: 0;
 }
@@ -125,6 +125,8 @@ export default {
   color: var(--main-font-color);
 }
 .promo {
+  display: flex;
+  align-items: center;
   position: relative;
   border-radius: 10px;
   background-color: var(--main-color);
@@ -168,9 +170,6 @@ export default {
   border: 2px solid var(--main-color);
 }
 @media (max-width: 1500px) {
-  .title {
-    font-size: 3rem;
-  }
   .description {
     font-size: 1.6rem;
   }

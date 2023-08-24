@@ -82,7 +82,11 @@ export default {
   grid-area: user;
 }
 .cart-link {
-  vertical-align: bottom;
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .header :deep(.burger) {
   display: none;
@@ -98,6 +102,16 @@ export default {
 .slide-enter-from,
 .slide-leave-to {
   transform: translateX(100%);
+}
+
+@media (max-width: 1680px) {
+  .header {
+    height: 80px;
+  }
+  .cart-link {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 @media (max-width: 900px) {
@@ -116,7 +130,12 @@ export default {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1280px) {
+  .logo {
+    width: 140px;
+  }
+}
+@media (max-width: 700px) {
   .authorization-list,
   .divider {
     display: none;
