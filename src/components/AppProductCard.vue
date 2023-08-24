@@ -48,7 +48,7 @@ export default defineComponent({
       return attribute?.value;
     },
     name(): string {
-      return `${this.brand} ${this.productData.name.en}`;
+      return `${this.productData.name.en} by ${this.brand}`;
     },
     description(): string {
       const DESCRIPTION_MAX_LENGTH = 40;
@@ -81,6 +81,7 @@ export default defineComponent({
 
 <style scoped>
 .card {
+  box-sizing: border-box;
   width: 20%;
   padding: 20px;
 

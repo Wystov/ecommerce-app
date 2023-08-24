@@ -75,6 +75,7 @@ hr {
   margin: 0 auto;
   max-width: 1680px;
   padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .flex {

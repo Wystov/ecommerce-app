@@ -136,6 +136,7 @@ interface RegistrationAddressData {
   };
 }
 type Country = 'US' | 'GB';
+type SortBy = 'price desc' | 'price asc' | 'name en' | '';
 
 export type {
   ButtonClasses,
@@ -157,4 +158,5 @@ export type {
   UserSignUpMain,
   BaseDataAuthorization,
   Country,
+  SortBy,
 };
