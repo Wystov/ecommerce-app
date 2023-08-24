@@ -1,14 +1,14 @@
 <template>
   <div class="card">
-    <img class="product-image" :src="image" alt="product image" />
+    <img class="product-image w-100" :src="image" alt="product image" />
     <div class="product-content">
       <p class="product-name">{{ name }}</p>
       <p class="product-description">{{ description }}</p>
       <div class="product-price">
-        <p v-if="salePrice" class="old-price">{{ price }}</p>
-        <p :class="salePrice ? 'new-price' : 'price'">
+        <span v-if="salePrice" class="old-price">{{ price }}</span>
+        <span :class="salePrice ? 'new-price' : 'price'">
           {{ salePrice ?? price }}
-        </p>
+        </span>
       </div>
     </div>
   </div>
@@ -17,6 +17,7 @@
 <script lang="ts">
 import type { Price, Product, ProductData } from '@commercetools/platform-sdk';
 import { defineComponent, type PropType } from 'vue';
+import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 
 export default defineComponent({
   props: {
@@ -33,12 +34,13 @@ export default defineComponent({
       required: true,
     },
   },
+  data: () => ({ imgPlaceholder }),
   computed: {
     data(): ProductData {
       return this.product.masterData.current;
     },
     image(): string {
-      return this.data.masterVariant.images?.[0].url ?? '';
+      return this.data.masterVariant.images?.[0].url ?? imgPlaceholder;
     },
     brand(): string {
       const attribute = this.data.masterVariant.attributes
@@ -56,23 +58,22 @@ export default defineComponent({
       }
       return description;
     },
-    priceForCountry(): Price[] {
+    priceForCountry(): Price | undefined {
       return this.data.masterVariant.prices
-        ?.filter((price) => price.value.currencyCode === this.currency) ?? [];
+        ?.filter((price) => price.value.currencyCode === this.currency)[0];
     },
     price(): string | undefined {
-      const price = this.priceForCountry[0];
-      if (price !== undefined) {
-        return `${this.currencyTag}${price.value.centAmount / 100}`;
-      }
-      return undefined;
+      const normalPrice = this.priceForCountry?.value?.centAmount;
+      return normalPrice ? this.formattedPrice(normalPrice) : undefined;
     },
     salePrice(): string | undefined {
-      const onSale = this.priceForCountry[0].discounted;
-      if (onSale !== undefined) {
-        return `${this.currencyTag}${onSale.value.centAmount / 100}`;
-      }
-      return undefined;
+      const salePrice = this.priceForCountry?.discounted?.value.centAmount;
+      return salePrice ? this.formattedPrice(salePrice) : undefined;
+    },
+  },
+  methods: {
+    formattedPrice(cents: number): string {
+      return `${this.currencyTag}${cents / 100}`;
     },
   },
 });
@@ -87,9 +88,6 @@ export default defineComponent({
     width: 30%;
   }
 }
-.product-image {
-  width: 100%;
-}
 .product-content {
   margin-top: 20px;
   display: flex;
@@ -100,10 +98,12 @@ export default defineComponent({
   font-weight: 600;
 }
 .old-price {
+  display: block;
   text-decoration: line-through;
 }
 .price,
 .new-price {
+  display: block;
   font-size: 24px;
 }
 .new-price {

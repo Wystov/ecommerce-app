@@ -8,14 +8,14 @@
       :isPlain="true"
       :options="country"
       :default-selected="userStore.data.country" />
-
     <RouterLink
       v-for="(link, i) in updateAuthorizationList"
       :key="i"
       :class="link.class"
-      :to="{ name: link.name }"
-    >
-      <template v-if="link.name !== 'Account'">{{ link.name }}</template>
+      :to="{ name: link.name }">
+      <template
+        v-if="link.name !== 'Account'">{{ link.name }}
+      </template>
     </RouterLink>
   </div>
 </template>

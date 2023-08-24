@@ -5,7 +5,7 @@
       :key="product.id"
       :product="product"
       :currency="currency"
-      :currency-tag="currencyTag" />
+      :currencyTag="currencyTag" />
   </div>
 </template>
 
