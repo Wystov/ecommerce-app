@@ -3,14 +3,14 @@
     <AppProductCard
       v-for="product in productList"
       :key="product.id"
-      :product="product"
+      :productData="product"
       :currency="currency"
       :currencyTag="currencyTag" />
   </div>
 </template>
 
 <script lang="ts">
-import type { Product } from '@commercetools/platform-sdk';
+import type { ProductProjection } from '@commercetools/platform-sdk';
 import { mapState } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
@@ -20,7 +20,7 @@ export default {
   components: {
     AppProductCard,
   },
-  data: (): { productList: Product[] } => ({
+  data: (): { productList: ProductProjection[] } => ({
     productList: [],
   }),
   computed: {
@@ -34,7 +34,8 @@ export default {
   },
   methods: {
     async getProducts(): Promise<void> {
-      const { body } = await api.call().products().get().execute();
+      const { body } = await api.call().productProjections().search().get()
+        .execute();
       this.productList = body.results;
     },
   },

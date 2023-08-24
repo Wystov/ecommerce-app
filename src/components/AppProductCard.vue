@@ -15,14 +15,14 @@
 </template>
 
 <script lang="ts">
-import type { Price, Product, ProductData } from '@commercetools/platform-sdk';
+import type { Price, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { defineComponent, type PropType } from 'vue';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 
 export default defineComponent({
   props: {
-    product: {
-      type: Object as PropType<Product>,
+    productData: {
+      type: Object as PropType<ProductProjection>,
       required: true,
     },
     currency: {
@@ -36,30 +36,30 @@ export default defineComponent({
   },
   data: () => ({ imgPlaceholder }),
   computed: {
-    data(): ProductData {
-      return this.product.masterData.current;
+    product(): ProductVariant {
+      return this.productData.masterVariant;
     },
     image(): string {
-      return this.data.masterVariant.images?.[0].url ?? imgPlaceholder;
+      return this.product.images?.[0].url ?? imgPlaceholder;
     },
     brand(): string {
-      const attribute = this.data.masterVariant.attributes
+      const attribute = this.product.attributes
         ?.find((attr) => attr.name === 'brand');
       return attribute?.value;
     },
     name(): string {
-      return `${this.brand} ${this.data.name.en}`;
+      return `${this.brand} ${this.productData.name.en}`;
     },
     description(): string {
       const DESCRIPTION_MAX_LENGTH = 40;
-      const description = this.data.description?.en ?? '';
+      const description = this.productData.description?.en ?? '';
       if (description.length > DESCRIPTION_MAX_LENGTH) {
         return `${description.slice(0, DESCRIPTION_MAX_LENGTH)}...`;
       }
       return description;
     },
     priceForCountry(): Price | undefined {
-      return this.data.masterVariant.prices
+      return this.product.prices
         ?.filter((price) => price.value.currencyCode === this.currency)[0];
     },
     price(): string | undefined {
