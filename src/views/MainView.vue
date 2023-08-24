@@ -7,7 +7,7 @@
           <p class="description">Order today, crunch tomorrow. Choose yours!</p>
           <BaseButton
             @click="$router.push({ name: 'Catalog' })"
-            size="large"
+            size="medium"
             class="button"
             label="Explore"
           />
@@ -26,7 +26,7 @@
           <BaseButton
             v-if="!authorized"
             @click="$router.push({ name: 'Sign Up' })"
-            size="large"
+            size="medium"
             class="button"
             label="Join us"
           />
@@ -35,7 +35,7 @@
             <BaseButton
               @click="copyPromo"
               ref="copyButton"
-              size="large"
+              size="medium"
               class="button"
               :label="promoBtnText"
             />
