@@ -84,6 +84,9 @@ export default defineComponent({
   box-sizing: border-box;
   width: 20%;
   padding: 20px;
+  border: 1px solid #e9e9e9;
+  margin-left: -1px;
+  margin-top: -1px;
 
   @media (max-width: 1000px) {
     width: 30%;

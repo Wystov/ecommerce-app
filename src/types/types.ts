@@ -136,7 +136,7 @@ interface RegistrationAddressData {
   };
 }
 type Country = 'US' | 'GB';
-type SortBy = 'price desc' | 'price asc' | 'name en' | '';
+type SortBy = 'price desc' | 'price asc' | 'name en';
 
 export type {
   ButtonClasses,
