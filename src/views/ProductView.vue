@@ -1,6 +1,6 @@
 <template>
   <section class="wrapper">
-    <AppProduct :keyProduct="1" />
+    <AppProduct :keyProduct="36" />
   </section>
 </template>
 

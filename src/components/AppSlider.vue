@@ -13,7 +13,7 @@
   >
     <swiper-slide
       v-for="(url, i) in images"
-      :key="i"
+      :key="i + 1000"
     ><img
       :src="url"
       alt="product image"
@@ -65,7 +65,7 @@ export default {
     SwiperSlide,
   },
   setup(): SwiperSetup {
-    const thumbsSwiper = ref();
+    const thumbsSwiper = ref<null | SwiperType>(null);
 
     const setThumbsSwiper = (swiper: SwiperType): void => {
       thumbsSwiper.value = swiper;
@@ -84,6 +84,7 @@ export default {
 .swiper {
   width: 100%;
   height: 100%;
+      border-radius: 20px;
 }
 
 .swiper-slide {
@@ -92,13 +93,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
 }
 
 .swiper-slide img {
   display: block;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  border-radius: 20px;
 }
 
 .swiper {
@@ -128,6 +131,7 @@ export default {
   width: 25%;
   height: 100%;
   opacity: 0.4;
+  cursor: pointer;
 }
 
 .mySwiper .swiper-slide-thumb-active {
@@ -137,8 +141,9 @@ export default {
 .swiper-slide img {
   display: block;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  border-radius: 20px;
 }
 .swiper-button-prev:after,
 .swiper-button-next:after {

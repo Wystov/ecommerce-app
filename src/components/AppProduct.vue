@@ -4,7 +4,9 @@
       <AppSlider :images="product.images" />
     </div>
     <div class="product-info">
-      <h1 class="product-name">{{ product.name }}</h1>
+      <h1 class="product-name">{{ product.name[0] }}
+        <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
+      </h1>
       <div class="product-price-group">
         <div class="price-container">
           <BasePrice
@@ -34,20 +36,15 @@
           @click="removeFromCart"
           outline
           class="button"
-        >Remove from cart</BaseButton
-        >
+        >Remove from cart</BaseButton>
         <BaseButton v-else @click="addToCart" class="button">Add to cart</BaseButton>
       </div>
       <ul class="specification-list">
-        <li class="specification-item">
-          <span class="property">Brand:</span> <span class="value"> {{ product.brand }}</span>
-        </li>
-        <li class="specification-item">
-          <span class="property">Type:</span> <span class="value">FLAKES</span>
-        </li>
-        <li class="specification-item">
-          <span class="property">Weight:</span>
-          <span class="value">{{ product.weight + ' oz' }}</span>
+        <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
+          <span class="property">{{ attr.name }}</span>
+          <span class="value">
+            {{ attr.name === 'weight' ? attr.value + ' oz' : attr.value }}
+          </span>
         </li>
       </ul>
       <p class="description">{{ product.description }}</p>
@@ -64,6 +61,8 @@ import BaseButton from './shared/BaseButton.vue';
 import AppSlider from './AppSlider.vue';
 import BasePrice from './shared/BasePrice.vue';
 
+type Attribute = { name: string, value: string }
+
 export default {
   components: {
     BaseButton,
@@ -79,9 +78,8 @@ export default {
   data(): {
     productAPI: null | ProductData;
     product: {
-      name: string;
-      brand: string;
-      weight: string;
+      name: string[];
+      attributes?: Attribute[];
       description: string;
       images: string[];
     };
@@ -89,9 +87,8 @@ export default {
     return {
       productAPI: null,
       product: {
-        name: '',
-        brand: '',
-        weight: '',
+        name: [],
+        attributes: [],
         description: '',
         images: [],
       },
@@ -137,13 +134,11 @@ export default {
       this.productAPI = body.masterData.current;
       const { masterVariant } = this.productAPI;
 
-      this.product.name = this.productAPI?.name.en;
-      this.product.brand = masterVariant?.attributes?.find((attr) => attr.name === 'brand')?.value;
-      this.product.weight = masterVariant?.attributes?.find((attr) => attr.name === 'weight')
-        ?.value;
+      this.splittedTitle(this.productAPI?.name.en);
+      this.product.attributes = masterVariant?.attributes;
       this.product.description = this.productAPI?.description?.en || '';
       this.product.images = masterVariant.images?.map((img) => img.url) || [];
-      console.log(this.productAPI, this.product.images);
+      console.log(this.productAPI);
     },
     getPriceData(): Price | undefined {
       return this.productAPI?.masterVariant?.prices?.find(
@@ -156,6 +151,16 @@ export default {
     removeFromCart(): void {
       this.userStore.removeProductFromCart(this.keyProduct);
     },
+    splittedTitle(title: string): void {
+      const words = title.split(' ');
+
+      if (words.length < 3) {
+        this.product.name[0] = words.splice(0, 1).join('');
+        this.product.name[1] = words.join(' ');
+      } else {
+        this.product.name[0] = title;
+      }
+    },
   },
   created(): void {
     this.getProduct();
@@ -165,10 +170,11 @@ export default {
 
 <style scoped>
 .product-content {
-  display: flex;
-  flex-wrap: wrap;
+  --gap: 40px;
+  display: grid;
+  grid-template-columns: repeat(2, calc(50% - var(--gap) / 2));
   justify-content: center;
-  gap: 40px;
+  gap: var(--gap);
   width: 100%;
   --second-color: #f9f9f9;
 }
@@ -176,26 +182,26 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 100%;
-  max-width: 384px;
   padding: 80px 130px;
   border-radius: 20px;
   background: var(--second-color);
-  max-width: 384px;
+  height: fit-content;
 }
 .product-info {
   display: flex;
   flex-direction: column;
   align-content: center;
-  max-width: 384px;
-
   gap: 42px;
 }
 .product-name {
   margin: 0;
   font-weight: 700;
   text-align: center;
+  .product-name-light {
+  font-weight: 500;
 }
+}
+
 .button {
   width: 100%;
 }
@@ -235,10 +241,12 @@ export default {
     display: flex;
     font-size: 18px;
     opacity: 0.5;
+    text-transform: capitalize;
   }
   .value {
     display: flex;
     font-size: 22px;
+    text-transform: uppercase;
   }
 }
 .description {
