@@ -9,6 +9,7 @@ import CartView from '@/views/CartView.vue';
 import { NamePages, PathPages } from '@/types/enums';
 import AccountView from '@/views/AccountView.vue';
 import { useUserStore } from '@/stores/user';
+import ProductView from '@/views/ProductView.vue';
 
 const {
   Home, AboutUs, Catalog, Login, Registration, NotFound, Cart, Account,
@@ -77,6 +78,14 @@ const routes = [
     component: AccountView,
     meta: {
       title: Account,
+    },
+  },
+  {
+    name: 'Product',
+    path: '/product',
+    component: ProductView,
+    meta: {
+      title: 'Product',
     },
   },
 ];

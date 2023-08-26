@@ -11,6 +11,7 @@ interface ButtonClasses {
   circle: boolean;
   active: boolean;
   disabled: boolean;
+  outline: boolean;
 }
 interface SelectClasses {
   'dark-theme-input': boolean;
@@ -137,6 +138,17 @@ interface RegistrationAddressData {
 }
 type Country = 'US' | 'GB';
 
+interface StateUser {
+  authorized: boolean;
+  fetching: boolean;
+  data: {
+      country: string;
+      cart: {
+          product: number[];
+      };
+  };
+}
+
 export type {
   ButtonClasses,
   SelectClasses,
@@ -157,4 +169,5 @@ export type {
   UserSignUpMain,
   BaseDataAuthorization,
   Country,
+  StateUser,
 };
