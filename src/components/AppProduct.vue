@@ -212,6 +212,7 @@ export default {
   gap: 18px;
   border-radius: 20px;
   border: 2px solid #eb5461;
+  backdrop-filter: blur(4px);
 }
 .price-container {
   display: flex;
@@ -225,6 +226,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
+  backdrop-filter: blur(4px);
   .specification-item {
     display: flex;
     justify-content: space-between;
@@ -251,5 +253,6 @@ export default {
 }
 .description {
   text-align: justify;
+  backdrop-filter: blur(4px);
 }
 </style>

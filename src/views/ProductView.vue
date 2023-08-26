@@ -1,7 +1,9 @@
 <template>
-  <section class="wrapper">
-    <AppProduct :keyProduct="36" />
-  </section>
+  <div class="bg">
+    <section class="wrapper">
+      <AppProduct :keyProduct="36" />
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,5 +18,10 @@ export default {
 <style scoped>
 .wrapper {
   margin-top: 50px;
+
+}
+.bg {
+background-image: url('../assets/images/product_pattern.svg');
+  background-size: 50%;
 }
 </style>
