@@ -1,5 +1,5 @@
 <template>
-  <section class="container not-found-container">
+  <section class="wrapper not-found-container">
     <img :src="image" class="image" alt="Not Found Page" />
     <div class="caption">
       <h2 class="title">{{ title }}</h2>
@@ -53,10 +53,9 @@ export default {
 .not-found-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 46px;
-  margin-top: 160px;
+  margin-top: 110px;
 }
 
 .image {

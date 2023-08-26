@@ -1,5 +1,5 @@
 <template>
-  <h1 class="container">Cart</h1>
+  <h1 class="wrapper">Cart</h1>
 </template>
 
 <script lang="ts">

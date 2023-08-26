@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper mt-50 w-100">
+  <div class="wrapper w-100">
     <AppProductList />
   </div>
 </template>
