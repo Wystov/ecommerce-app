@@ -137,6 +137,24 @@ interface RegistrationAddressData {
 }
 type Country = 'US' | 'GB';
 type SortBy = 'price desc' | 'price asc' | 'name en';
+interface FacetTerm {
+  term: string;
+  count: number;
+}
+interface FacetResult {
+  terms: FacetTerm[];
+  total: number;
+  selected: Set<string>;
+}
+interface FilterOptions {
+  brand: FacetResult;
+  weight: FacetResult;
+  price: FacetResult;
+}
+interface FacetResults {
+  [key: string]: FacetResult;
+}
+type Filter = 'brand' | 'weight' | 'price';
 
 export type {
   ButtonClasses,
@@ -159,4 +177,9 @@ export type {
   BaseDataAuthorization,
   Country,
   SortBy,
+  FilterOptions,
+  FacetTerm,
+  FacetResult,
+  FacetResults,
+  Filter,
 };

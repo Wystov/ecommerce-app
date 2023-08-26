@@ -12,10 +12,11 @@
 
 <script lang="ts">
 import type { ProductProjection } from '@commercetools/platform-sdk';
-import { mapState } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import { useFilterStore } from '@/stores/filter';
 import api from '@/utils/api/client';
+import type { FacetResults } from '@/types/types';
 import AppProductCard from './AppProductCard.vue';
 
 export default {
@@ -29,7 +30,7 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, { userData: 'data' }),
-    ...mapState(useFilterStore, ['queryArgs']),
+    ...mapState(useFilterStore, ['queryArgs', 'loaded']),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
     },
@@ -38,12 +39,14 @@ export default {
     },
   },
   methods: {
+    ...mapActions(useFilterStore, ['setFilterOptions']),
     async getProducts(): Promise<void | undefined> {
       const { queryArgs } = this;
       const { body } = await api.call().productProjections().search()
         .get({ queryArgs })
         .execute();
       console.log(body);
+      this.setFilterOptions(body.facets as unknown as FacetResults);
       this.productList = body.results;
     },
   },
