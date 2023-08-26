@@ -144,7 +144,7 @@ interface FacetTerm {
 interface FacetResult {
   terms: FacetTerm[];
   total: number;
-  selected: Set<string>;
+  selected: Set<string> | [number, number];
 }
 interface FilterOptions {
   brand: FacetResult;

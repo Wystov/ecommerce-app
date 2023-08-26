@@ -31,28 +31,40 @@ export const useFilterStore = defineStore('filter', {
       this.loaded = true;
       const brands = options['variants.attributes.brand'];
       brands.terms.sort((a, b) => a.term.localeCompare(b.term));
+      brands.selected = new Set();
       this.filterOptions.brand = brands;
-      this.filterOptions.weight = options['variants.attributes.weight'];
+      const weight = options['variants.attributes.weight'];
+      weight.terms.sort((a, b) => parseFloat(a.term) - parseFloat(b.term));
+      weight.selected = [0, 0];
+      this.filterOptions.weight = weight;
+      console.log(weight);
       this.filterOptions.price = options['variants.price.centAmount'];
-      Object.keys(this.filterOptions).forEach((key) => {
-        this.filterOptions[key as Filter].selected = new Set();
-      });
     },
     buildFilterOptions() {
       const activeFilters = Object.entries(this.filterOptions)
-        .filter(([, options]) => options.selected.size)
+        .filter(([, options]) => {
+          const { selected } = options;
+          return selected instanceof Set
+            ? selected.size > 0
+            : Array.isArray(selected) && selected.length > 0;
+        })
         .map(([key, options]) => {
-          const filterValue = [...options.selected]
-            .map((option) => `"${option}"`)
-            .join(', ');
-          return `variants.attributes.${key}: ${filterValue}`;
+          const filterValue = options.selected instanceof Array
+            ? `range (${options.selected[0]} to ${options.selected[1]})`
+            : [...options.selected].map((option) => `"${option}"`).join(', ');
+          return `variants.attributes.${key}:${filterValue}`;
         });
       this.filter = activeFilters.length ? activeFilters : undefined;
     },
-    changeFilterOptions(name: Filter, key: string) {
+    changeCheckFilterOptions(name: Filter, key: string) {
       const { selected } = this.filterOptions[name];
+      if (!(selected instanceof Set)) return;
       selected.has(key) ? selected.delete(key) : selected.add(key);
       this.buildFilterOptions();
+    },
+    changeRangeFilterOptions(name: Filter, range: [number, number], build?: 'build') {
+      this.filterOptions[name].selected = range;
+      if (build) this.buildFilterOptions();
     },
   },
 });
