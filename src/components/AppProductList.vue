@@ -46,7 +46,6 @@ export default {
       const { body } = await api.call().productProjections().search()
         .get({ queryArgs })
         .execute();
-      console.log(body);
       this.setFilterOptions(body.facets as unknown as FacetResults);
       this.productList = body.results;
     },
