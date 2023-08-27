@@ -151,6 +151,7 @@ interface StateUser {
 }
 type Attribute = { name: string; value: string };
 interface AppProduct {
+  fetching: boolean;
   productData: null | ProductData;
   product: {
     name: string[];

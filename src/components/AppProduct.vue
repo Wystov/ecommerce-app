@@ -1,5 +1,8 @@
 <template>
-  <div class="product-content">
+  <div v-if="fetching" class="spinner-container">
+    <div class="spinner" />
+  </div>
+  <div v-else class="product-content">
     <h1 class="product-name mobile-name">
       {{ product.name[0] }}
       <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
@@ -80,6 +83,7 @@ export default {
   },
   data(): AppProduct {
     return {
+      fetching: true,
       productData: null,
       product: {
         name: [],
@@ -133,6 +137,8 @@ export default {
         this.product.images = masterVariant.images?.map((img) => img.url) || [];
       } catch (error) {
         console.error('Error getting data from server', error);
+      } finally {
+        this.fetching = false;
       }
     },
     getPriceData(): Price | undefined {
@@ -158,6 +164,12 @@ export default {
 </script>
 
 <style scoped>
+.spinner-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
 .product-content {
   --second-color: #f9f9f9;
   --gap: 40px;

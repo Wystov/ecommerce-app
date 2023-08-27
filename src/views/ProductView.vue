@@ -17,7 +17,7 @@ export default {
 </script>
 <style scoped>
 .bg {
-background-image: url('../assets/images/product_pattern.svg');
+  background-image: url('../assets/images/product_pattern.svg');
   background-size: 50%;
 }
 </style>
