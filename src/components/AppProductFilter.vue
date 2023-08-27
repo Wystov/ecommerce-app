@@ -1,6 +1,10 @@
 <template>
   <div class="filter-container">
     <template v-if="loaded">
+      <BaseButton
+        @click="resetStore"
+        class="button button-reset"
+      >Reset</BaseButton>
       <div class="checkbox-filter">
         <span class="title">Brand <span class="count">{{ brands.length }}</span></span>
         <BaseCheckbox
@@ -98,7 +102,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions']),
+    ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions', 'resetStore']),
     isBrandChecked(brand: string): boolean {
       const { selected } = this.filterOptions.brand;
       if (selected instanceof Set) {
@@ -115,6 +119,7 @@ export default {
     this.$watch(
       () => this.loaded,
       () => {
+        if (!this.loaded) return;
         this.weightRange = [this.minWeight, this.maxWeight];
         this.priceRange = [this.minPrice, this.maxPrice];
         this.changeRangeFilterOptions('weight', this.weightRange);
@@ -166,5 +171,14 @@ export default {
   max-width: fit-content;
   font-size: 1rem;
   padding: 0.5rem 1rem;
+}
+.button-reset {
+  background-color: white;
+  color: var(--main-font-color);
+  border: 2px solid var(--main-font-color);
+
+  &:hover {
+    border: 2px solid transparent;
+  }
 }
 </style>

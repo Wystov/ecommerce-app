@@ -71,5 +71,8 @@ export const useFilterStore = defineStore('filter', {
       this.filterOptions[name].selected = range;
       if (build) this.buildFilterOptions();
     },
+    resetStore(): void {
+      this.$reset();
+    },
   },
 });
