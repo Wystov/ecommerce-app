@@ -1,3 +1,4 @@
+import type { ProductData } from '@commercetools/platform-sdk';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -148,6 +149,16 @@ interface StateUser {
       };
   };
 }
+type Attribute = { name: string; value: string };
+interface AppProduct {
+  productData: null | ProductData;
+  product: {
+    name: string[];
+    attributes?: Attribute[];
+    description: string;
+    images: string[];
+  };
+}
 
 export type {
   ButtonClasses,
@@ -170,4 +181,5 @@ export type {
   BaseDataAuthorization,
   Country,
   StateUser,
+  AppProduct,
 };

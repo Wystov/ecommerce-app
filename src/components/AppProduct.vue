@@ -20,14 +20,7 @@
             :symbol="currencyTag"
             :price="price"
           />
-          <BasePrice
-            v-else
-            :size="26"
-            :symbol="currencyTag"
-            discounted
-            strikethrough
-            :price="price"
-          />
+          <BasePrice v-else :size="26" :symbol="currencyTag" strikethrough :price="price" />
           <BasePrice
             v-if="priceDiscounted !== ''"
             :size="52"
@@ -37,13 +30,18 @@
           />
         </div>
         <BaseButton
-          v-if="isInCart"
-          @click="removeFromCart"
+          v-if="hasProductInCart(keyProduct)"
+          @click="removeProductFromCart(keyProduct)"
           outline
           class="button"
         >Remove from cart</BaseButton
         >
-        <BaseButton v-else @click="addToCart" class="button">Add to cart</BaseButton>
+        <BaseButton
+          v-else
+          @click="addProductToCart(keyProduct)"
+          class="button"
+        >Add to cart</BaseButton
+        >
       </div>
       <ul class="specification-list">
         <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
@@ -59,15 +57,14 @@
 </template>
 
 <script lang="ts">
-import type { ProductData, Price } from '@commercetools/platform-sdk';
-import { mapState, mapStores } from 'pinia';
+import type { Price } from '@commercetools/platform-sdk';
+import { mapState, mapActions } from 'pinia';
+import type { AppProduct } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
 import BaseButton from './shared/BaseButton.vue';
 import AppSlider from './AppSlider.vue';
 import BasePrice from './shared/BasePrice.vue';
-
-type Attribute = { name: string; value: string };
 
 export default {
   components: {
@@ -81,17 +78,9 @@ export default {
       required: true,
     },
   },
-  data(): {
-    productAPI: null | ProductData;
-    product: {
-      name: string[];
-      attributes?: Attribute[];
-      description: string;
-      images: string[];
-    };
-    } {
+  data(): AppProduct {
     return {
-      productAPI: null,
+      productData: null,
       product: {
         name: [],
         attributes: [],
@@ -102,7 +91,6 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, { userData: 'data' }),
-    ...mapStores(useUserStore),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
     },
@@ -125,11 +113,9 @@ export default {
       }
       return '';
     },
-    isInCart(): Boolean {
-      return this.userStore.hasProductInCart(this.keyProduct);
-    },
   },
   methods: {
+    ...mapActions(useUserStore, ['addProductToCart', 'removeProductFromCart', 'hasProductInCart']),
     async getProduct(): Promise<void> {
       try {
         const { body } = await api
@@ -138,27 +124,21 @@ export default {
           .withKey({ key: `${this.keyProduct}` })
           .get()
           .execute();
-        this.productAPI = body.masterData.current;
-        const { masterVariant } = this.productAPI;
+        this.productData = body.masterData.current;
+        const { masterVariant } = this.productData;
 
-        this.splittedTitle(this.productAPI?.name.en);
+        this.splittedTitle(this.productData?.name.en);
         this.product.attributes = masterVariant?.attributes;
-        this.product.description = this.productAPI?.description?.en || '';
+        this.product.description = this.productData?.description?.en || '';
         this.product.images = masterVariant.images?.map((img) => img.url) || [];
       } catch (error) {
         console.error('Error getting data from server', error);
       }
     },
     getPriceData(): Price | undefined {
-      return this.productAPI?.masterVariant?.prices?.find(
+      return this.productData?.masterVariant?.prices?.find(
         (price) => price.value.currencyCode === this.currency,
       );
-    },
-    addToCart(): void {
-      this.userStore.addProductToCart(this.keyProduct);
-    },
-    removeFromCart(): void {
-      this.userStore.removeProductFromCart(this.keyProduct);
     },
     splittedTitle(title: string): void {
       const words = title.split(' ');
@@ -225,7 +205,6 @@ export default {
   gap: 18px;
   border-radius: 20px;
   border: 2px solid #eb5461;
-  backdrop-filter: blur(4px);
 }
 .price-container {
   display: flex;
@@ -239,7 +218,6 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  backdrop-filter: blur(4px);
   .specification-item {
     display: flex;
     justify-content: space-between;
@@ -266,7 +244,6 @@ export default {
 }
 .description {
   text-align: justify;
-  backdrop-filter: blur(4px);
 }
 
 @media (max-width: 1680px) {
