@@ -37,8 +37,10 @@ export const useFilterStore = defineStore('filter', {
       weight.terms.sort((a, b) => parseFloat(a.term) - parseFloat(b.term));
       weight.selected = [0, 0];
       this.filterOptions.weight = weight;
-      console.log(weight);
-      this.filterOptions.price = options['variants.price.centAmount'];
+      const price = options['variants.price.centAmount'];
+      price.terms.sort((a, b) => parseFloat(a.term) - parseFloat(b.term));
+      price.selected = [0, 0];
+      this.filterOptions.price = price;
     },
     buildFilterOptions() {
       const activeFilters = Object.entries(this.filterOptions)
@@ -52,7 +54,8 @@ export const useFilterStore = defineStore('filter', {
           const filterValue = options.selected instanceof Array
             ? `range (${options.selected[0]} to ${options.selected[1]})`
             : [...options.selected].map((option) => `"${option}"`).join(', ');
-          return `variants.attributes.${key}:${filterValue}`;
+          const queryPath = key === 'price' ? 'price.centAmount' : `attributes.${key}`;
+          return `variants.${queryPath}:${filterValue}`;
         });
       this.filter = activeFilters.length ? activeFilters : undefined;
     },

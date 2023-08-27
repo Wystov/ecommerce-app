@@ -14,19 +14,32 @@
           <span class="weight-range">&nbsp;({{ item.count }})</span>
         </BaseCheckbox>
       </div>
-      <div class="weight">
-        <span class="title">Weight</span>
+      <div class="range-filter">
+        <span class="title">Price</span>
         <Slider
-          v-model="weightRange"
-          :min="minWeight"
-          :max="maxWeight"
-          :tooltipPosition="'bottom'"
+          v-model="priceRange"
+          :min="minPrice"
+          :max="maxPrice"
           :step="0.1"
           :tooltips="false"
           :lazy="false"
           class="range-slider"
         />
-        <span class="weight-range">{{ weightRange[0] }} - {{ weightRange[1] }} oz.</span>
+        <span class="nums-range">${{ priceRange[0] / 100 }} - ${{ priceRange[1] / 100 }}</span>
+        <BaseButton @click="changeRangeFilterOptions('price', priceRange, 'build')" size="small">Apply</BaseButton>
+      </div>
+      <div class="range-filter">
+        <span class="title">Weight</span>
+        <Slider
+          v-model="weightRange"
+          :min="minWeight"
+          :max="maxWeight"
+          :step="0.1"
+          :tooltips="false"
+          :lazy="false"
+          class="range-slider"
+        />
+        <span class="nums-range">{{ weightRange[0] }} oz. - {{ weightRange[1] }} oz.</span>
         <BaseButton @click="changeRangeFilterOptions('weight', weightRange, 'build')" size="small">Apply</BaseButton>
       </div>
     </template>
@@ -48,9 +61,10 @@ export default {
     BaseButton,
     Slider,
   },
-  data(): { weightRange: [number, number]; } {
+  data(): { weightRange: [number, number]; priceRange: [number, number]; } {
     return {
       weightRange: [0, 0],
+      priceRange: [0, 0],
     };
   },
   computed: {
@@ -65,17 +79,29 @@ export default {
       const i = this.filterOptions.weight.terms.length - 1;
       return parseFloat(this.filterOptions.weight.terms[i].term);
     },
+    minPrice(): number {
+      return parseFloat(this.filterOptions.price.terms[0].term);
+    },
+    maxPrice(): number {
+      const i = this.filterOptions.price.terms.length - 1;
+      return parseFloat(this.filterOptions.price.terms[i].term);
+    },
   },
   methods: {
     ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions']),
   },
   created(): void {
-    if (this.loaded) this.weightRange = [this.minWeight, this.maxWeight];
+    if (this.loaded) {
+      this.weightRange = [this.minWeight, this.maxWeight];
+      this.priceRange = [this.minPrice, this.maxPrice];
+    }
     this.$watch(
       () => this.loaded,
       () => {
         this.weightRange = [this.minWeight, this.maxWeight];
+        this.priceRange = [this.minPrice, this.maxPrice];
         this.changeRangeFilterOptions('weight', this.weightRange);
+        this.changeRangeFilterOptions('price', this.priceRange);
       },
     );
   },
@@ -104,7 +130,7 @@ export default {
 .brands {
   border-bottom: 1px solid #e9e9e9;
 }
-.weight {
+.range-filter {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -113,7 +139,7 @@ export default {
   --slider-connect-bg: var(--main-color);
   --slider-handle-ring-color: transparent;
 }
-.weight-range {
+.nums-range {
   display: block;
 }
 </style>
