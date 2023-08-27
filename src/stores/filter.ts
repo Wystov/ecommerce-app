@@ -10,9 +10,18 @@ export const useFilterStore = defineStore('filter', {
     facet: ['variants.attributes.weight', 'variants.attributes.brand', 'variants.price.centAmount'],
     filter: undefined as string[] | undefined,
     filterOptions: {
-      brand: {},
-      weight: {},
-      price: {},
+      brand: {
+        key: 'variants.attributes.brand',
+        selected: new Set(),
+      },
+      weight: {
+        key: 'variants.attributes.weight',
+        selected: [0, 0],
+      },
+      price: {
+        key: 'variants.price.centAmount',
+        selected: [0, 0],
+      },
     } as FilterOptions,
   }),
   getters: {
@@ -28,32 +37,25 @@ export const useFilterStore = defineStore('filter', {
     },
     setFilterOptions(options: FacetResults) {
       if (this.loaded) return;
+      Object.keys(this.filterOptions).forEach((option) => {
+        const filterKey = this.filterOptions[option as keyof FilterOptions].key;
+        const filter = options[filterKey];
+        filter.terms.sort((a, b) => ((option === 'brand')
+          ? a.term.localeCompare(b.term)
+          : parseFloat(a.term) - parseFloat(b.term)));
+        Object.assign(this.filterOptions[option as keyof FilterOptions], filter);
+      });
       this.loaded = true;
-      const brands = options['variants.attributes.brand'];
-      brands.terms.sort((a, b) => a.term.localeCompare(b.term));
-      brands.selected = new Set();
-      this.filterOptions.brand = brands;
-      const weight = options['variants.attributes.weight'];
-      weight.terms.sort((a, b) => parseFloat(a.term) - parseFloat(b.term));
-      weight.selected = [0, 0];
-      this.filterOptions.weight = weight;
-      const price = options['variants.price.centAmount'];
-      price.terms.sort((a, b) => parseFloat(a.term) - parseFloat(b.term));
-      price.selected = [0, 0];
-      this.filterOptions.price = price;
     },
     buildFilterOptions() {
       const activeFilters = Object.entries(this.filterOptions)
-        .filter(([, options]) => {
-          const { selected } = options;
-          return selected instanceof Set
-            ? selected.size > 0
-            : Array.isArray(selected) && selected.length > 0;
-        })
-        .map(([key, options]) => {
-          const filterValue = options.selected instanceof Array
-            ? `range (${options.selected[0]} to ${options.selected[1]})`
-            : [...options.selected].map((option) => `"${option}"`).join(', ');
+        .filter(([, { selected }]) => (selected instanceof Set
+          ? selected.size > 0
+          : Array.isArray(selected) && selected.length > 0))
+        .map(([key, { selected }]) => {
+          const filterValue = selected instanceof Array
+            ? `range (${selected[0]} to ${selected[1]})`
+            : [...selected].map((option) => `"${option}"`).join(', ');
           const queryPath = key === 'price' ? 'price.centAmount' : `attributes.${key}`;
           return `variants.${queryPath}:${filterValue}`;
         });

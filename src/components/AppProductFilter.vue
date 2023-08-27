@@ -9,6 +9,7 @@
           :key="item.term"
           :id="item.term"
           :label="item.term"
+          :checked="isBrandChecked(item.term)"
           name="brand"
           class="variant">
           <span class="weight-range">&nbsp;({{ item.count }})</span>
@@ -20,7 +21,7 @@
           v-model="priceRange"
           :min="minPrice"
           :max="maxPrice"
-          :step="0.1"
+          :step="1"
           :tooltips="false"
           :lazy="false"
           class="range-slider"
@@ -89,11 +90,18 @@ export default {
   },
   methods: {
     ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions']),
+    isBrandChecked(brand: string): boolean {
+      const { selected } = this.filterOptions.brand;
+      if (selected instanceof Set) {
+        return selected.has(brand);
+      }
+      return false;
+    },
   },
   created(): void {
     if (this.loaded) {
-      this.weightRange = [this.minWeight, this.maxWeight];
-      this.priceRange = [this.minPrice, this.maxPrice];
+      this.weightRange = this.filterOptions.weight.selected as [number, number];
+      this.priceRange = this.filterOptions.price.selected as [number, number];
     }
     this.$watch(
       () => this.loaded,
@@ -110,7 +118,6 @@ export default {
 
 <style scoped>
 .filter-container {
-  min-height: 100vh;
   width: 250px;
   border-right: 1px solid #e9e9e9;
   padding-right: 1rem;

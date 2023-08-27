@@ -141,9 +141,11 @@ interface FacetTerm {
   term: string;
   count: number;
 }
+type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.price.centAmount';
 interface FacetResult {
   terms: FacetTerm[];
   total: number;
+  key: FilterKey;
   selected: Set<string> | [number, number];
 }
 interface FilterOptions {
@@ -182,4 +184,5 @@ export type {
   FacetResult,
   FacetResults,
   Filter,
+  FilterKey,
 };
