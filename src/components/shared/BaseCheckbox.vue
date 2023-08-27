@@ -9,7 +9,9 @@
       :checked="checked"
       :disabled="disabled"
     />
-    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }">{{ label }}</label>
+    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }">
+      {{ label }}<slot />
+    </label>
   </div>
 </template>
 
