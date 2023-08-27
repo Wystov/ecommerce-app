@@ -1,23 +1,28 @@
 <template>
   <div class="product-content">
+    <h1 class="product-name mobile-name">
+      {{ product.name[0] }}
+      <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
+    </h1>
     <div class="product-slider">
       <AppSlider :images="product.images" />
     </div>
     <div class="product-info">
-      <h1 class="product-name">{{ product.name[0] }}
+      <h1 class="product-name">
+        {{ product.name[0] }}
         <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
       </h1>
       <div class="product-price-group">
         <div class="price-container">
           <BasePrice
             v-if="priceDiscounted === ''"
-            :size="32"
+            :size="40"
             :symbol="currencyTag"
             :price="price"
           />
           <BasePrice
             v-else
-            :size="24"
+            :size="26"
             :symbol="currencyTag"
             discounted
             strikethrough
@@ -25,7 +30,7 @@
           />
           <BasePrice
             v-if="priceDiscounted !== ''"
-            :size="42"
+            :size="52"
             :symbol="currencyTag"
             discounted
             :price="priceDiscounted"
@@ -36,7 +41,8 @@
           @click="removeFromCart"
           outline
           class="button"
-        >Remove from cart</BaseButton>
+        >Remove from cart</BaseButton
+        >
         <BaseButton v-else @click="addToCart" class="button">Add to cart</BaseButton>
       </div>
       <ul class="specification-list">
@@ -61,7 +67,7 @@ import BaseButton from './shared/BaseButton.vue';
 import AppSlider from './AppSlider.vue';
 import BasePrice from './shared/BasePrice.vue';
 
-type Attribute = { name: string, value: string }
+type Attribute = { name: string; value: string };
 
 export default {
   components: {
@@ -170,13 +176,14 @@ export default {
 
 <style scoped>
 .product-content {
+  --second-color: #f9f9f9;
   --gap: 40px;
+
   display: grid;
   grid-template-columns: repeat(2, calc(50% - var(--gap) / 2));
   justify-content: center;
   gap: var(--gap);
   width: 100%;
-  --second-color: #f9f9f9;
 }
 .product-slider {
   display: flex;
@@ -198,8 +205,11 @@ export default {
   font-weight: 700;
   text-align: center;
   .product-name-light {
-  font-weight: 500;
-}
+    font-weight: 500;
+  }
+  &.mobile-name {
+    display: none;
+  }
 }
 
 .button {
@@ -254,5 +264,60 @@ export default {
 .description {
   text-align: justify;
   backdrop-filter: blur(4px);
+}
+
+@media (max-width: 1680px) {
+  .product-content {
+    display: flex;
+  }
+  .product-slider {
+    max-width: 100%;
+    width: 30vw;
+    padding: 4vw 5vw;
+  }
+  .product-info {
+    max-width: 100%;
+    width: 40vw;
+  }
+}
+@media (max-width: 900px) {
+  .product-price-group {
+    padding: 34px;
+  }
+  .product-slider {
+    width: 42vw;
+    background: transparent;
+    padding: 0;
+    padding-top: 4vw;
+  }
+}
+@media (max-width: 768px) {
+  .product-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .product-slider,
+  .product-info {
+    width: 70vw;
+    padding-top: 0;
+  }
+  .product-name {
+    display: none;
+    &.mobile-name {
+      display: block;
+      font-size: 48px;
+    }
+  }
+}
+@media (max-width: 500px) {
+  .product-slider,
+  .product-info {
+    width: 80vw;
+  }
+  .product-name {
+    &.mobile-name {
+      font-size: 38px;
+    }
+  }
 }
 </style>

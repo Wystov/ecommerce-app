@@ -53,12 +53,18 @@ import type { SwiperModule, Swiper as SwiperType } from 'swiper/types';
 
 interface SwiperSetup {
   thumbsSwiper: Ref<SwiperType | null | undefined>;
-  setThumbsSwiper: (swiper: SwiperType) => void; modules: SwiperModule[];
+  setThumbsSwiper: (swiper: SwiperType) => void;
+  modules: SwiperModule[];
 }
 
 export default {
   props: {
-    images: { type: Array<string>, default: ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjOFlo/R8ABfECde1VE6sAAAAASUVORK5CYII'] },
+    images: {
+      type: Array<string>,
+      default: [
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjOFlo/R8ABfECde1VE6sAAAAASUVORK5CYII',
+      ],
+    },
   },
   components: {
     Swiper,
@@ -84,7 +90,7 @@ export default {
 .swiper {
   width: 100%;
   height: 100%;
-      border-radius: 20px;
+  border-radius: 20px;
 }
 
 .swiper-slide {
@@ -94,6 +100,8 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 20px;
+  background-size: cover;
+  background-position: center;
 }
 
 .swiper-slide img {
@@ -109,11 +117,6 @@ export default {
   height: 300px;
   margin-left: auto;
   margin-right: auto;
-}
-
-.swiper-slide {
-  background-size: cover;
-  background-position: center;
 }
 
 .mySwiper2 {
@@ -138,13 +141,6 @@ export default {
   opacity: 1;
 }
 
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 20px;
-}
 .swiper-button-prev:after,
 .swiper-button-next:after {
   color: var(--main-color);
