@@ -1,5 +1,5 @@
 <template>
-  <div class="catalog">
+  <div v-if="productList.length" class="catalog">
     <AppProductCard
       v-for="product in productList"
       :key="product.id"
@@ -8,6 +8,7 @@
       :currencyTag="currencyTag"
     />
   </div>
+  <div v-else>No products found</div>
 </template>
 
 <script lang="ts">

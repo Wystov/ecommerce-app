@@ -1,7 +1,7 @@
 <template>
   <div class="filter-container">
     <template v-if="loaded">
-      <div class="brands">
+      <div class="checkbox-filter">
         <span class="title">Brand <span class="count">{{ brands.length }}</span></span>
         <BaseCheckbox
           v-for="item in brands"
@@ -26,7 +26,9 @@
           :lazy="false"
           class="range-slider"
         />
-        <span class="nums-range">${{ priceRange[0] / 100 }} - ${{ priceRange[1] / 100 }}</span>
+        <span class="nums-range">
+          ${{ priceRange[0] / 100 }} - ${{ priceRange[1] / 100 }}
+        </span>
         <BaseButton @click="changeRangeFilterOptions('price', priceRange, 'build')" size="small">Apply</BaseButton>
       </div>
       <div class="range-filter">
@@ -40,8 +42,15 @@
           :lazy="false"
           class="range-slider"
         />
-        <span class="nums-range">{{ weightRange[0] }} oz. - {{ weightRange[1] }} oz.</span>
-        <BaseButton @click="changeRangeFilterOptions('weight', weightRange, 'build')" size="small">Apply</BaseButton>
+        <span class="nums-range">
+          {{ weightRange[0] }} oz. - {{ weightRange[1] }} oz.
+        </span>
+        <BaseButton
+          @click="changeRangeFilterOptions('weight', weightRange, 'build')"
+          class="button"
+          size="small">
+          Apply
+        </BaseButton>
       </div>
     </template>
   </div>
@@ -134,19 +143,28 @@ export default {
 .variant {
   padding-bottom: 0.5rem;
 }
-.brands {
+.checkbox-filter {
   border-bottom: 1px solid #e9e9e9;
+  padding-bottom: 0.5rem;
 }
 .range-filter {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9e9e9;
 }
 .range-slider {
   --slider-connect-bg: var(--main-color);
   --slider-handle-ring-color: transparent;
+  padding: 0 0.5rem;
 }
 .nums-range {
   display: block;
+}
+.button {
+  max-width: fit-content;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
 }
 </style>
