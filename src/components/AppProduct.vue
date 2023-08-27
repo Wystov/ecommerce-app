@@ -2,61 +2,63 @@
   <div v-if="fetching" class="spinner-container">
     <div class="spinner" />
   </div>
-  <div v-else class="product-content">
-    <h1 class="product-name mobile-name">
-      {{ product.name[0] }}
-      <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
-    </h1>
-    <div class="product-slider">
-      <AppSlider :images="product.images" />
-    </div>
-    <div class="product-info">
-      <h1 class="product-name">
+  <Transition>
+    <div v-if="!fetching" class="product-content">
+      <h1 class="product-name mobile-name">
         {{ product.name[0] }}
         <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
       </h1>
-      <div class="product-price-group">
-        <div class="price-container">
-          <BasePrice
-            v-if="priceDiscounted === ''"
-            :size="40"
-            :symbol="currencyTag"
-            :price="price"
-          />
-          <BasePrice v-else :size="26" :symbol="currencyTag" strikethrough :price="price" />
-          <BasePrice
-            v-if="priceDiscounted !== ''"
-            :size="52"
-            :symbol="currencyTag"
-            discounted
-            :price="priceDiscounted"
-          />
-        </div>
-        <BaseButton
-          v-if="hasProductInCart(keyProduct)"
-          @click="removeProductFromCart(keyProduct)"
-          outline
-          class="button"
-        >Remove from cart</BaseButton
-        >
-        <BaseButton
-          v-else
-          @click="addProductToCart(keyProduct)"
-          class="button"
-        >Add to cart</BaseButton
-        >
+      <div class="product-slider">
+        <AppSlider :images="product.images" />
       </div>
-      <ul class="specification-list">
-        <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
-          <span class="property">{{ attr.name }}</span>
-          <span class="value">
-            {{ attr.name === 'weight' ? attr.value + ' oz' : attr.value }}
-          </span>
-        </li>
-      </ul>
-      <p class="description">{{ product.description }}</p>
+      <div class="product-info">
+        <h1 class="product-name">
+          {{ product.name[0] }}
+          <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
+        </h1>
+        <div class="product-price-group">
+          <div class="price-container">
+            <BasePrice
+              v-if="priceDiscounted === ''"
+              :size="40"
+              :symbol="currencyTag"
+              :price="price"
+            />
+            <BasePrice v-else :size="26" :symbol="currencyTag" strikethrough :price="price" />
+            <BasePrice
+              v-if="priceDiscounted !== ''"
+              :size="52"
+              :symbol="currencyTag"
+              discounted
+              :price="priceDiscounted"
+            />
+          </div>
+          <BaseButton
+            v-if="hasProductInCart(keyProduct)"
+            @click="removeProductFromCart(keyProduct)"
+            outline
+            class="button"
+          >Remove from cart</BaseButton
+          >
+          <BaseButton
+            v-else
+            @click="addProductToCart(keyProduct)"
+            class="button"
+          >Add to cart</BaseButton
+          >
+        </div>
+        <ul class="specification-list">
+          <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
+            <span class="property">{{ attr.name }}</span>
+            <span class="value">
+              {{ attr.name === 'weight' ? attr.value + ' oz' : attr.value }}
+            </span>
+          </li>
+        </ul>
+        <p class="description">{{ product.description }}</p>
+      </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -170,6 +172,14 @@ export default {
   display: grid;
   place-items: center;
 }
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 .product-content {
   --second-color: #f9f9f9;
   --gap: 40px;
@@ -206,7 +216,6 @@ export default {
     display: none;
   }
 }
-
 .button {
   width: 100%;
 }
@@ -257,7 +266,6 @@ export default {
 .description {
   text-align: justify;
 }
-
 @media (max-width: 1680px) {
   .product-content {
     display: flex;
