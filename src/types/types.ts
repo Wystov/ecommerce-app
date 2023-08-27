@@ -1,3 +1,4 @@
+import type { ProductData } from '@commercetools/platform-sdk';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -11,6 +12,7 @@ interface ButtonClasses {
   circle: boolean;
   active: boolean;
   disabled: boolean;
+  outline: boolean;
 }
 interface SelectClasses {
   'dark-theme-input': boolean;
@@ -137,6 +139,28 @@ interface RegistrationAddressData {
 }
 type Country = 'US' | 'GB';
 
+interface StateUser {
+  authorized: boolean;
+  fetching: boolean;
+  data: {
+      country: string;
+      cart: {
+          product: number[];
+      };
+  };
+}
+type Attribute = { name: string; value: string };
+interface AppProduct {
+  fetching: boolean;
+  productData: null | ProductData;
+  product: {
+    name: string[];
+    attributes?: Attribute[];
+    description: string;
+    images: string[];
+  };
+}
+
 export type {
   ButtonClasses,
   SelectClasses,
@@ -157,4 +181,6 @@ export type {
   UserSignUpMain,
   BaseDataAuthorization,
   Country,
+  StateUser,
+  AppProduct,
 };

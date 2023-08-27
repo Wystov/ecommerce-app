@@ -2,14 +2,17 @@ import { defineStore } from 'pinia';
 import api from '@/utils/api/client';
 import { initErrorHandler } from '@/utils/api/error-handler';
 import { LocalStorageKeys } from '@/types/enums';
-import type { Country } from '@/types/types';
+import type { Country, StateUser } from '@/types/types';
 
 export const useUserStore = defineStore('user', {
-  state: () => ({
+  state: (): StateUser => ({
     authorized: false,
     fetching: true,
     data: {
       country: localStorage.getItem(LocalStorageKeys.Country) ?? 'US',
+      cart: {
+        product: [],
+      },
     },
   }),
   actions: {
@@ -33,6 +36,16 @@ export const useUserStore = defineStore('user', {
     changeCountry(country: Country) {
       this.data.country = country;
       localStorage.setItem(LocalStorageKeys.Country, this.data.country);
+    },
+    hasProductInCart(keyProduct: number): Boolean {
+      return this.data.cart.product.includes(keyProduct);
+    },
+    addProductToCart(keyProduct: number) {
+      this.data.cart.product.push(keyProduct);
+    },
+    removeProductFromCart(keyProduct: number) {
+      const index = this.data.cart.product.findIndex(((product) => product === keyProduct));
+      this.data.cart.product.splice(index, 1);
     },
   },
 });
