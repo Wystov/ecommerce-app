@@ -131,20 +131,23 @@ export default {
   },
   methods: {
     async getProduct(): Promise<void> {
-      const { body } = await api
-        .call()
-        .products()
-        .withKey({ key: `${this.keyProduct}` })
-        .get()
-        .execute();
-      this.productAPI = body.masterData.current;
-      const { masterVariant } = this.productAPI;
+      try {
+        const { body } = await api
+          .call()
+          .products()
+          .withKey({ key: `${this.keyProduct}` })
+          .get()
+          .execute();
+        this.productAPI = body.masterData.current;
+        const { masterVariant } = this.productAPI;
 
-      this.splittedTitle(this.productAPI?.name.en);
-      this.product.attributes = masterVariant?.attributes;
-      this.product.description = this.productAPI?.description?.en || '';
-      this.product.images = masterVariant.images?.map((img) => img.url) || [];
-      console.log(this.productAPI);
+        this.splittedTitle(this.productAPI?.name.en);
+        this.product.attributes = masterVariant?.attributes;
+        this.product.description = this.productAPI?.description?.en || '';
+        this.product.images = masterVariant.images?.map((img) => img.url) || [];
+      } catch (error) {
+        console.error('Error getting data from server', error);
+      }
     },
     getPriceData(): Price | undefined {
       return this.productAPI?.masterVariant?.prices?.find(
