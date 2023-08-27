@@ -9,6 +9,7 @@ import CartView from '@/views/CartView.vue';
 import { NamePages, PathPages } from '@/types/enums';
 import AccountView from '@/views/AccountView.vue';
 import { useUserStore } from '@/stores/user';
+import ProductView from '@/views/ProductView.vue';
 
 const {
   Home, AboutUs, Catalog, Login, Registration, NotFound, Cart, Account,
@@ -79,6 +80,14 @@ const routes = [
       title: Account,
     },
   },
+  {
+    name: 'Product',
+    path: '/product',
+    component: ProductView,
+    meta: {
+      title: 'Product',
+    },
+  },
 ];
 
 const router = createRouter({
@@ -88,11 +97,13 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const { authorized } = useUserStore();
-  const isNeedRedirect = (authorized && (to.name === Login || to.name === Registration))
-  || (!authorized && to.name === Account);
+  const isNeedRedirectToMain = authorized && (to.name === Login || to.name === Registration);
+  const isNeedRedirectToLogin = !authorized && to.name === Account;
 
-  if (isNeedRedirect) {
+  if (isNeedRedirectToMain) {
     next(PathPages.Home);
+  } else if (isNeedRedirectToLogin) {
+    next(PathPages.Login);
   } else {
     document.title = `Crunch! ${to.meta.title}`;
     next();

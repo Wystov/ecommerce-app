@@ -15,6 +15,7 @@ export default {
     circle: { type: Boolean, default: false },
     active: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
+    outline: { type: Boolean, default: false },
     as: { type: String, default: 'button' },
   },
   computed: {
@@ -30,6 +31,7 @@ export default {
         circle: this.circle,
         active: this.active,
         disabled: this.disabled,
+        outline: this.outline,
       };
     },
   },
@@ -44,7 +46,7 @@ export default {
   justify-content: center;
   width: auto;
   min-width: 4em;
-  border: solid 1px transparent;
+  border: solid 2px transparent;
   border-radius: 10px;
   transition: 0.3s;
   cursor: pointer;
@@ -95,6 +97,23 @@ export default {
   &:not(:disabled):active,
   &.active {
     background: var(--main-color-active);
+  }
+}
+
+.theme-light.outline {
+  background: transparent;
+  color: var(--main-font-color);
+  border: 2px solid var(--main-font-color);
+  &:not(:disabled):hover {
+    border: 2px solid var(--main-color-hover);
+    color: var(--main-color);
+    background: #fff;
+  }
+
+  &:not(:disabled):active,
+  &.active {
+    color: var(--main-color-active);
+    border: 2px solid var(--main-color-active);
   }
 }
 

@@ -29,6 +29,7 @@
     "lodash": "^4.17.21",
     "pinia": "^2.1.4",
     "postcode-validator": "^3.8.14",
+    "swiper": "^10.2.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },
