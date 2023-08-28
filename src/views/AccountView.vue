@@ -10,6 +10,7 @@
       </template>
     </div>
     <AppAccountInfo v-if="activeIndex === 0" />
+    <AppAccountAddresses v-if="activeIndex === 1" />
   </div>
 </template>
 
@@ -17,10 +18,10 @@
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import AppAccountInfo from '@/components/AppAccountInfo.vue';
-// import { LocalStorageKeys } from '@/types/enums';
+import AppAccountAddresses from '@/components/AppAccountAddresses.vue';
 
 export default {
-  components: { AppAccountInfo },
+  components: { AppAccountInfo, AppAccountAddresses },
   computed: {
     ...mapStores(useUserStore),
   },
@@ -33,7 +34,6 @@ export default {
   methods: {
     setActiveSection(index: number): void {
       this.activeIndex = index;
-      // console.log('token:', this.userStore.email);
     },
   },
   created(): void {

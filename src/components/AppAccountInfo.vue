@@ -1,18 +1,12 @@
 <template>
   <div class="info-container">
     <div class="info-block">
-      <div class="info-item">
-        <span>First name</span>
-        <span class="content">{{ name }}</span>
-      </div>
-      <div class="info-item">
-        <span>Last Name</span>
-        <span class="content">{{ surname }}</span>
-      </div>
-      <div class="info-item">
-        <span>Date of birth</span>
-        <span class="content">{{ date }}</span>
-      </div>
+      <span class="content-name">First name</span>
+      <span class="content">{{ firstName }}</span>
+      <span class="content-name">Last Name</span>
+      <span class="content">{{ lastName }}</span>
+      <span class="content-name">Date of birth</span>
+      <span class="content">{{ birthDate }}</span>
     </div>
     <div class="buttons-block">
       <BaseButton label="Update info" @click="getData" />
@@ -27,21 +21,38 @@ import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import { LocalStorageKeys } from '@/types/enums';
+import type { AccountInfoData } from '@/types/types';
 import api from '@/utils/api/client';
 
 export default {
   components: {
     BaseButton,
   },
+  data(): AccountInfoData {
+    return {
+      name: '',
+      surname: '',
+      date: '',
+    };
+  },
   computed: {
     ...mapStores(useUserStore),
-    name(): string {
+    firstName(): string {
+      if (this.name) {
+        return this.name;
+      }
       return '';
     },
-    surname(): string {
+    lastName(): string {
+      if (this.surname) {
+        return this.surname;
+      }
       return '';
     },
-    date(): string {
+    birthDate(): string {
+      if (this.date) {
+        return this.date;
+      }
       return '';
     },
   },
@@ -53,24 +64,36 @@ export default {
       this.$router.push({ name: 'Home' });
     },
     async getData(): Promise<void> {
-      const body = await api.call().customerGroups();
-      console.log('body:', body);
+      try {
+        const { body } = await api.call().me().get().execute();
+        this.name = body.firstName;
+        this.surname = body.lastName;
+        this.date = body.dateOfBirth;
+      } catch (error) {
+        console.error('Error:', error);
+      }
     },
+  },
+  created(): void {
+    this.getData();
   },
 };
 </script>
 
 <style scoped>
-.info-container,
-.info-block {
+.info-container {
   display: flex;
   flex-direction: column;
   gap: 3rem;
 }
-.info-item {
-  display: flex;
-  align-items: flex-end;
+.info-block {
+  display: grid;
+  grid-template-columns: 0.3fr 1fr;
+  align-items: end;
   gap: 3rem;
+}
+.content-name {
+  width: fit-content;
 }
 .content {
   font-size: 1.5rem;

@@ -135,6 +135,11 @@ interface RegistrationAddressData {
     value: string;
   };
 }
+interface AccountInfoData {
+  name: string | undefined;
+  surname: string | undefined;
+  date: string | undefined;
+}
 type Country = 'US' | 'GB';
 
 export type {
@@ -157,4 +162,5 @@ export type {
   UserSignUpMain,
   BaseDataAuthorization,
   Country,
+  AccountInfoData,
 };
