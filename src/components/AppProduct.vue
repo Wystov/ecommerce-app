@@ -2,8 +2,8 @@
   <div v-if="fetching" class="spinner-container">
     <div class="spinner" />
   </div>
-  <Transition>
-    <div v-if="!fetching" class="product-content">
+  <Transition v-else>
+    <div v-if="productData" class="product-content">
       <h1 class="product-name mobile-name">
         {{ product.name[0] }}
         <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
@@ -58,6 +58,7 @@
         <p class="description">{{ product.description }}</p>
       </div>
     </div>
+    <NotFoundView v-else />
   </Transition>
 </template>
 
@@ -67,6 +68,7 @@ import { mapState, mapActions } from 'pinia';
 import type { AppProduct } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
+import NotFoundView from '@/views/NotFoundView.vue';
 import BaseButton from './shared/BaseButton.vue';
 import AppSlider from './AppSlider.vue';
 import BasePrice from './shared/BasePrice.vue';
@@ -76,6 +78,7 @@ export default {
     BaseButton,
     AppSlider,
     BasePrice,
+    NotFoundView,
   },
   props: {
     keyProduct: {
@@ -123,14 +126,15 @@ export default {
   methods: {
     ...mapActions(useUserStore, ['addProductToCart', 'removeProductFromCart', 'hasProductInCart']),
     async getProduct(): Promise<void> {
+      const { slug } = this.$route.params;
+      const queryArgs = { where: `slug(en="${slug}")` };
       try {
-        const { body } = await api
-          .call()
-          .products()
-          .withKey({ key: `${this.keyProduct}` })
-          .get()
+        const { body } = await api.call()
+          .productProjections().get({ queryArgs })
           .execute();
-        this.productData = body.masterData.current;
+        if (!body.results.length) throw new Error('no product');
+        // eslint-disable-next-line prefer-destructuring
+        this.productData = body.results[0];
         const { masterVariant } = this.productData;
 
         this.splittedTitle(this.productData?.name.en);
@@ -138,7 +142,7 @@ export default {
         this.product.description = this.productData?.description?.en || '';
         this.product.images = masterVariant.images?.map((img) => img.url) || [];
       } catch (error) {
-        console.error('Error getting data from server', error);
+        this.productData = null;
       } finally {
         this.fetching = false;
       }

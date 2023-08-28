@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <RouterLink class="card" :to="{ name: 'Product', params: { slug } }">
     <img class="product-image w-100" :src="image" alt="product image" />
     <div class="product-content">
       <p class="product-name">{{ name }}</p>
@@ -11,7 +11,7 @@
         </span>
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>
 
 <script lang="ts">
@@ -70,6 +70,9 @@ export default defineComponent({
       const salePrice = this.priceForCountry?.discounted?.value.centAmount;
       return salePrice ? this.formattedPrice(salePrice) : undefined;
     },
+    slug(): string {
+      return this.productData.slug.en;
+    },
   },
   methods: {
     formattedPrice(cents: number): string {
@@ -87,6 +90,7 @@ export default defineComponent({
   border: 1px solid #e9e9e9;
   margin-left: -1px;
   margin-top: -1px;
+  text-decoration: none;
 
   @media (max-width: 1000px) {
     width: 30%;
