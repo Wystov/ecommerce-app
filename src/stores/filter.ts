@@ -72,7 +72,9 @@ export const useFilterStore = defineStore('filter', {
       if (build) this.buildFilterOptions();
     },
     resetStore(): void {
+      const { sort } = this;
       this.$reset();
+      this.sort = sort;
     },
   },
 });
