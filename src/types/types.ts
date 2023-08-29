@@ -181,6 +181,17 @@ interface FacetResults {
   [key: string]: FacetResult;
 }
 type Filter = 'brand' | 'weight' | 'price';
+interface CategoryMap {
+  id: string;
+  parentId: string | null;
+  name: string;
+  routerName: string;
+  params: {
+    categorySlug: string;
+    subcategorySlug?: string;
+  }
+  children: CategoryMap[];
+}
 
 export type {
   ButtonClasses,
@@ -211,4 +222,5 @@ export type {
   FacetResults,
   Filter,
   FilterKey,
+  CategoryMap,
 };

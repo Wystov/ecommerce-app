@@ -176,6 +176,7 @@ export default {
   padding: 0.5rem 1rem;
 }
 .button-reset {
+  margin-top: 1rem;
   background-color: white;
   color: var(--main-font-color);
   border: 2px solid var(--main-font-color);

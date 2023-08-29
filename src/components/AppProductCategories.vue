@@ -1,26 +1,75 @@
 <template>
   <template v-if="loaded">
-    <div class="links">
-      <RouterLink
-        v-for="category in categories.data"
-        :key="category.id"
-        :to="{ name: 'Category', params: { categorySlug: category.slug.en } }">
-        {{ category.name.en }}
-      </RouterLink>
-    </div>
+    <span class="title">Categories</span>
+    <nav class="links">
+      <ul class="categories">
+        <li class="category-item">
+          <RouterLink
+            :to="{ name: 'Catalog' }"
+            class="category-link">
+            All
+          </RouterLink>
+        </li>
+        <template v-for="category in mappedCategories" :key="category.id">
+          <li class="category-item">
+            <RouterLink
+              :to="{ name: category.routerName, params: category.params }"
+              class="category-link">
+              {{ category.name }}
+            </RouterLink>
+          </li>
+          <ul v-if="category.children.length" class="subcategories">
+            <li
+              v-for="child in category.children"
+              :key="child.id"
+              class="subcategory-item">
+              <RouterLink
+                :to="{ name: child.routerName, params: child.params }"
+                class="subcategory-link">
+                {{ child.name }}
+              </RouterLink>
+            </li>
+          </ul>
+        </template>
+      </ul>
+    </nav>
   </template>
+
 </template>
 
 <script lang="ts">
 import { mapState, mapActions } from 'pinia';
 import { useFilterStore } from '@/stores/filter';
 import api from '@/utils/api/client';
+import type { CategoryMap } from '@/types/types';
 
 export default {
   computed: {
     ...mapState(useFilterStore, ['categories']),
     loaded(): boolean {
       return this.categories.data.length > 0;
+    },
+    mappedCategories(): CategoryMap[] | null {
+      if (!this.loaded) return null;
+      const categories: CategoryMap[] = this.categories.data.map((category) => ({
+        name: category.name.en,
+        id: category.id,
+        parentId: category.parent?.id ?? null,
+        params: { categorySlug: category.slug.en },
+        routerName: 'Category',
+        children: [],
+      }));
+      categories.forEach((item) => {
+        const category = item;
+        const parent = categories.find((c) => c.id === category.parentId);
+        if (parent) {
+          category.params.subcategorySlug = category.params.categorySlug;
+          category.params.categorySlug = parent.params.categorySlug;
+          category.routerName = 'Subcategory';
+          parent.children.push(category);
+        }
+      });
+      return categories.filter((cat) => !cat.parentId);
     },
   },
   methods: {
@@ -39,9 +88,33 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  display: block;
+  font-weight: 600;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
 .links {
-  display: flex;
-  flex-direction: column;
+  border-bottom: 1px solid #e9e9e9;
+  padding-bottom: 0.5rem;
+}
+.categories,
+.subcategories {
+  padding-left: 1rem;
+}
+.category-item,
+.subcategory-item {
+  padding-bottom: 0.3rem;
+}
+.category-item {
+  list-style-type: disc;
+}
+.subcategory-item {
+  list-style-type: circle;
+}
+.category-link,
+.subcategory-link {
+  text-decoration: none;
 }
 .router-link-exact-active {
   color: var(--main-color);

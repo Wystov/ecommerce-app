@@ -33,7 +33,7 @@ const routes = [
     },
   },
   {
-    name: 'Catalog',
+    name: Catalog,
     path: '/catalog',
     component: CatalogView,
   },
