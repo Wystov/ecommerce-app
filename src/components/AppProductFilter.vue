@@ -1,6 +1,7 @@
 <template>
   <div class="filter-container">
     <template v-if="loaded">
+      <AppProductCategories />
       <BaseButton
         @click="resetStore"
         class="button button-reset"
@@ -68,12 +69,14 @@ import type { FacetTerm } from '@/types/types';
 import BaseCheckbox from './shared/BaseCheckbox.vue';
 import BaseButton from './shared/BaseButton.vue';
 import '@vueform/slider/themes/default.css';
+import AppProductCategories from './AppProductCategories.vue';
 
 export default {
   components: {
     BaseCheckbox,
     BaseButton,
     Slider,
+    AppProductCategories,
   },
   data(): { weightRange: [number, number]; priceRange: [number, number]; } {
     return {

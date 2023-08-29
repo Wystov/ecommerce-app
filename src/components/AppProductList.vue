@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, { userData: 'data' }),
-    ...mapState(useFilterStore, ['queryArgs', 'loaded']),
+    ...mapState(useFilterStore, ['queryArgs', 'loaded', 'categories', 'categoriesLoaded']),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
     },
@@ -40,20 +40,35 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useFilterStore, ['setFilterOptions']),
+    ...mapActions(useFilterStore, ['setFilterOptions', 'changeCategory', 'getCategories']),
+    async checkCategory(): Promise<void> {
+      if (!this.categoriesLoaded) await this.getCategories();
+      const { params } = this.$route;
+      const { categorySlug, subcategorySlug } = params;
+      const selectedSlug = subcategorySlug ?? categorySlug;
+      const { current } = this.categories;
+      if (selectedSlug !== current) this.changeCategory(selectedSlug as string);
+    },
     async getProducts(): Promise<void | undefined> {
+      await this.checkCategory();
       const { queryArgs } = this;
       const { body } = await api.call().productProjections().search()
         .get({ queryArgs })
         .execute();
       this.setFilterOptions(body.facets as unknown as FacetResults);
+      if (!this.loaded) this.buildFilterOptions();
       this.productList = body.results;
+      console.log('products', body.results);
     },
   },
   created(): void {
     this.getProducts();
     this.$watch(
       () => this.queryArgs,
+      () => { if (this.loaded) this.getProducts(); },
+    );
+    this.$watch(
+      () => this.$route.params,
       () => this.getProducts(),
     );
   },
