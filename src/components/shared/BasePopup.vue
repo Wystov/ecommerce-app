@@ -29,7 +29,7 @@ export default {
   props: {
     show: { type: Boolean, default: false },
     className: { type: String, default: 'popup-default' },
-    closeIn: { type: Boolean, default: true },
+    closeIn: { type: Boolean, default: false },
   },
   watch: {
     show(): void {
