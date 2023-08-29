@@ -43,6 +43,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'warn',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
+    'no-unused-expressions': ['error', { allowTernary: true }],
   },
   settings: {
     'import/resolver': {

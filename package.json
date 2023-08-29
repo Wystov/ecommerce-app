@@ -24,6 +24,7 @@
     "@commercetools/sdk-client-v2": "^2.2.0",
     "@heroicons/vue": "^2.0.18",
     "@types/lodash": "^4.14.197",
+    "@vueform/slider": "^2.1.7",
     "axios": "^1.4.0",
     "lodash": "^4.17.21",
     "pinia": "^2.1.4",

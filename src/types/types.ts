@@ -160,6 +160,27 @@ interface AppProduct {
     images: string[];
   };
 }
+type SortBy = 'price desc' | 'price asc' | 'name en';
+interface FacetTerm {
+  term: string;
+  count: number;
+}
+type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.price.centAmount';
+interface FacetResult {
+  terms: FacetTerm[];
+  total: number;
+  key: FilterKey;
+  selected: Set<string> | [number, number];
+}
+interface FilterOptions {
+  brand: FacetResult;
+  weight: FacetResult;
+  price: FacetResult;
+}
+interface FacetResults {
+  [key: string]: FacetResult;
+}
+type Filter = 'brand' | 'weight' | 'price';
 
 export type {
   ButtonClasses,
@@ -183,4 +204,11 @@ export type {
   Country,
   StateUser,
   AppProduct,
+  SortBy,
+  FilterOptions,
+  FacetTerm,
+  FacetResult,
+  FacetResults,
+  Filter,
+  FilterKey,
 };
