@@ -1,18 +1,46 @@
 <template>
-  <BasePopup :show="showPopUp" @close="showPopUp = !showPopUp" />
+  <BasePopup :show="showPopUp" @close="closePopUp">
+    <swiper
+      zoom
+      loop
+      navigation
+      :spaceBetween="0"
+      :initialSlide="currentIndexSlide"
+      :modules="modules"
+      :keyboard="{
+        enabled: true,
+      }"
+      @slide-change-transition-start="(swiper) => (currentIndexSlide = swiper.realIndex)"
+      class="mySwiperPopUp"
+    >
+      <swiper-slide
+        zoom
+        v-for="(url, i) in images"
+        :key="i"
+      ><img
+        :src="url"
+        @error="setImgPlaceholder"
+        alt="product image"
+      /></swiper-slide>
+    </swiper>
+    <p class="popup-describe">
+      <span :style="{ verticalAlign: 'middle' }"
+      ><CursorArrowRaysIcon :style="{ width: '1em' }" /></span
+      >Double click on image to zoom
+    </p>
+  </BasePopup>
   <swiper
-    loop
     :style="{
       '--swiper-navigation-color': 'var(--main-color)',
       '--swiper-pagination-color': 'var(--main-color)',
     }"
-    pagination
+    @swiper="mainSwiper = $event"
+    loop
     :spaceBetween="10"
-    :thumbs="{ swiper: thumbsSwiper }"
     :modules="modules"
+    :pagination="{ clickable: true }"
+    :thumbs="{ swiper: thumbsSwiper }"
     :navigation="{ nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }"
-    class="mySwiper"
-    effect="coverflow"
     :coverflowEffect="{
       rotate: 50,
       stretch: 0,
@@ -20,29 +48,31 @@
       modifier: 1,
       slideShadows: false,
     }"
+    effect="coverflow"
+    class="mySwiper"
   >
     <swiper-slide
       v-for="(url, i) in images"
       :key="i"
     ><img
       :src="url"
-      alt="product image"
-      @keydown="showPopUp = true"
-      @click="showPopUp = true"
+      @keydown="openPopUp(i)"
+      @click="openPopUp(i)"
       @error="setImgPlaceholder"
+      alt="product image"
     /></swiper-slide>
   </swiper>
   <div class="slider-thumb-container">
     <div class="swiper-button-prev" />
     <div class="swiper-button-next" />
     <swiper
-      @swiper="setThumbsSwiper"
       loop
       freeMode
       watchSlidesProgress
       :spaceBetween="10"
       :slides-per-view="3"
       :modules="modules"
+      @swiper="setThumbsSwiper"
       class="mySwiperThumb"
     >
       <swiper-slide
@@ -50,8 +80,8 @@
         :key="i"
       ><img
         :src="url"
-        alt="product image"
         @error="setImgPlaceholder"
+        alt="product image"
       /></swiper-slide>
     </swiper>
   </div>
@@ -62,22 +92,34 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
+import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/thumbs';
 
 import { ref, type Ref } from 'vue';
 import {
-  FreeMode, Navigation, Thumbs, Pagination, EffectCoverflow,
+  FreeMode,
+  Navigation,
+  Thumbs,
+  Pagination,
+  EffectCoverflow,
+  Zoom,
+  Keyboard,
 } from 'swiper/modules';
 import type { SwiperModule, Swiper as SwiperType } from 'swiper/types';
+import { CursorArrowRaysIcon } from '@heroicons/vue/20/solid';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 import BasePopup from './shared/BasePopup.vue';
 
 interface SwiperSetup {
   showPopUp: Ref<boolean>;
+  currentIndexSlide: Ref<number>;
+  openPopUp: (index: number) => void;
+  closePopUp: (index: number) => void;
   setImgPlaceholder: ($event: Event) => void;
   thumbsSwiper: Ref<SwiperType | null | undefined>;
+  mainSwiper: Ref<SwiperType | null | undefined>;
   setThumbsSwiper: (swiper: SwiperType) => void;
   modules: SwiperModule[];
 }
@@ -94,10 +136,15 @@ export default {
     Swiper,
     SwiperSlide,
     BasePopup,
+    CursorArrowRaysIcon,
   },
   setup(): SwiperSetup {
     const thumbsSwiper = ref<null | SwiperType>(null);
+    const mainSwiper = ref<null | SwiperType>(null);
+
     const showPopUp = ref(false);
+    const currentIndexSlide = ref(0);
+
     const setThumbsSwiper = (swiper: SwiperType): void => {
       thumbsSwiper.value = swiper;
     };
@@ -105,13 +152,25 @@ export default {
       const { target } = $event;
       if (target instanceof HTMLImageElement) target.src = imgPlaceholder;
     };
-
+    const openPopUp = (index: number): void => {
+      showPopUp.value = true;
+      currentIndexSlide.value = index;
+    };
+    const closePopUp = async (): Promise<void> => {
+      showPopUp.value = false;
+      mainSwiper.value?.slideToLoop(currentIndexSlide.value, 0);
+      thumbsSwiper.value?.slideToLoop(currentIndexSlide.value, 0);
+    };
     return {
       showPopUp,
+      currentIndexSlide,
+      openPopUp,
+      closePopUp,
       setImgPlaceholder,
       thumbsSwiper,
+      mainSwiper,
       setThumbsSwiper,
-      modules: [FreeMode, Navigation, Thumbs, Pagination, EffectCoverflow],
+      modules: [FreeMode, Navigation, Thumbs, Pagination, EffectCoverflow, Zoom, Keyboard],
     };
   },
 };
@@ -123,7 +182,6 @@ export default {
   height: 100%;
   border-radius: 20px;
 }
-
 .swiper-slide {
   text-align: center;
   font-size: 18px;
@@ -135,21 +193,18 @@ export default {
   border-radius: 20px;
   overflow: hidden;
 }
-
 .swiper-slide img {
   display: block;
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
 }
-
 .swiper {
   width: 100%;
   height: 300px;
   margin-left: auto;
   margin-right: auto;
 }
-
 .mySwiper {
   height: 80%;
   width: 100%;
@@ -161,13 +216,11 @@ export default {
     border-radius: 20px;
   }
 }
-
 .mySwiperThumb {
   height: 20%;
   box-sizing: border-box;
   padding: 10px 0;
 }
-
 .mySwiperThumb .swiper-slide {
   width: 25%;
   height: 100%;
@@ -176,15 +229,37 @@ export default {
   border: solid 2px #d9d9d9;
   box-sizing: border-box;
 }
-
 .mySwiperThumb .swiper-slide-thumb-active {
   opacity: 1;
   border: solid 2px var(--main-color);
 }
-
 .slider-thumb-container {
   position: relative;
   width: 86%;
+}
+.mySwiperPopUp {
+  position: relative;
+  height: auto;
+  .swiper-button-next,
+  .swiper-button-prev {
+    top: 50%;
+    font-size: 26px;
+  }
+  .swiper-button-next {
+    right: 4%;
+  }
+  .swiper-button-prev {
+    left: 4%;
+  }
+}
+.mySwiperPopUp img {
+  max-width: 70vw;
+  max-height: 70vh;
+  object-fit: contain;
+}
+.popup-describe {
+  padding: 2vw;
+  text-align: center;
 }
 .swiper-button-next,
 .swiper-button-prev {
@@ -206,13 +281,19 @@ export default {
   }
 }
 @media (max-width: 600px) {
-  .swiper-button-next,
-  .swiper-button-prev {
-    display: none;
+  .slider-thumb-container {
+    .swiper-button-next,
+    .swiper-button-prev {
+      display: none;
+    }
   }
   .slider-thumb-container {
     position: relative;
     width: 100%;
+  }
+  .mySwiperPopUp img {
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 </style>
