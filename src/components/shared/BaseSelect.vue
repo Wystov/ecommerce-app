@@ -89,6 +89,7 @@ label {
 }
 
 .select {
+  cursor: pointer;
   border: 1.5px solid var(--main-color-outline);
   font-size: 1rem;
   outline: none;

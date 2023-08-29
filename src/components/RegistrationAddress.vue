@@ -111,6 +111,7 @@ export default {
         field.placeholder = this.countryField.options.find((option) => option.value === value)
           ?.placeholder;
       }
+      this.readyData();
     },
 
     setValue(e: Event, i: number): void {

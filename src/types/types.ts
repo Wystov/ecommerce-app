@@ -1,3 +1,4 @@
+import type { ProductData } from '@commercetools/platform-sdk';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -11,6 +12,7 @@ interface ButtonClasses {
   circle: boolean;
   active: boolean;
   disabled: boolean;
+  outline: boolean;
 }
 interface SelectClasses {
   'dark-theme-input': boolean;
@@ -158,6 +160,49 @@ interface AccountAddressesData {
 }
 type Country = 'US' | 'GB';
 
+interface StateUser {
+  authorized: boolean;
+  fetching: boolean;
+  data: {
+      country: string;
+      cart: {
+          product: number[];
+      };
+  };
+}
+type Attribute = { name: string; value: string };
+interface AppProduct {
+  fetching: boolean;
+  productData: null | ProductData;
+  product: {
+    name: string[];
+    attributes?: Attribute[];
+    description: string;
+    images: string[];
+  };
+}
+type SortBy = 'price desc' | 'price asc' | 'name en';
+interface FacetTerm {
+  term: string;
+  count: number;
+}
+type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.price.centAmount';
+interface FacetResult {
+  terms: FacetTerm[];
+  total: number;
+  key: FilterKey;
+  selected: Set<string> | [number, number];
+}
+interface FilterOptions {
+  brand: FacetResult;
+  weight: FacetResult;
+  price: FacetResult;
+}
+interface FacetResults {
+  [key: string]: FacetResult;
+}
+type Filter = 'brand' | 'weight' | 'price';
+
 export type {
   ButtonClasses,
   SelectClasses,
@@ -178,6 +223,15 @@ export type {
   UserSignUpMain,
   BaseDataAuthorization,
   Country,
+  StateUser,
+  AppProduct,
+  SortBy,
+  FilterOptions,
+  FacetTerm,
+  FacetResult,
+  FacetResults,
+  Filter,
+  FilterKey,
   AccountInfoData,
   Address,
   AccountAddressesData,
