@@ -9,7 +9,7 @@
       <span class="content">{{ birthDate }}</span>
     </div>
     <div class="buttons-block">
-      <BaseButton label="Update info" @click="getData" />
+      <BaseButton label="Update info" />
       <BaseButton label="Change password" />
       <BaseButton @click="logOut" label="Log out" />
     </div>

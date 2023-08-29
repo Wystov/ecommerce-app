@@ -55,14 +55,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 25px;
+  gap: 2rem;
 }
 .sections-nav {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 25px;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 .section-nav-item {
   color: var(--main-font-color);

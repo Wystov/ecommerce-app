@@ -140,6 +140,22 @@ interface AccountInfoData {
   surname: string | undefined;
   date: string | undefined;
 }
+interface Address {
+  city: string;
+  country: string;
+  id: string;
+  postalCode: string;
+  streetName: string;
+}
+interface AccountAddressesData {
+  addresses: Address[];
+  shippingIds: string[];
+  defaultShippingId: string[];
+  shippingAddresses: Address[];
+  billingIds: string[];
+  defaultBillingId: string[];
+  billingAddresses: Address[]
+}
 type Country = 'US' | 'GB';
 
 export type {
@@ -163,4 +179,6 @@ export type {
   BaseDataAuthorization,
   Country,
   AccountInfoData,
+  Address,
+  AccountAddressesData,
 };
