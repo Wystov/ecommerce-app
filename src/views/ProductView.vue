@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <section class="wrapper">
-      <AppProduct :keyProduct="1" />
+      <AppProduct />
     </section>
   </div>
 </template>

@@ -1,63 +1,66 @@
 <template>
-  <div v-if="fetching" class="spinner-container">
-    <div class="spinner" />
-  </div>
-  <Transition>
-    <div v-if="!fetching" class="product-content">
-      <h1 class="product-name mobile-name">
-        {{ product.name[0] }}
-        <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
-      </h1>
-      <div class="product-slider">
-        <AppSliderProductPage :images="product.images" />
-      </div>
-      <div class="product-info">
-        <h1 class="product-name">
+  <Transition mode="out-in">
+    <div v-if="fetching" class="spinner-container">
+      <div class="spinner" />
+    </div>
+    <template v-else>
+      <div v-if="productData" class="product-content">
+        <h1 class="product-name mobile-name">
           {{ product.name[0] }}
           <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
         </h1>
-        <div class="product-price-group">
-          <div class="price-container">
-            <BasePrice
-              v-if="priceDiscounted === ''"
-              :size="40"
-              :symbol="currencyTag"
-              :price="price"
-            />
-            <BasePrice v-else :size="26" :symbol="currencyTag" strikethrough :price="price" />
-            <BasePrice
-              v-if="priceDiscounted !== ''"
-              :size="52"
-              :symbol="currencyTag"
-              discounted
-              :price="priceDiscounted"
-            />
-          </div>
-          <BaseButton
-            v-if="hasProductInCart(keyProduct)"
-            @click="removeProductFromCart(keyProduct)"
-            outline
-            class="button"
-          >Remove from cart</BaseButton
-          >
-          <BaseButton
-            v-else
-            @click="addProductToCart(keyProduct)"
-            class="button"
-          >Add to cart</BaseButton
-          >
+        <div class="product-slider">
+          <AppSliderProductPage :images="product.images" />
         </div>
-        <ul class="specification-list">
-          <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
-            <span class="property">{{ attr.name }}</span>
-            <span class="value">
-              {{ attr.name === 'weight' ? attr.value + ' oz' : attr.value }}
-            </span>
-          </li>
-        </ul>
-        <p class="description">{{ product.description }}</p>
+        <div class="product-info">
+          <h1 class="product-name">
+            {{ product.name[0] }}
+            <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
+          </h1>
+          <div class="product-price-group">
+            <div class="price-container">
+              <BasePrice
+                v-if="priceDiscounted === ''"
+                :size="40"
+                :symbol="currencyTag"
+                :price="price"
+              />
+              <BasePrice v-else :size="26" :symbol="currencyTag" strikethrough :price="price" />
+              <BasePrice
+                v-if="priceDiscounted !== ''"
+                :size="52"
+                :symbol="currencyTag"
+                discounted
+                :price="priceDiscounted"
+              />
+            </div>
+            <BaseButton
+              v-if="hasProductInCart(product.keyProduct || -1)"
+              @click="removeProductFromCart(product.keyProduct || -1)"
+              outline
+              class="button"
+            >Remove from cart</BaseButton
+            >
+            <BaseButton
+              v-else
+              @click="addProductToCart(product.keyProduct || -1)"
+              class="button"
+            >Add to cart</BaseButton
+            >
+          </div>
+          <ul class="specification-list">
+            <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
+              <span class="property">{{ attr.name }}</span>
+              <span class="value">
+                {{ attr.name === 'weight' ? attr.value + ' oz' : attr.value }}
+              </span>
+            </li>
+          </ul>
+          <p class="description">{{ product.description }}</p>
+        </div>
       </div>
-    </div>
+      <NotFoundView v-else />
+    </template>
   </Transition>
 </template>
 
@@ -68,6 +71,7 @@ import type { AppProduct } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
+import NotFoundView from '@/views/NotFoundView.vue';
 import BaseButton from './shared/BaseButton.vue';
 import AppSliderProductPage from './AppSliderProductPage.vue';
 import BasePrice from './shared/BasePrice.vue';
@@ -77,12 +81,7 @@ export default {
     BaseButton,
     AppSliderProductPage,
     BasePrice,
-  },
-  props: {
-    keyProduct: {
-      type: Number,
-      required: true,
-    },
+    NotFoundView,
   },
   data(): AppProduct {
     return {
@@ -93,6 +92,7 @@ export default {
         attributes: [],
         description: '',
         images: [],
+        keyProduct: undefined,
       },
     };
   },
@@ -124,27 +124,24 @@ export default {
   methods: {
     ...mapActions(useUserStore, ['addProductToCart', 'removeProductFromCart', 'hasProductInCart']),
     async getProduct(): Promise<void> {
+      const { slug } = this.$route.params;
+      const queryArgs = { where: `slug(en="${slug}")` };
       try {
-        const { body } = await api
-          .call()
-          .products()
-          .withKey({ key: `${this.keyProduct}` })
-          .get()
-          .execute();
-        this.productData = body.masterData.current;
+        const { body } = await api.call().productProjections().get({ queryArgs }).execute();
+        if (!body.results.length) throw new Error('no product');
+        // eslint-disable-next-line prefer-destructuring
+        this.productData = body.results[0];
         const { masterVariant } = this.productData;
 
         this.splittedTitle(this.productData?.name.en);
         this.product.attributes = masterVariant?.attributes;
         this.product.description = this.productData?.description?.en || '';
-        this.product.images = masterVariant.images?.map((img) => {
-          if (img.url) {
-            return img.url;
-          }
-          return imgPlaceholder;
-        }) || [];
+        this.product.images = masterVariant.images?.map((img) => img.url ?? imgPlaceholder) || [];
+        if (this.productData.key) {
+          this.product.keyProduct = parseInt(this.productData.key, 10);
+        }
       } catch (error) {
-        console.error('Error getting data from server', error);
+        this.productData = null;
       } finally {
         this.fetching = false;
       }

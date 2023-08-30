@@ -1,4 +1,4 @@
-import type { ProductData } from '@commercetools/platform-sdk';
+import type { ProductProjection } from '@commercetools/platform-sdk';
 import type { Ref } from 'vue';
 import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
@@ -154,12 +154,13 @@ interface StateUser {
 type Attribute = { name: string; value: string };
 interface AppProduct {
   fetching: boolean;
-  productData: null | ProductData;
+  productData: null | ProductProjection;
   product: {
     name: string[];
     attributes?: Attribute[];
     description: string;
     images: string[];
+    keyProduct?: number;
   };
 }
 type SortBy = 'price desc' | 'price asc' | 'name en';
