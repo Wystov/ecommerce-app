@@ -97,7 +97,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/thumbs';
 
-import { ref, type Ref } from 'vue';
+import { ref } from 'vue';
 import {
   FreeMode,
   Navigation,
@@ -107,22 +107,11 @@ import {
   Zoom,
   Keyboard,
 } from 'swiper/modules';
-import type { SwiperModule, Swiper as SwiperType } from 'swiper/types';
+import type { Swiper as SwiperType } from 'swiper/types';
 import { CursorArrowRaysIcon } from '@heroicons/vue/20/solid';
+import type { SwiperSetup } from '@/types/types';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 import BasePopup from './shared/BasePopup.vue';
-
-interface SwiperSetup {
-  showPopUp: Ref<boolean>;
-  currentIndexSlide: Ref<number>;
-  openPopUp: (index: number) => void;
-  closePopUp: (index: number) => void;
-  setImgPlaceholder: ($event: Event) => void;
-  thumbsSwiper: Ref<SwiperType | null | undefined>;
-  mainSwiper: Ref<SwiperType | null | undefined>;
-  setThumbsSwiper: (swiper: SwiperType) => void;
-  modules: SwiperModule[];
-}
 
 export default {
   emits: ['open'],

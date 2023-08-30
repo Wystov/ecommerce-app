@@ -42,7 +42,7 @@ export default {
   },
   mounted(): void {
     document.addEventListener('keydown', (e) => {
-      if (this.show && e.keyCode === 27) {
+      if (this.show && e.key === 'Escape') {
         this.$emit('close');
       }
     });

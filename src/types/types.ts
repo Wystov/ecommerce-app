@@ -1,4 +1,6 @@
 import type { ProductData } from '@commercetools/platform-sdk';
+import type { Ref } from 'vue';
+import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -182,6 +184,18 @@ interface FacetResults {
 }
 type Filter = 'brand' | 'weight' | 'price';
 
+interface SwiperSetup {
+  showPopUp: Ref<boolean>;
+  currentIndexSlide: Ref<number>;
+  openPopUp: (index: number) => void;
+  closePopUp: (index: number) => void;
+  setImgPlaceholder: ($event: Event) => void;
+  thumbsSwiper: Ref<Swiper | null | undefined>;
+  mainSwiper: Ref<Swiper | null | undefined>;
+  setThumbsSwiper: (swiper: Swiper) => void;
+  modules: SwiperModule[];
+}
+
 export type {
   ButtonClasses,
   SelectClasses,
@@ -211,4 +225,5 @@ export type {
   FacetResults,
   Filter,
   FilterKey,
+  SwiperSetup,
 };
