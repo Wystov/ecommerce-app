@@ -3,7 +3,7 @@
     <AppProductCategories />
     <template v-if="loaded">
       <BaseButton
-        @click="resetStore"
+        @click="reset"
         class="button button-reset"
       >Reset</BaseButton>
       <div class="checkbox-filter">
@@ -110,13 +110,17 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions', 'resetStore']),
+    ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions', 'resetStore', 'refreshFilter']),
     isBrandChecked(brand: string): boolean {
       const { selected } = this.filterOptions.brand;
       if (selected instanceof Set) {
         return selected.has(brand);
       }
       return false;
+    },
+    reset(): void {
+      this.resetStore();
+      this.refreshFilter();
     },
   },
   created(): void {

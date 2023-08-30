@@ -93,6 +93,7 @@ export const useFilterStore = defineStore('filter', {
     refreshFilter(): void {
       this.loaded = false;
       this.refresh = true;
+      this.buildFilterOptions();
     },
   },
 });
