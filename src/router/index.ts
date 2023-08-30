@@ -36,6 +36,9 @@ const routes = [
     name: Catalog,
     path: '/catalog',
     component: CatalogView,
+    meta: {
+      title: Catalog,
+    },
   },
   {
     path: '/catalog/:categorySlug',

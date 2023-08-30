@@ -47,7 +47,6 @@ export default {
 
 <style scoped>
 .sort-select {
-  grid-column: span 2;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;

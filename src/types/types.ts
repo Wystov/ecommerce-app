@@ -192,6 +192,10 @@ interface CategoryMap {
   }
   children: CategoryMap[];
 }
+interface Breadcrumb {
+  route: string;
+  name: string;
+}
 
 export type {
   ButtonClasses,
@@ -223,4 +227,5 @@ export type {
   Filter,
   FilterKey,
   CategoryMap,
+  Breadcrumb,
 };

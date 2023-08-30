@@ -19,9 +19,6 @@ export const useCategoriesStore = defineStore('categories', {
       this.categories.data = body.results;
       console.log('categories', body.results);
     },
-    setCategories(categories: Category[]): void {
-      this.categories.data = categories;
-    },
     changeCategory(category: string): void {
       const filter = useFilterStore();
       filter.resetStore();

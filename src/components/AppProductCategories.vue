@@ -1,5 +1,5 @@
 <template>
-  <template v-if="loaded">
+  <template v-if="categoriesLoaded">
     <span class="title">Categories</span>
     <nav class="links">
       <ul class="categories">
@@ -40,17 +40,13 @@
 <script lang="ts">
 import { mapState, mapActions } from 'pinia';
 import { useCategoriesStore } from '@/stores/categories';
-import api from '@/utils/api/client';
 import type { CategoryMap } from '@/types/types';
 
 export default {
   computed: {
-    ...mapState(useCategoriesStore, ['categories']),
-    loaded(): boolean {
-      return this.categories.data.length > 0;
-    },
+    ...mapState(useCategoriesStore, ['categories', 'categoriesLoaded']),
     mappedCategories(): CategoryMap[] | null {
-      if (!this.loaded) return null;
+      if (!this.categoriesLoaded) return null;
       const categories: CategoryMap[] = this.categories.data.map((category) => ({
         name: category.name.en,
         id: category.id,
@@ -73,16 +69,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useCategoriesStore, ['setCategories', 'changeCategory']),
-    async getCategories(): Promise<void> {
-      if (this.loaded) return;
-      const { body } = await api.call().categories().get().execute();
-      this.setCategories(body.results);
-      console.log(body.results);
-    },
-  },
-  created(): void {
-    this.getCategories();
+    ...mapActions(useCategoriesStore, ['changeCategory']),
   },
 };
 </script>
