@@ -76,7 +76,7 @@ export default defineComponent({
   },
   methods: {
     formattedPrice(cents: number): string {
-      return `${this.currencyTag}${cents / 100}`;
+      return `${this.currencyTag}${(cents / 100).toFixed(2)}`;
     },
   },
 });

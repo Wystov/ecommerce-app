@@ -39,6 +39,7 @@ export const useUserStore = defineStore('user', {
     },
     changeCountry(country: Country) {
       const filter = useFilterStore();
+      filter.resetStore();
       filter.refreshFilter();
       this.data.country = country;
       localStorage.setItem(LocalStorageKeys.Country, this.data.country);
