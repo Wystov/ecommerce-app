@@ -229,6 +229,10 @@ export default {
 .mySwiperPopUp {
   position: relative;
   height: auto;
+  border-radius: 20px 20px 0 0;
+  .swiper-slide {
+    border-radius: 20px 20px 0 0;
+  }
   .swiper-button-next,
   .swiper-button-prev {
     top: 50%;
