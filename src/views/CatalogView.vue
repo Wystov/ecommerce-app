@@ -56,20 +56,6 @@ export default {
 </script>
 
 <style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.3s ease;
-}
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-.spinner-container {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-}
 .container {
   display: grid;
   grid-template-columns: auto 1fr;

@@ -85,15 +85,17 @@ export default defineComponent({
 <style scoped>
 .card {
   box-sizing: border-box;
-  width: 20%;
+  width: calc(20% + 1px);
+  max-height: 381px;
   padding: 20px;
   border: 1px solid #e9e9e9;
   margin-left: -1px;
   margin-top: -1px;
   text-decoration: none;
+  background-color: white;
 
   @media (max-width: 1000px) {
-    width: 30%;
+    width: calc(33.333% + 1px);
   }
 }
 .product-content {

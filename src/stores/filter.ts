@@ -37,6 +37,7 @@ export const useFilterStore = defineStore('filter', {
         'filter.query': state.filter,
         priceCountry: country,
         priceCurrency: currency,
+        limit: 50,
       };
     },
   },

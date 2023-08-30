@@ -1,14 +1,21 @@
 <template>
-  <div v-if="productList.length" class="catalog">
-    <AppProductCard
-      v-for="product in productList"
-      :key="product.id"
-      :productData="product"
-      :currency="currency"
-      :currencyTag="currencyTag"
-    />
-  </div>
-  <div v-else>No products found</div>
+  <Transition mode="out-in">
+    <div v-if="init" class="spinner-container">
+      <div class="spinner" />
+    </div>
+    <template v-else>
+      <TransitionGroup v-if="productList.length" tag="div" class="catalog" name="card">
+        <AppProductCard
+          v-for="product in productList"
+          :key="product.id"
+          :productData="product"
+          :currency="currency"
+          :currencyTag="currencyTag"
+        />
+      </TransitionGroup>
+      <div v-else>No products found</div>
+    </template>
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -25,9 +32,10 @@ export default {
   components: {
     AppProductCard,
   },
-  data(): { productList: ProductProjection[] } {
+  data(): { productList: ProductProjection[], init: boolean } {
     return {
       productList: [],
+      init: true,
     };
   },
   computed: {
@@ -43,8 +51,7 @@ export default {
     ...mapActions(useCategoriesStore, ['changeCategory', 'getCategories']),
     async checkCategory(): Promise<void> {
       if (!this.categoriesLoaded) await this.getCategories();
-      const { params } = this.$route;
-      const { categorySlug, subcategorySlug } = params;
+      const { categorySlug, subcategorySlug } = this.$route.params;
       const selectedSlug = subcategorySlug ?? categorySlug;
       const { current } = this.categories;
       if (selectedSlug !== current) this.changeCategory(selectedSlug as string);
@@ -58,14 +65,16 @@ export default {
       this.setFilterOptions(body.facets as unknown as FacetResults);
       if (!this.loaded) this.buildFilterOptions();
       this.productList = body.results;
-      console.log(body);
+      this.init = false;
     },
   },
   created(): void {
     this.getProducts();
     this.$watch(
       () => this.queryArgs,
-      () => { if (this.loaded || this.refresh) this.getProducts(); },
+      () => {
+        if (this.loaded || this.refresh) this.getProducts();
+      },
     );
     this.$watch(
       () => this.$route.params,
@@ -79,6 +88,10 @@ export default {
 .catalog {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+.card-move {
+  transition: all 500ms ease-in-out;
 }
 </style>

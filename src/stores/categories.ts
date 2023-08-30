@@ -15,7 +15,6 @@ export const useCategoriesStore = defineStore('categories', {
     categoriesLoaded: (state) => state.categories.data.length > 0,
     mappedCategories(): CategoryMap[] | null {
       if (!this.categoriesLoaded) return null;
-      console.log(this.categories.data);
       const categories: CategoryMap[] = this.categories.data.map((category) => ({
         name: category.name.en,
         id: category.id,

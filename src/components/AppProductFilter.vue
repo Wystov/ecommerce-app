@@ -1,11 +1,12 @@
 <template>
   <div class="filter-container">
     <AppProductCategories />
+    <button
+      @click="reset"
+      class="button-reset"
+      type="button"
+    >Reset filters</button>
     <template v-if="loaded">
-      <BaseButton
-        @click="reset"
-        class="button button-reset"
-      >Reset</BaseButton>
       <div class="checkbox-filter">
         <span class="title">Brand <span class="count">{{ brands.length }}</span></span>
         <BaseCheckbox
@@ -144,7 +145,7 @@ export default {
 
 <style scoped>
 .filter-container {
-  width: 250px;
+  width: 200px;
   border-top: 1px solid #e9e9e9;
   padding-right: 1rem;
   margin-top: -1px;
@@ -180,19 +181,14 @@ export default {
 .nums-range {
   display: block;
 }
-.button {
+.button-reset {
+  cursor: pointer;
   max-width: fit-content;
   font-size: 1rem;
-  padding: 0.5rem 1rem;
-}
-.button-reset {
   margin-top: 1rem;
-  background-color: white;
-  color: var(--main-font-color);
-  border: 2px solid var(--main-font-color);
-
-  &:hover {
-    border: 2px solid transparent;
-  }
+  background-color: transparent;
+  padding: 0;
+  color: var(--main-color);
+  border: none;
 }
 </style>
