@@ -18,7 +18,10 @@
             <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
           </h1>
           <div class="product-price-group">
-            <div class="price-container">
+            <div
+              class="price-container"
+              :class="priceDiscounted && price ? 'two-price' : 'one-price'"
+            >
               <BasePrice
                 v-if="priceDiscounted === ''"
                 :size="40"
@@ -232,12 +235,20 @@ export default {
   border: 2px solid #eb5461;
 }
 .price-container {
-  display: flex;
-  justify-content: center;
+  display: grid;
   align-items: center;
-  text-align: center;
+  justify-items: center;
   width: 100%;
   gap: 20px;
+  &.one-price {
+    grid-template-columns: 1fr;
+  }
+  &.two-price {
+    grid-template-columns: repeat(3, 1fr);
+    .price:first-child {
+      justify-self: flex-end;
+    }
+  }
 }
 .specification-list {
   display: flex;
