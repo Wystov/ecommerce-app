@@ -29,7 +29,7 @@ export const useFilterStore = defineStore('filter', {
     queryArgs: (state) => ({
       sort: state.sort,
       facet: state.facet,
-      filter: state.filter,
+      'filter.query': state.filter,
     }),
   },
   actions: {
