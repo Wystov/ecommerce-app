@@ -1,4 +1,4 @@
-import type { ProductData } from '@commercetools/platform-sdk';
+import type { ProductProjection } from '@commercetools/platform-sdk';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -152,7 +152,7 @@ interface StateUser {
 type Attribute = { name: string; value: string };
 interface AppProduct {
   fetching: boolean;
-  productData: null | ProductData;
+  productData: null | ProductProjection;
   product: {
     name: string[];
     attributes?: Attribute[];
