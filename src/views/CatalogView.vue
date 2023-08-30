@@ -5,8 +5,10 @@
     </div>
     <template v-else>
       <div v-if="rightPath" class="wrapper w-100 container">
-        <AppBreadcrumbs />
-        <AppProductSort />
+        <div class="top-container">
+          <AppBreadcrumbs />
+          <AppProductSort />
+        </div>
         <AppProductFilter />
         <AppProductList />
       </div>
@@ -60,5 +62,10 @@ export default {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
+}
+.top-container {
+  display: flex;
+  justify-content: space-between;
+  grid-column: span 2;
 }
 </style>
