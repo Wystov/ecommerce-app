@@ -39,13 +39,13 @@
 
 <script lang="ts">
 import { mapState, mapActions } from 'pinia';
-import { useFilterStore } from '@/stores/filter';
+import { useCategoriesStore } from '@/stores/categories';
 import api from '@/utils/api/client';
 import type { CategoryMap } from '@/types/types';
 
 export default {
   computed: {
-    ...mapState(useFilterStore, ['categories']),
+    ...mapState(useCategoriesStore, ['categories']),
     loaded(): boolean {
       return this.categories.data.length > 0;
     },
@@ -73,7 +73,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useFilterStore, ['resetStore', 'setCategories', 'changeCategory']),
+    ...mapActions(useCategoriesStore, ['setCategories', 'changeCategory']),
     async getCategories(): Promise<void> {
       if (this.loaded) return;
       const { body } = await api.call().categories().get().execute();

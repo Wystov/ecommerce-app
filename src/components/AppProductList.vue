@@ -16,6 +16,7 @@ import type { ProductProjection } from '@commercetools/platform-sdk';
 import { mapActions, mapState } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import { useFilterStore } from '@/stores/filter';
+import { useCategoriesStore } from '@/stores/categories';
 import api from '@/utils/api/client';
 import type { FacetResults } from '@/types/types';
 import AppProductCard from './AppProductCard.vue';
@@ -31,7 +32,8 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, { userData: 'data' }),
-    ...mapState(useFilterStore, ['queryArgs', 'loaded', 'categories', 'categoriesLoaded']),
+    ...mapState(useFilterStore, ['queryArgs', 'loaded']),
+    ...mapState(useCategoriesStore, ['categories', 'categoriesLoaded']),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
     },
@@ -40,7 +42,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useFilterStore, ['setFilterOptions', 'changeCategory', 'getCategories']),
+    ...mapActions(useFilterStore, ['setFilterOptions']),
+    ...mapActions(useCategoriesStore, ['changeCategory', 'getCategories']),
     async checkCategory(): Promise<void> {
       if (!this.categoriesLoaded) await this.getCategories();
       const { params } = this.$route;

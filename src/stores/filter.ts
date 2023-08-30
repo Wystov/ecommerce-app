@@ -1,18 +1,13 @@
 import { defineStore } from 'pinia';
-import type { Category } from '@commercetools/platform-sdk';
 import type {
   SortBy, FilterOptions, FacetResults, Filter,
 } from '@/types/types';
-import api from '@/utils/api/client';
+import { useCategoriesStore } from './categories';
 
 export const useFilterStore = defineStore('filter', {
   state: () => ({
     loaded: false,
     sort: 'name.en asc' as SortBy,
-    categories: {
-      data: [] as Category[],
-      current: undefined as string | undefined,
-    },
     facet: ['variants.attributes.weight', 'variants.attributes.brand', 'variants.price.centAmount'],
     filter: undefined as string[] | undefined,
     filterOptions: {
@@ -36,7 +31,6 @@ export const useFilterStore = defineStore('filter', {
       facet: state.facet,
       filter: state.filter,
     }),
-    categoriesLoaded: (state) => state.categories.data.length > 0,
   },
   actions: {
     setSort(sort: SortBy) {
@@ -55,6 +49,7 @@ export const useFilterStore = defineStore('filter', {
       this.loaded = true;
     },
     buildFilterOptions() {
+      const categories = useCategoriesStore();
       const activeFilters = Object.entries(this.filterOptions)
         .filter(([, { selected }]) => (selected instanceof Set
           ? selected.size > 0
@@ -66,7 +61,7 @@ export const useFilterStore = defineStore('filter', {
           const queryPath = key === 'price' ? 'price.centAmount' : `attributes.${key}`;
           return `variants.${queryPath}:${filterValue}`;
         });
-      const categoryId = this.currentCategoryId();
+      const categoryId = categories.currentCategoryId();
       if (categoryId) {
         activeFilters.push(`categories.id: subtree("${categoryId}")`);
       }
@@ -87,25 +82,6 @@ export const useFilterStore = defineStore('filter', {
       this.$reset();
       this.sort = sort;
     },
-    setCategories(categories: Category[]): void {
-      this.categories.data = categories;
-    },
-    changeCategory(category: string): void {
-      const categoriesData = this.categories.data;
-      this.resetStore();
-      this.categories.data = categoriesData;
-      this.categories.current = category;
-      this.buildFilterOptions();
-    },
-    currentCategoryId() {
-      const category = this.categories.data
-        .find((item) => item.slug.en === this.categories.current);
-      return category?.id;
-    },
-    async getCategories(): Promise<void> {
-      const { body } = await api.call().categories().get().execute();
-      this.categories.data = body.results;
-      console.log('categories', body.results);
-    },
+
   },
 });

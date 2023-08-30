@@ -1,7 +1,7 @@
 <template>
   <div class="filter-container">
+    <AppProductCategories />
     <template v-if="loaded">
-      <AppProductCategories />
       <BaseButton
         @click="resetStore"
         class="button button-reset"
