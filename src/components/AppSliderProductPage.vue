@@ -236,13 +236,34 @@ export default {
   .swiper-button-next,
   .swiper-button-prev {
     top: 50%;
-    font-size: 26px;
+    width: fit-content;
+    padding: 6px;
+    aspect-ratio: 1;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 1em;
+    transition: 0.3s;
+    &:hover {
+      background: var(--main-color);
+      color: #fff;
+    }
+    &:active {
+      background: var(--main-color-active);
+    }
   }
   .swiper-button-next {
     right: 4%;
+    &::after {
+      padding-left: 6px;
+      font-size: 1.5rem;
+    }
   }
   .swiper-button-prev {
     left: 4%;
+    &::after {
+      padding-right: 6px;
+      font-size: 1.5rem;
+    }
   }
 }
 .mySwiperPopUp img {
