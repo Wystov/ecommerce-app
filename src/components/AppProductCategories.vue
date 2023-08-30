@@ -10,7 +10,7 @@
             All
           </RouterLink>
         </li>
-        <template v-for="category in mappedCategories" :key="category.id">
+        <template v-for="category in filteredCategories" :key="category.id">
           <li class="category-item">
             <RouterLink
               :to="{ name: category.routerName, params: category.params }"
@@ -44,28 +44,9 @@ import type { CategoryMap } from '@/types/types';
 
 export default {
   computed: {
-    ...mapState(useCategoriesStore, ['categories', 'categoriesLoaded']),
-    mappedCategories(): CategoryMap[] | null {
-      if (!this.categoriesLoaded) return null;
-      const categories: CategoryMap[] = this.categories.data.map((category) => ({
-        name: category.name.en,
-        id: category.id,
-        parentId: category.parent?.id ?? null,
-        params: { categorySlug: category.slug.en },
-        routerName: 'Category',
-        children: [],
-      }));
-      categories.forEach((item) => {
-        const category = item;
-        const parent = categories.find((c) => c.id === category.parentId);
-        if (parent) {
-          category.params.subcategorySlug = category.params.categorySlug;
-          category.params.categorySlug = parent.params.categorySlug;
-          category.routerName = 'Subcategory';
-          parent.children.push(category);
-        }
-      });
-      return categories.filter((cat) => !cat.parentId);
+    ...mapState(useCategoriesStore, ['categories', 'categoriesLoaded', 'mappedCategories']),
+    filteredCategories(): CategoryMap[] | null {
+      return this.mappedCategories?.filter((cat) => !cat.parentId) ?? null;
     },
   },
   methods: {

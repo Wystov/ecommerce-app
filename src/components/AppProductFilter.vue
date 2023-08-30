@@ -145,8 +145,9 @@ export default {
 <style scoped>
 .filter-container {
   width: 250px;
-  border-right: 1px solid #e9e9e9;
+  border-top: 1px solid #e9e9e9;
   padding-right: 1rem;
+  margin-top: -1px;
 }
 .title {
   display: block;

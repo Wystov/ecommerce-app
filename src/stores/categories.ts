@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Category } from '@commercetools/platform-sdk';
 import api from '@/utils/api/client';
+import type { CategoryMap } from '@/types/types';
 import { useFilterStore } from './filter';
 
 export const useCategoriesStore = defineStore('categories', {
@@ -12,6 +13,29 @@ export const useCategoriesStore = defineStore('categories', {
   }),
   getters: {
     categoriesLoaded: (state) => state.categories.data.length > 0,
+    mappedCategories(): CategoryMap[] | null {
+      if (!this.categoriesLoaded) return null;
+      console.log(this.categories.data);
+      const categories: CategoryMap[] = this.categories.data.map((category) => ({
+        name: category.name.en,
+        id: category.id,
+        parentId: category.parent?.id ?? null,
+        params: { categorySlug: category.slug.en },
+        routerName: 'Category',
+        children: [],
+      }));
+      categories.forEach((item) => {
+        const category = item;
+        const parent = categories.find((c) => c.id === category.parentId);
+        if (parent) {
+          category.params.subcategorySlug = category.params.categorySlug;
+          category.params.categorySlug = parent.params.categorySlug;
+          category.routerName = 'Subcategory';
+          parent.children.push(category);
+        }
+      });
+      return categories;
+    },
   },
   actions: {
     async getCategories(): Promise<void> {
