@@ -17,7 +17,6 @@ export const useCategoriesStore = defineStore('categories', {
     async getCategories(): Promise<void> {
       const { body } = await api.call().categories().get().execute();
       this.categories.data = body.results;
-      console.log('categories', body.results);
     },
     changeCategory(category: string): void {
       const filter = useFilterStore();

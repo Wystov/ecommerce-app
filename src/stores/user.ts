@@ -3,6 +3,7 @@ import api from '@/utils/api/client';
 import { initErrorHandler } from '@/utils/api/error-handler';
 import { LocalStorageKeys } from '@/types/enums';
 import type { Country, StateUser } from '@/types/types';
+import { useFilterStore } from './filter';
 
 export const useUserStore = defineStore('user', {
   state: (): StateUser => ({
@@ -15,6 +16,9 @@ export const useUserStore = defineStore('user', {
       },
     },
   }),
+  getters: {
+    currency: (state) => (state.data.country === 'US' ? 'USD' : 'GBP'),
+  },
   actions: {
     async init() {
       try {
@@ -34,6 +38,8 @@ export const useUserStore = defineStore('user', {
       this.authorized = false;
     },
     changeCountry(country: Country) {
+      const filter = useFilterStore();
+      filter.refreshFilter();
       this.data.country = country;
       localStorage.setItem(LocalStorageKeys.Country, this.data.country);
     },

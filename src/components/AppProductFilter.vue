@@ -32,7 +32,7 @@
           class="range-slider"
         />
         <span class="nums-range">
-          ${{ priceRange[0] / 100 }} - ${{ priceRange[1] / 100 }}
+          {{ currencyTag }}{{ priceRange[0] / 100 }} - {{ currencyTag }}{{ priceRange[1] / 100 }}
         </span>
         <BaseButton @click="changeRangeFilterOptions('price', priceRange, 'build')" size="small">Apply</BaseButton>
       </div>
@@ -65,6 +65,7 @@
 import { mapActions, mapState } from 'pinia';
 import Slider from '@vueform/slider';
 import { useFilterStore } from '@/stores/filter';
+import { useUserStore } from '@/stores/user';
 import type { FacetTerm } from '@/types/types';
 import BaseCheckbox from './shared/BaseCheckbox.vue';
 import BaseButton from './shared/BaseButton.vue';
@@ -86,6 +87,7 @@ export default {
   },
   computed: {
     ...mapState(useFilterStore, ['filterOptions', 'loaded']),
+    ...mapState(useUserStore, ['currency']),
     brands(): FacetTerm[] {
       return this.filterOptions.brand.terms;
     },
@@ -102,6 +104,9 @@ export default {
     maxPrice(): number {
       const i = this.filterOptions.price.terms.length - 1;
       return parseFloat(this.filterOptions.price.terms[i].term);
+    },
+    currencyTag(): string {
+      return this.currency === 'USD' ? '$' : '£';
     },
   },
   methods: {

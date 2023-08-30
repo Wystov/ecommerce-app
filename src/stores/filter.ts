@@ -3,12 +3,14 @@ import type {
   SortBy, FilterOptions, FacetResults, Filter,
 } from '@/types/types';
 import { useCategoriesStore } from './categories';
+import { useUserStore } from './user';
 
 export const useFilterStore = defineStore('filter', {
   state: () => ({
     loaded: false,
+    refresh: false,
     sort: 'name.en asc' as SortBy,
-    facet: ['variants.attributes.weight', 'variants.attributes.brand', 'variants.price.centAmount'],
+    facet: ['variants.attributes.weight', 'variants.attributes.brand', 'variants.scopedPrice.currentValue.centAmount'],
     filter: undefined as string[] | undefined,
     filterOptions: {
       brand: {
@@ -20,17 +22,23 @@ export const useFilterStore = defineStore('filter', {
         selected: [0, 0],
       },
       price: {
-        key: 'variants.price.centAmount',
+        key: 'variants.scopedPrice.currentValue.centAmount',
         selected: [0, 0],
       },
     } as FilterOptions,
   }),
   getters: {
-    queryArgs: (state) => ({
-      sort: state.sort,
-      facet: state.facet,
-      'filter.query': state.filter,
-    }),
+    queryArgs: (state) => {
+      const userStore = useUserStore();
+      const { currency, data: { country } } = userStore;
+      return {
+        sort: state.sort,
+        facet: state.facet,
+        'filter.query': state.filter,
+        priceCountry: country,
+        priceCurrency: currency,
+      };
+    },
   },
   actions: {
     setSort(sort: SortBy) {
@@ -58,7 +66,7 @@ export const useFilterStore = defineStore('filter', {
           const filterValue = selected instanceof Array
             ? `range (${selected[0]} to ${selected[1]})`
             : [...selected].map((option) => `"${option}"`).join(', ');
-          const queryPath = key === 'price' ? 'price.centAmount' : `attributes.${key}`;
+          const queryPath = key === 'price' ? 'scopedPrice.currentValue.centAmount' : `attributes.${key}`;
           return `variants.${queryPath}:${filterValue}`;
         });
       const categoryId = categories.currentCategoryId();
@@ -82,6 +90,9 @@ export const useFilterStore = defineStore('filter', {
       this.$reset();
       this.sort = sort;
     },
-
+    refreshFilter(): void {
+      this.loaded = false;
+      this.refresh = true;
+    },
   },
 });

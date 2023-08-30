@@ -1,5 +1,3 @@
-<!-- Breadcrumbs.vue -->
-
 <template>
   <ul class="breadcrumbs">
     <li><RouterLink :to="{ name: 'Home' }" class="link">Home</RouterLink></li>

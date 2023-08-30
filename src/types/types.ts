@@ -165,7 +165,7 @@ interface FacetTerm {
   term: string;
   count: number;
 }
-type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.price.centAmount';
+type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.scopedPrice.currentValue.centAmount';
 interface FacetResult {
   terms: FacetTerm[];
   total: number;

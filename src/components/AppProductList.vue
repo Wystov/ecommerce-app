@@ -31,12 +31,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUserStore, { userData: 'data' }),
-    ...mapState(useFilterStore, ['queryArgs', 'loaded']),
+    ...mapState(useUserStore, { userData: 'data', currency: 'currency' }),
+    ...mapState(useFilterStore, ['queryArgs', 'loaded', 'refresh']),
     ...mapState(useCategoriesStore, ['categories', 'categoriesLoaded']),
-    currency(): string {
-      return this.userData.country === 'US' ? 'USD' : 'GBP';
-    },
     currencyTag(): string {
       return this.currency === 'USD' ? '$' : '£';
     },
@@ -61,14 +58,14 @@ export default {
       this.setFilterOptions(body.facets as unknown as FacetResults);
       if (!this.loaded) this.buildFilterOptions();
       this.productList = body.results;
-      console.log('products', body.results);
+      console.log(body);
     },
   },
   created(): void {
     this.getProducts();
     this.$watch(
       () => this.queryArgs,
-      () => { if (this.loaded) this.getProducts(); },
+      () => { if (this.loaded || this.refresh) this.getProducts(); },
     );
     this.$watch(
       () => this.$route.params,
