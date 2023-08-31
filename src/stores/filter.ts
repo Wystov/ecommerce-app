@@ -23,12 +23,10 @@ export const useFilterStore = defineStore('filter', {
       weight: {
         key: 'variants.attributes.weight',
         selected: [0, 0],
-        range: [0, 0],
       },
       price: {
         key: 'variants.scopedPrice.currentValue.centAmount',
         selected: [0, 0],
-        range: [0, 0],
       },
     } as FilterOptions,
   }),

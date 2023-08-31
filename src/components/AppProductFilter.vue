@@ -120,7 +120,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'appliedFilters', 'appliedFilters']),
+    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'appliedFilters']),
     ...mapState(useUserStore, ['currency']),
     brands(): FacetTerm[] {
       return this.filterOptions.brand.terms;
@@ -144,21 +144,21 @@ export default {
     },
     mappedAppliedFilters(): string[] {
       if (!this.loaded) return [];
-      const response = [];
+      const filters = [];
       const { search, brand, price, weight } = this.appliedFilters;
-      if (search?.length) response.push(`Search: ${search}`);
-      if (brand?.length) response.push(`Brand: ${brand.join(', ')}`);
+      if (search?.length) filters.push(`Search: ${search}`);
+      if (brand?.length) filters.push(`Brand: ${brand.join(', ')}`);
       if (Array.isArray(price) && (price[0] !== this.minPrice || price[1] !== this.maxPrice)) {
         const priceStr = price
           .map((p) => `${this.currencyTag}${(+p / 100).toFixed(2)}`)
           .join(' - ');
-        response.push(`Price: ${priceStr}`);
+        filters.push(`Price: ${priceStr}`);
       }
       if (Array.isArray(weight) && (weight[0] !== this.minWeight || weight[1] !== this.maxWeight)) {
         const weightStr = weight.map((w) => `${w} oz.`).join(' - ');
-        response.push(`Weight: ${weightStr}`);
+        filters.push(`Weight: ${weightStr}`);
       }
-      return response;
+      return filters;
     },
   },
   methods: {
