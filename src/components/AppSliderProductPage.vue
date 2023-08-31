@@ -267,12 +267,10 @@ export default {
   }
 }
 .mySwiperPopUp img {
-  max-width: 70vw;
-  max-height: 70vh;
   object-fit: contain;
 }
 .popup-describe {
-  padding: 2vw;
+  padding: 2vh;
   text-align: center;
 }
 .swiper-button-next,

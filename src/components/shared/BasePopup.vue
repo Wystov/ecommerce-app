@@ -102,16 +102,16 @@ export default {
   width: 100%;
 }
 .popup-default {
-  width: 70vw;
+  width: min(70vh, 70vw);
 }
 @media (max-width: 900px) {
   .popup-default {
-    width: 80vw;
+    width: min(80vh, 80vw);
   }
 }
 @media (max-width: 768px) {
   .popup-default {
-    width: 90vw;
+    width: min(90vh, 90vw);
   }
   .close-btn {
     z-index: 22;
@@ -122,7 +122,7 @@ export default {
 }
 @media (max-width: 500px) {
   .popup-default {
-    width: 98vw;
+    width: min(95vh, 95vw);
   }
   .close-btn {
     z-index: 22;
