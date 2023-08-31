@@ -21,10 +21,12 @@ export const useFilterStore = defineStore('filter', {
       weight: {
         key: 'variants.attributes.weight',
         selected: [0, 0],
+        range: [0, 0],
       },
       price: {
         key: 'variants.scopedPrice.currentValue.centAmount',
         selected: [0, 0],
+        range: [0, 0],
       },
     } as FilterOptions,
   }),
@@ -42,6 +44,15 @@ export const useFilterStore = defineStore('filter', {
         'text.en': state.search,
         fuzzy: true,
         fuzzyLevel: state.search && state.search.length > 2 ? 1 : 0,
+      };
+    },
+    appliedFilters: (state) => {
+      const { brand, weight, price } = state.filterOptions;
+      return {
+        search: state.search,
+        brand: [...brand.selected],
+        weight: [...weight.selected],
+        price: [...price.selected],
       };
     },
   },

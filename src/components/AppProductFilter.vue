@@ -1,11 +1,17 @@
 <template>
   <div class="filter-container">
     <AppProductCategories />
-    <button
-      @click="reset"
-      class="button-reset"
-      type="button"
-    >Reset filters</button>
+    <div v-if="mappedAppliedFilters?.length" class="applied-filters">
+      <span class="title">Applied filters</span>
+      <ul v-for="filter in mappedAppliedFilters" :key="filter">
+        <li>{{ filter }}</li>
+      </ul>
+      <button
+        @click="reset"
+        class="button-reset"
+        type="button"
+      >Reset filters</button>
+    </div>
     <template v-if="loaded">
       <div class="search">
         <span class="title">{{ searchTitle }}</span>
@@ -98,7 +104,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useFilterStore, ['filterOptions', 'loaded']),
+    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'appliedFilters', 'appliedFilters']),
     ...mapState(useUserStore, ['currency']),
     brands(): FacetTerm[] {
       return this.filterOptions.brand.terms;
@@ -119,6 +125,23 @@ export default {
     },
     currencyTag(): string {
       return this.currency === 'USD' ? '$' : '£';
+    },
+    mappedAppliedFilters(): string[] {
+      if (!this.loaded) return [];
+      const response = [];
+      const { search, brand, price, weight } = this.appliedFilters;
+      if (search?.length) response.push(`Search: ${search}`);
+      if (brand?.length) response.push(`Brand: ${brand.join(', ')}`);
+      if (Array.isArray(price) && (price[0] !== this.minPrice || price[1] !== this.maxPrice)) {
+        const priceStr = price
+          .map((p) => `${this.currencyTag}${(+p / 100).toFixed(2)}`).join(' - ');
+        response.push(`Price: ${priceStr}`);
+      }
+      if (Array.isArray(weight) && (weight[0] !== this.minWeight || weight[1] !== this.maxWeight)) {
+        const weightStr = weight.map((w) => `${w} oz.`).join(' - ');
+        response.push(`Weight: ${weightStr}`);
+      }
+      return response;
     },
   },
   methods: {
@@ -229,5 +252,9 @@ export default {
   font-size: 1.5rem;
   padding: 0.25rem 0.5rem;
   min-width: 0;
+}
+.applied-filters {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9e9e9;
 }
 </style>

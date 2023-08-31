@@ -171,6 +171,7 @@ interface FacetResult {
   total: number;
   key: FilterKey;
   selected: Set<string> | [number, number];
+  range?: [number, number];
 }
 interface FilterOptions {
   brand: FacetResult;
