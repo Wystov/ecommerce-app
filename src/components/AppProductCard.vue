@@ -86,7 +86,7 @@ export default defineComponent({
 .card {
   box-sizing: border-box;
   width: calc(20% + 1px);
-  max-height: 381px;
+  max-height: fit-content;
   padding: 20px;
   border: 1px solid #e9e9e9;
   margin-left: -1px;
