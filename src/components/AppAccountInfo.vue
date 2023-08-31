@@ -38,22 +38,13 @@ export default {
   computed: {
     ...mapStores(useUserStore),
     firstName(): string {
-      if (this.name) {
-        return this.name;
-      }
-      return '';
+      return this.name ?? '';
     },
     lastName(): string {
-      if (this.surname) {
-        return this.surname;
-      }
-      return '';
+      return this.surname ?? '';
     },
     birthDate(): string {
-      if (this.date) {
-        return this.date;
-      }
-      return '';
+      return this.date ?? '';
     },
   },
   methods: {

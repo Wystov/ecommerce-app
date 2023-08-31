@@ -1,4 +1,4 @@
-import type { ProductData } from '@commercetools/platform-sdk';
+import type { ProductData, ClientResponse } from '@commercetools/platform-sdk';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -149,15 +149,6 @@ interface Address {
   postalCode: string;
   streetName: string;
 }
-interface AccountAddressesData {
-  addresses: Address[];
-  shippingIds: string[];
-  defaultShippingId: string[];
-  shippingAddresses: Address[];
-  billingIds: string[];
-  defaultBillingId: string[];
-  billingAddresses: Address[]
-}
 type Country = 'US' | 'GB';
 
 interface StateUser {
@@ -169,6 +160,7 @@ interface StateUser {
           product: number[];
       };
   };
+  customerData: ClientResponse,
 }
 type Attribute = { name: string; value: string };
 interface AppProduct {
@@ -234,5 +226,4 @@ export type {
   FilterKey,
   AccountInfoData,
   Address,
-  AccountAddressesData,
 };

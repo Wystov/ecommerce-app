@@ -2,48 +2,52 @@
   <div class="info-container">
     <h4>Shipping addresses</h4>
     <div class="address-block">
-      <div v-if="defaultShippingId.length !== 0" class="address-item">
-        <div class="default">Default</div>
-        <div class="address-line">
-          <span>{{ getDefaultShippingAddress }}</span>
-          <PencilSquareIcon class="icon" />
-          <ArchiveBoxXMarkIcon class="icon" />
-        </div>
-      </div>
-      <template v-for="(address, i) in getShippingAddresses" :key="i">
-        <div class="address-item">
-          <div v-if="defaultShippingId.length !== 0" class="divider" />
+      <template v-if="loaded">
+        <div v-if="userStore.getDefaultShippingAddressId" class="address-item">
+          <div class="default">Default</div>
           <div class="address-line">
-            <span>{{ address.streetName + ', ' + address.city + ', ' + address.country + ', ' + address.postalCode }}</span>
+            <span>{{ userStore.defaultShippingAddress }}</span>
             <PencilSquareIcon class="icon" />
             <ArchiveBoxXMarkIcon class="icon" />
-            <div v-if="true" class="default set-default">Set as default</div>
           </div>
         </div>
+        <template v-for="(address) in userStore.shippingAddresses" :key="address.id">
+          <div class="address-item">
+            <div v-if="userStore.getDefaultShippingAddressId" class="divider" />
+            <div class="address-line">
+              <span>{{ addressName(address) }}</span>
+              <PencilSquareIcon class="icon" />
+              <ArchiveBoxXMarkIcon class="icon" />
+              <div v-if="true" class="default set-default">Set as default</div>
+            </div>
+          </div>
+        </template>
       </template>
     </div>
   </div>
   <div class="info-container">
     <h4>Billing addresses</h4>
     <div class="address-block">
-      <div v-if="defaultBillingId.length !== 0" class="address-item">
-        <div class="default">Default</div>
-        <div class="address-line">
-          <span>{{ getDefaultBillingAddress }}</span>
-          <PencilSquareIcon class="icon" />
-          <ArchiveBoxXMarkIcon class="icon" />
-        </div>
-      </div>
-      <template v-for="(address, i) in getBillingAddresses" :key="i">
-        <div class="address-item">
-          <div v-if="defaultBillingId.length !== 0" class="divider" />
+      <template v-if="loaded">
+        <div v-if="userStore.getDefaultBillingAddressId" class="address-item">
+          <div class="default">Default</div>
           <div class="address-line">
-            <span>{{ address.streetName + ', ' + address.city + ', ' + address.country + ', ' + address.postalCode }}</span>
+            <span>{{ userStore.defaultBillingAddress }}</span>
             <PencilSquareIcon class="icon" />
             <ArchiveBoxXMarkIcon class="icon" />
-            <div v-if="true" class="default set-default">Set as default</div>
           </div>
         </div>
+        <template v-for="(address) in userStore.billingAddresses" :key="address.id">
+          <div class="address-item">
+            <div v-if="userStore.getDefaultBillingAddressId" class="divider" />
+            <div class="address-line">
+              <span>{{ addressName(address) }}</span>
+              <PencilSquareIcon class="icon" />
+              <ArchiveBoxXMarkIcon class="icon" />
+              <div v-if="true" class="default set-default">Set as default</div>
+            </div>
+          </div>
+        </template>
       </template>
     </div>
   </div>
@@ -60,7 +64,7 @@ import { PencilSquareIcon, ArchiveBoxXMarkIcon } from '@heroicons/vue/20/solid';
 import { useUserStore } from '@/stores/user';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import { LocalStorageKeys } from '@/types/enums';
-import type { Address, AccountAddressesData } from '@/types/types';
+import type { Address } from '@/types/types';
 import api from '@/utils/api/client';
 
 export default {
@@ -69,37 +73,13 @@ export default {
     ArchiveBoxXMarkIcon,
     BaseButton,
   },
-  data(): AccountAddressesData {
+  data(): {loaded: boolean} {
     return {
-      addresses: [],
-      shippingIds: [],
-      defaultShippingId: [],
-      shippingAddresses: [],
-      billingIds: [],
-      defaultBillingId: [],
-      billingAddresses: [],
+      loaded: false,
     };
   },
   computed: {
     ...mapStores(useUserStore),
-    getShippingAddresses(): Address[] {
-      const noDefaultAddresses = this.addresses.filter((el) => !this.defaultShippingId
-        .includes(el.id));
-      return noDefaultAddresses.filter((el) => this.shippingIds.includes(el.id));
-    },
-    getDefaultShippingAddress(): string {
-      const address = (this.addresses.filter((el) => this.defaultShippingId.includes(el.id)))[0];
-      return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
-    },
-    getBillingAddresses(): Address[] {
-      const noDefaultAddress = this.addresses.filter((el) => !this.defaultBillingId
-        .includes(el.id));
-      return noDefaultAddress.filter((el) => this.billingIds.includes(el.id));
-    },
-    getDefaultBillingAddress(): string {
-      const address = (this.addresses.filter((el) => this.defaultBillingId.includes(el.id)))[0];
-      return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
-    },
   },
   methods: {
     logOut(): void {
@@ -110,15 +90,15 @@ export default {
     },
     async getData(): Promise<void> {
       try {
-        const { body } = await api.call().me().get().execute();
-        this.addresses = body.addresses as Address[];
-        this.shippingIds = body.shippingAddressIds as string[];
-        if (body.defaultShippingAddressId) this.defaultShippingId = [body.defaultShippingAddressId];
-        this.billingIds = body.billingAddressIds as string[];
-        if (body.defaultBillingAddressId) this.defaultBillingId = [body.defaultBillingAddressId];
+        const response = await api.call().me().get().execute();
+        this.userStore.setCustomerData(response);
+        this.loaded = true;
       } catch (error) {
         console.error('Error:', error);
       }
+    },
+    addressName(address: Address): string {
+      return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
     },
   },
   created(): void {
