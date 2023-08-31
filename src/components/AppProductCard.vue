@@ -1,11 +1,20 @@
 <template>
-  <RouterLink class="card" :to="{ name: 'Product', params: { slug } }">
-    <img class="product-image w-100" :src="image" alt="product image" />
+  <RouterLink
+    class="card"
+    :to="{ name: 'Product', params: { slug } }">
+    <img
+      class="product-image w-100"
+      :src="image"
+      alt="product image" />
     <div class="product-content">
       <p class="product-name">{{ name }}</p>
       <p class="product-description">{{ description }}</p>
       <div class="product-price">
-        <span v-if="salePrice" class="old-price">{{ price }}</span>
+        <span
+          v-if="salePrice"
+          class="old-price">
+          {{ price }}
+        </span>
         <span :class="salePrice ? 'new-price' : 'price'">
           {{ salePrice ?? price }}
         </span>
@@ -43,8 +52,7 @@ export default defineComponent({
       return this.product.images?.[0].url ?? imgPlaceholder;
     },
     brand(): string {
-      const attribute = this.product.attributes
-        ?.find((attr) => attr.name === 'brand');
+      const attribute = this.product.attributes?.find((attr) => attr.name === 'brand');
       return attribute?.value;
     },
     name(): string {
@@ -59,8 +67,7 @@ export default defineComponent({
       return description;
     },
     priceForCountry(): Price | undefined {
-      return this.product.prices
-        ?.filter((price) => price.value.currencyCode === this.currency)[0];
+      return this.product.prices?.filter((price) => price.value.currencyCode === this.currency)[0];
     },
     price(): string | undefined {
       const normalPrice = this.priceForCountry?.value?.centAmount;

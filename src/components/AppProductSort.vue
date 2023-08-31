@@ -6,8 +6,7 @@
     :options="sortOptions"
     :defaultSelected="sort"
     :isPlain="true"
-    class="sort-select"
-  />
+    class="sort-select" />
 </template>
 
 <script lang="ts">

@@ -9,8 +9,7 @@ const authErrors: Record<string, string> = {
   'email not available':
     'Account with this email address already exists. Please try again with a different email.',
 
-  'Failed to fetch':
-    'Server doesn\'t respond. Check your internet connection or try later',
+  'Failed to fetch': "Server doesn't respond. Check your internet connection or try later",
 };
 
 export const authErrorHandler = (error: unknown): ApiResponse => {
@@ -24,7 +23,7 @@ export const authErrorHandler = (error: unknown): ApiResponse => {
   return response;
 };
 
-export const initErrorHandler = (error:unknown): void => {
+export const initErrorHandler = (error: unknown): void => {
   if ((error as Error).message === 'The refresh token was not found. It may have expired.') {
     localStorage.removeItem(LocalStorageKeys.Token);
     api.signOut();

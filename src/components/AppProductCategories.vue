@@ -10,7 +10,9 @@
             All
           </RouterLink>
         </li>
-        <template v-for="category in filteredCategories" :key="category.id">
+        <template
+          v-for="category in filteredCategories"
+          :key="category.id">
           <li class="category-item">
             <RouterLink
               :to="{ name: category.routerName, params: category.params }"
@@ -18,7 +20,9 @@
               {{ category.name }}
             </RouterLink>
           </li>
-          <ul v-if="category.children.length" class="subcategories">
+          <ul
+            v-if="category.children.length"
+            class="subcategories">
             <li
               v-for="child in category.children"
               :key="child.id"
@@ -34,7 +38,6 @@
       </ul>
     </nav>
   </template>
-
 </template>
 
 <script lang="ts">

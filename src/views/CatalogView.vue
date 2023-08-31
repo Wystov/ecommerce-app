@@ -1,10 +1,14 @@
 <template>
   <Transition mode="out-in">
-    <div v-if="!categoriesLoaded" class="spinner-container">
+    <div
+      v-if="!categoriesLoaded"
+      class="spinner-container">
       <div class="spinner" />
     </div>
     <template v-else>
-      <div v-if="rightPath" class="wrapper w-100 container">
+      <div
+        v-if="rightPath"
+        class="wrapper w-100 container">
         <div class="top-container">
           <AppBreadcrumbs />
           <AppProductSort />
@@ -15,7 +19,6 @@
       <NotFoundView v-else />
     </template>
   </Transition>
-
 </template>
 
 <script lang="ts">
@@ -41,11 +44,13 @@ export default {
       if (!this.categoriesLoaded) return false;
       const { categorySlug, subcategorySlug } = this.$route.params;
       if (!categorySlug && !subcategorySlug) return true;
-      return this.mappedCategories?.some((category) => {
-        const rightCat = category.params.categorySlug === categorySlug;
-        const rightSubcat = category.params.subcategorySlug === subcategorySlug;
-        return rightCat && rightSubcat;
-      }) ?? false;
+      return (
+        this.mappedCategories?.some((category) => {
+          const rightCat = category.params.categorySlug === categorySlug;
+          const rightSubcat = category.params.subcategorySlug === subcategorySlug;
+          return rightCat && rightSubcat;
+        }) ?? false
+      );
     },
   },
   methods: {

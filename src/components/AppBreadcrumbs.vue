@@ -1,9 +1,23 @@
 <template>
   <ul class="breadcrumbs">
-    <li><RouterLink :to="{ name: 'Home' }" class="link">Home</RouterLink></li>
-    <template v-for="item in breadcrumbs" :key="item.name">
+    <li>
+      <RouterLink
+        :to="{ name: 'Home' }"
+        class="link">
+        Home
+      </RouterLink>
+    </li>
+    <template
+      v-for="item in breadcrumbs"
+      :key="item.name">
       <span class="divider">/</span>
-      <li><RouterLink :to="item.route" class="link">{{ item.name }}</RouterLink></li>
+      <li>
+        <RouterLink
+          :to="item.route"
+          class="link">
+          {{ item.name }}
+        </RouterLink>
+      </li>
     </template>
   </ul>
 </template>

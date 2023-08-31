@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia';
-import type {
-  SortBy, FilterOptions, FacetResults, Filter,
-} from '@/types/types';
+import type { SortBy, FilterOptions, FacetResults, Filter } from '@/types/types';
 import { useCategoriesStore } from './categories';
 import { useUserStore } from './user';
 
@@ -11,7 +9,11 @@ export const useFilterStore = defineStore('filter', {
     refresh: false,
     sort: 'name.en asc' as SortBy,
     search: undefined as string | undefined,
-    facet: ['variants.attributes.weight', 'variants.attributes.brand', 'variants.scopedPrice.currentValue.centAmount'],
+    facet: [
+      'variants.attributes.weight',
+      'variants.attributes.brand',
+      'variants.scopedPrice.currentValue.centAmount',
+    ],
     filter: undefined as string[] | undefined,
     filterOptions: {
       brand: {
@@ -33,7 +35,10 @@ export const useFilterStore = defineStore('filter', {
   getters: {
     queryArgs: (state) => {
       const userStore = useUserStore();
-      const { currency, data: { country } } = userStore;
+      const {
+        currency,
+        data: { country },
+      } = userStore;
       return {
         sort: state.sort,
         facet: state.facet,
@@ -65,9 +70,11 @@ export const useFilterStore = defineStore('filter', {
       Object.keys(this.filterOptions).forEach((option) => {
         const filterKey = this.filterOptions[option as keyof FilterOptions].key;
         const filter = options[filterKey];
-        filter.terms.sort((a, b) => ((option === 'brand')
-          ? a.term.localeCompare(b.term)
-          : parseFloat(a.term) - parseFloat(b.term)));
+        filter.terms.sort((a, b) =>
+          option === 'brand'
+            ? a.term.localeCompare(b.term)
+            : parseFloat(a.term) - parseFloat(b.term),
+        );
         Object.assign(this.filterOptions[option as keyof FilterOptions], filter);
       });
       this.loaded = true;
@@ -75,14 +82,20 @@ export const useFilterStore = defineStore('filter', {
     buildFilterOptions() {
       const categories = useCategoriesStore();
       const activeFilters = Object.entries(this.filterOptions)
-        .filter(([, { selected }]) => (selected instanceof Set
-          ? selected.size > 0
-          : Array.isArray(selected) && selected.some((num) => num !== 0)))
+        .filter(([, { selected }]) =>
+          selected instanceof Set
+            ? selected.size > 0
+            : Array.isArray(selected) && selected.some((num) => num !== 0),
+        )
         .map(([key, { selected }]) => {
-          const filterValue = selected instanceof Array
-            ? `range (${selected[0]} to ${selected[1]})`
-            : [...selected].map((option) => `"${option}"`).join(', ');
-          const queryPath = key === 'price' ? 'scopedPrice.currentValue.centAmount' : `attributes.${key}`;
+          const filterValue =
+            selected instanceof Array
+              ? `range (${selected[0]} to ${selected[1]})`
+              : [...selected].map((option) => `"${option}"`).join(', ');
+          const queryPath =
+            key === 'price'
+              ? 'scopedPrice.currentValue.centAmount'
+              : `attributes.${key}`;
           return `variants.${queryPath}:${filterValue}`;
         });
       const categoryId = categories.currentCategoryId();

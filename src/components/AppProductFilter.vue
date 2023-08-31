@@ -1,27 +1,43 @@
 <template>
   <div class="filter-container">
     <AppProductCategories />
-    <div v-if="mappedAppliedFilters?.length" class="applied-filters">
+    <div
+      v-if="mappedAppliedFilters?.length"
+      class="applied-filters">
       <span class="title">Applied filters</span>
-      <ul v-for="filter in mappedAppliedFilters" :key="filter">
+      <ul
+        v-for="filter in mappedAppliedFilters"
+        :key="filter">
         <li>{{ filter }}</li>
       </ul>
       <button
         @click="reset"
         class="button-reset"
-        type="button"
-      >Reset filters</button>
+        type="button">
+        Reset filters
+      </button>
     </div>
     <template v-if="loaded">
       <div class="search">
         <span class="title">{{ searchTitle }}</span>
         <div class="search-container">
-          <BaseInput @keyup.enter="setSearch" id="search" ref="searchInput" width="75%" />
-          <BaseButton size="small" @click="setSearch" class="search-btn">&#x1F50D;&#xFE0E;</BaseButton>
+          <BaseInput
+            @keyup.enter="setSearch"
+            id="search"
+            ref="searchInput"
+            width="75%" />
+          <BaseButton
+            size="small"
+            @click="setSearch"
+            class="search-btn">
+            &#x1F50D;&#xFE0E;
+          </BaseButton>
         </div>
       </div>
       <div class="checkbox-filter">
-        <span class="title">Brand <span class="count">{{ brands.length }}</span></span>
+        <span class="title">
+          Brand<span class="count">{{ brands.length }}</span>
+        </span>
         <BaseCheckbox
           v-for="item in brands"
           @change="changeCheckFilterOptions('brand', item.term)"
@@ -43,12 +59,15 @@
           :step="1"
           :tooltips="false"
           :lazy="false"
-          class="range-slider"
-        />
+          class="range-slider" />
         <span class="nums-range">
           {{ currencyTag }}{{ priceRange[0] / 100 }} - {{ currencyTag }}{{ priceRange[1] / 100 }}
         </span>
-        <BaseButton @click="changeRangeFilterOptions('price', priceRange, 'build')" size="small">Apply</BaseButton>
+        <BaseButton
+          @click="changeRangeFilterOptions('price', priceRange, 'build')"
+          size="small">
+          Apply
+        </BaseButton>
       </div>
       <div class="range-filter">
         <span class="title">Weight</span>
@@ -59,11 +78,8 @@
           :step="0.1"
           :tooltips="false"
           :lazy="false"
-          class="range-slider"
-        />
-        <span class="nums-range">
-          {{ weightRange[0] }} oz. - {{ weightRange[1] }} oz.
-        </span>
+          class="range-slider" />
+        <span class="nums-range"> {{ weightRange[0] }} oz. - {{ weightRange[1] }} oz. </span>
         <BaseButton
           @click="changeRangeFilterOptions('weight', weightRange, 'build')"
           class="button"
@@ -134,7 +150,8 @@ export default {
       if (brand?.length) response.push(`Brand: ${brand.join(', ')}`);
       if (Array.isArray(price) && (price[0] !== this.minPrice || price[1] !== this.maxPrice)) {
         const priceStr = price
-          .map((p) => `${this.currencyTag}${(+p / 100).toFixed(2)}`).join(' - ');
+          .map((p) => `${this.currencyTag}${(+p / 100).toFixed(2)}`)
+          .join(' - ');
         response.push(`Price: ${priceStr}`);
       }
       if (Array.isArray(weight) && (weight[0] !== this.minWeight || weight[1] !== this.maxWeight)) {
@@ -145,7 +162,13 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions', 'resetStore', 'refreshFilter', 'changeSearch']),
+    ...mapActions(useFilterStore, [
+      'changeCheckFilterOptions',
+      'changeRangeFilterOptions',
+      'resetStore',
+      'refreshFilter',
+      'changeSearch',
+    ]),
     isBrandChecked(brand: string): boolean {
       const { selected } = this.filterOptions.brand;
       if (selected instanceof Set) {

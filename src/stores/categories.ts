@@ -48,8 +48,9 @@ export const useCategoriesStore = defineStore('categories', {
       filter.buildFilterOptions();
     },
     currentCategoryId() {
-      const category = this.categories.data
-        .find((item) => item.slug.en === this.categories.current);
+      const category = this.categories.data.find(
+        (item) => item.slug.en === this.categories.current,
+      );
       return category?.id;
     },
   },

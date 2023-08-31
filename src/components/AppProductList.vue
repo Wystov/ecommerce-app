@@ -1,17 +1,22 @@
 <template>
   <Transition mode="out-in">
-    <div v-if="init" class="spinner-container">
+    <div
+      v-if="init"
+      class="spinner-container">
       <div class="spinner" />
     </div>
     <template v-else>
-      <TransitionGroup v-if="productList.length" tag="div" class="catalog" name="card">
+      <TransitionGroup
+        v-if="productList.length"
+        tag="div"
+        class="catalog"
+        name="card">
         <AppProductCard
           v-for="product in productList"
           :key="product.id"
           :productData="product"
           :currency="currency"
-          :currencyTag="currencyTag"
-        />
+          :currencyTag="currencyTag" />
       </TransitionGroup>
       <div v-else>No products found</div>
     </template>
@@ -19,20 +24,19 @@
 </template>
 
 <script lang="ts">
-import type { ProductProjection } from '@commercetools/platform-sdk';
 import { mapActions, mapState } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import { useFilterStore } from '@/stores/filter';
 import { useCategoriesStore } from '@/stores/categories';
 import api from '@/utils/api/client';
-import type { FacetResults } from '@/types/types';
+import type { FacetResults, ProductListType } from '@/types/types';
 import AppProductCard from './AppProductCard.vue';
 
 export default {
   components: {
     AppProductCard,
   },
-  data(): { productList: ProductProjection[], init: boolean } {
+  data(): ProductListType {
     return {
       productList: [],
       init: true,
@@ -59,9 +63,7 @@ export default {
     async getProducts(): Promise<void | undefined> {
       await this.checkCategory();
       const { queryArgs } = this;
-      const { body } = await api.call().productProjections().search()
-        .get({ queryArgs })
-        .execute();
+      const { body } = await api.call().productProjections().search().get({ queryArgs }).execute();
       this.setFilterOptions(body.facets as unknown as FacetResults);
       if (!this.loaded) this.buildFilterOptions();
       this.productList = body.results;

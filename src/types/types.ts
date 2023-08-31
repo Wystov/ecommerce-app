@@ -203,6 +203,10 @@ interface ProductFilterType {
   searchValue: string;
   searchTitle: string
 }
+interface ProductListType {
+  productList: ProductProjection[];
+  init: boolean
+}
 
 export type {
   ButtonClasses,
@@ -236,4 +240,5 @@ export type {
   CategoryMap,
   Breadcrumb,
   ProductFilterType,
+  ProductListType,
 };
