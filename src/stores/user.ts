@@ -68,9 +68,9 @@ export const useUserStore = defineStore('user', {
         this.fetching = false;
       }
     },
-    loginUser(response: ClientResponse) {
+    loginUser(response?: ClientResponse) {
       this.authorized = true;
-      this.setCustomerData(response);
+      if (response) this.setCustomerData(response);
     },
     logoutUser() {
       this.authorized = false;

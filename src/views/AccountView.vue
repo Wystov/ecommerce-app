@@ -6,22 +6,26 @@
         <li class="section-nav-item" :class="{ active: activeIndex === i }" @click="setActiveSection(i)" @keydown="setActiveSection(i)">
           {{ section }}
         </li>
-        <img src="@/assets/icons/round.svg" class="decoration-svg" alt="decoration" v-if="i < sections.length - 1" />
+        <div class="divider" v-if="i < sections.length - 1" />
       </template>
     </div>
     <AppAccountInfo v-if="activeIndex === 0" />
     <AppAccountAddresses v-if="activeIndex === 1" />
+    <BaseButton @click="logOut" label="Log out" />
   </div>
 </template>
 
 <script lang="ts">
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/user';
+import { LocalStorageKeys } from '@/types/enums';
 import AppAccountInfo from '@/components/AppAccountInfo.vue';
 import AppAccountAddresses from '@/components/AppAccountAddresses.vue';
+import BaseButton from '@/components/shared/BaseButton.vue';
+import api from '@/utils/api/client';
 
 export default {
-  components: { AppAccountInfo, AppAccountAddresses },
+  components: { AppAccountInfo, AppAccountAddresses, BaseButton },
   computed: {
     ...mapStores(useUserStore),
   },
@@ -32,6 +36,12 @@ export default {
     };
   },
   methods: {
+    logOut(): void {
+      localStorage.removeItem(LocalStorageKeys.Token);
+      api.signOut();
+      this.userStore.logoutUser();
+      this.$router.push({ name: 'Home' });
+    },
     setActiveSection(index: number): void {
       this.activeIndex = index;
     },
@@ -80,5 +90,9 @@ export default {
 .active {
   color: var(--main-color);
   cursor: default;
+}
+.divider {
+  height: 2rem;
+  border: 1px solid var(--main-font-color);
 }
 </style>

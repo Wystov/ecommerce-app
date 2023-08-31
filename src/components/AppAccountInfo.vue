@@ -11,7 +11,7 @@
     <div class="buttons-block">
       <BaseButton label="Update info" />
       <BaseButton label="Change password" />
-      <BaseButton @click="logOut" label="Log out" />
+      <div class="divider-final" />
     </div>
   </div>
 </template>
@@ -20,7 +20,6 @@
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import BaseButton from '@/components/shared/BaseButton.vue';
-import { LocalStorageKeys } from '@/types/enums';
 import type { AccountInfoData } from '@/types/types';
 import api from '@/utils/api/client';
 
@@ -48,12 +47,6 @@ export default {
     },
   },
   methods: {
-    logOut(): void {
-      localStorage.removeItem(LocalStorageKeys.Token);
-      api.signOut();
-      this.userStore.logoutUser();
-      this.$router.push({ name: 'Home' });
-    },
     async getData(): Promise<void> {
       try {
         const { body } = await api.call().me().get().execute();
@@ -79,18 +72,30 @@ export default {
 }
 .info-block {
   display: grid;
-  grid-template-columns: 0.3fr 1fr;
+  grid-template-columns: 0.5fr 1fr;
   align-items: end;
   gap: 3rem;
 }
 .content-name {
   width: fit-content;
-}
-.content {
-  font-size: 1.5rem;
+  font-weight: 500;
 }
 .buttons-block {
-  display: flex;
+  display: grid;
+  grid-template-areas: "button button" "divider divider";
   gap: 2rem;
+}
+.buttons-block :deep(.button) {
+  background-color: transparent;
+  color: var(--main-font-color);
+  border: 1.5px solid var(--main-font-color);
+}
+.buttons-block :deep(.button:hover) {
+  border-color: var(--main-color);
+}
+.divider-final {
+  width: 100%;
+  border: 0.75px solid var(--main-font-color);
+  grid-area: divider;
 }
 </style>
