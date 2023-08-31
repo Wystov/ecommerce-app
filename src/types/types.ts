@@ -196,6 +196,12 @@ interface Breadcrumb {
   route: string;
   name: string;
 }
+interface ProductFilterType {
+  weightRange: [number, number];
+  priceRange: [number, number];
+  searchValue: string;
+  searchTitle: string
+}
 
 export type {
   ButtonClasses,
@@ -228,4 +234,5 @@ export type {
   FilterKey,
   CategoryMap,
   Breadcrumb,
+  ProductFilterType,
 };

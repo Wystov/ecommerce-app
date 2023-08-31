@@ -7,6 +7,13 @@
       type="button"
     >Reset filters</button>
     <template v-if="loaded">
+      <div class="search">
+        <span class="title">{{ searchTitle }}</span>
+        <div class="search-container">
+          <BaseInput @keyup.enter="setSearch" id="search" ref="searchInput" width="75%" />
+          <BaseButton size="small" @click="setSearch" class="search-btn">&#x1F50D;&#xFE0E;</BaseButton>
+        </div>
+      </div>
       <div class="checkbox-filter">
         <span class="title">Brand <span class="count">{{ brands.length }}</span></span>
         <BaseCheckbox
@@ -67,11 +74,12 @@ import { mapActions, mapState } from 'pinia';
 import Slider from '@vueform/slider';
 import { useFilterStore } from '@/stores/filter';
 import { useUserStore } from '@/stores/user';
-import type { FacetTerm } from '@/types/types';
+import type { BaseInputType, FacetTerm, ProductFilterType } from '@/types/types';
 import BaseCheckbox from './shared/BaseCheckbox.vue';
 import BaseButton from './shared/BaseButton.vue';
 import '@vueform/slider/themes/default.css';
 import AppProductCategories from './AppProductCategories.vue';
+import BaseInput from './shared/BaseInput.vue';
 
 export default {
   components: {
@@ -79,11 +87,14 @@ export default {
     BaseButton,
     Slider,
     AppProductCategories,
+    BaseInput,
   },
-  data(): { weightRange: [number, number]; priceRange: [number, number]; } {
+  data(): ProductFilterType {
     return {
       weightRange: [0, 0],
       priceRange: [0, 0],
+      searchValue: '',
+      searchTitle: '',
     };
   },
   computed: {
@@ -111,7 +122,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions', 'resetStore', 'refreshFilter']),
+    ...mapActions(useFilterStore, ['changeCheckFilterOptions', 'changeRangeFilterOptions', 'resetStore', 'refreshFilter', 'changeSearch']),
     isBrandChecked(brand: string): boolean {
       const { selected } = this.filterOptions.brand;
       if (selected instanceof Set) {
@@ -123,20 +134,35 @@ export default {
       this.resetStore();
       this.refreshFilter();
     },
-  },
-  created(): void {
-    if (this.loaded) {
+    setSearch(): void {
+      const value = (this.$refs.searchInput as BaseInputType).inputValue.trim().toLowerCase();
+      if (value.length) this.changeSearch(value);
+    },
+    setSearchCategoryName(): void {
+      const category = this.$route.path.split('/').at(-1);
+      this.searchTitle = `Search in ${category}`;
+    },
+    setRangeOptions(): void {
+      if (!this.loaded) return;
+      this.weightRange = [this.minWeight, this.maxWeight];
+      this.priceRange = [this.minPrice, this.maxPrice];
+      this.changeRangeFilterOptions('weight', this.weightRange);
+      this.changeRangeFilterOptions('price', this.priceRange);
+    },
+    setSavedRangeOptions(): void {
+      if (!this.loaded) return;
       this.weightRange = this.filterOptions.weight.selected as [number, number];
       this.priceRange = this.filterOptions.price.selected as [number, number];
-    }
+    },
+  },
+  created(): void {
+    this.setSearchCategoryName();
+    this.setSavedRangeOptions();
     this.$watch(
       () => this.loaded,
       () => {
-        if (!this.loaded) return;
-        this.weightRange = [this.minWeight, this.maxWeight];
-        this.priceRange = [this.minPrice, this.maxPrice];
-        this.changeRangeFilterOptions('weight', this.weightRange);
-        this.changeRangeFilterOptions('price', this.priceRange);
+        this.setRangeOptions();
+        this.setSearchCategoryName();
       },
     );
   },
@@ -190,5 +216,18 @@ export default {
   padding: 0;
   color: var(--main-color);
   border: none;
+}
+.search-container {
+  display: flex;
+  gap: 0.5rem;
+}
+.search {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9e9e9;
+}
+.search-btn {
+  font-size: 1.5rem;
+  padding: 0.25rem 0.5rem;
+  min-width: 0;
 }
 </style>

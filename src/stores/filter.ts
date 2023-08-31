@@ -10,6 +10,7 @@ export const useFilterStore = defineStore('filter', {
     loaded: false,
     refresh: false,
     sort: 'name.en asc' as SortBy,
+    search: undefined as string | undefined,
     facet: ['variants.attributes.weight', 'variants.attributes.brand', 'variants.scopedPrice.currentValue.centAmount'],
     filter: undefined as string[] | undefined,
     filterOptions: {
@@ -38,6 +39,9 @@ export const useFilterStore = defineStore('filter', {
         priceCountry: country,
         priceCurrency: currency,
         limit: 50,
+        'text.en': state.search,
+        fuzzy: true,
+        fuzzyLevel: state.search && state.search.length > 2 ? 1 : 0,
       };
     },
   },
@@ -95,6 +99,9 @@ export const useFilterStore = defineStore('filter', {
       this.loaded = false;
       this.refresh = true;
       this.buildFilterOptions();
+    },
+    changeSearch(value: string): void {
+      this.search = value;
     },
   },
 });
