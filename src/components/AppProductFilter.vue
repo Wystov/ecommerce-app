@@ -4,7 +4,7 @@
     <div
       v-if="mappedAppliedFilters?.length"
       class="applied-filters">
-      <span class="title">Applied filters</span>
+      <span class="filter-title">Applied filters</span>
       <ul
         v-for="filter in mappedAppliedFilters"
         :key="filter">
@@ -19,7 +19,7 @@
     </div>
     <template v-if="loaded">
       <div class="search">
-        <span class="title">{{ searchTitle }}</span>
+        <span class="filter-title">{{ searchTitle }}</span>
         <div class="search-container">
           <BaseInput
             @keyup.enter="setSearch"
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="checkbox-filter">
-        <span class="title">
+        <span class="filter-title">
           Brand<span class="count">{{ brands.length }}</span>
         </span>
         <BaseCheckbox
@@ -51,7 +51,7 @@
         </BaseCheckbox>
       </div>
       <div class="range-filter">
-        <span class="title">Price</span>
+        <span class="filter-title">Price</span>
         <Slider
           v-model="priceRange"
           :min="minPrice"
@@ -70,7 +70,7 @@
         </BaseButton>
       </div>
       <div class="range-filter">
-        <span class="title">Weight</span>
+        <span class="filter-title">Weight</span>
         <Slider
           v-model="weightRange"
           :min="minWeight"
@@ -222,7 +222,7 @@ export default {
   padding-right: 1rem;
   margin-top: -1px;
 }
-.title {
+.filter-title {
   display: block;
   font-weight: 600;
   padding-bottom: 1rem;
@@ -230,6 +230,7 @@ export default {
 }
 .count {
   color: #a6a5a5;
+  margin-left: 0.5rem;
 }
 .variant {
   padding-bottom: 0.5rem;
