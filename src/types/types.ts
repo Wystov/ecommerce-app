@@ -165,7 +165,7 @@ interface FacetTerm {
   term: string;
   count: number;
 }
-type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.price.centAmount';
+type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.scopedPrice.currentValue.centAmount';
 interface FacetResult {
   terms: FacetTerm[];
   total: number;
@@ -181,6 +181,31 @@ interface FacetResults {
   [key: string]: FacetResult;
 }
 type Filter = 'brand' | 'weight' | 'price';
+interface CategoryMap {
+  id: string;
+  parentId: string | null;
+  name: string;
+  routerName: string;
+  params: {
+    categorySlug: string;
+    subcategorySlug?: string;
+  }
+  children: CategoryMap[];
+}
+interface Breadcrumb {
+  route: string;
+  name: string;
+}
+interface ProductFilterType {
+  weightRange: [number, number];
+  priceRange: [number, number];
+  searchValue: string;
+  searchTitle: string
+}
+interface ProductListType {
+  productList: ProductProjection[];
+  init: boolean
+}
 
 export type {
   ButtonClasses,
@@ -211,4 +236,8 @@ export type {
   FacetResults,
   Filter,
   FilterKey,
+  CategoryMap,
+  Breadcrumb,
+  ProductFilterType,
+  ProductListType,
 };

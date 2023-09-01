@@ -6,8 +6,7 @@
     :options="sortOptions"
     :defaultSelected="sort"
     :isPlain="true"
-    class="sort-select"
-  />
+    class="sort-select" />
 </template>
 
 <script lang="ts">
@@ -47,7 +46,6 @@ export default {
 
 <style scoped>
 .sort-select {
-  grid-column: span 2;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
