@@ -44,6 +44,12 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
     'no-unused-expressions': ['error', { allowTernary: true }],
+    'object-curly-newline': 'off',
+    'newline-per-chained-call': 'off',
+    'no-confusing-arrow': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'function-paren-newline': 'off',
+    'operator-linebreak': 'off',
   },
   settings: {
     'import/resolver': {
