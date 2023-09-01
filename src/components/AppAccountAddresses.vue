@@ -22,7 +22,7 @@
                 <span>{{ addressName(address) }}</span>
                 <PencilSquareIcon class="icon" />
                 <ArchiveBoxXMarkIcon class="icon" />
-                <div v-if="true" class="set-default">Set as default</div>
+                <div class="set-default">Set as default</div>
               </div>
             </div>
           </template>
@@ -52,7 +52,7 @@
                 <span>{{ addressName(address) }}</span>
                 <PencilSquareIcon class="icon" />
                 <ArchiveBoxXMarkIcon class="icon" />
-                <div v-if="true" class="set-default">Set as default</div>
+                <div class="set-default">Set as default</div>
               </div>
             </div>
           </template>
