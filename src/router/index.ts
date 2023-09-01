@@ -34,11 +34,23 @@ const routes = [
   },
   {
     name: Catalog,
-    path: PathPages.Catalog,
+    path: '/catalog',
     component: CatalogView,
     meta: {
       title: Catalog,
     },
+  },
+  {
+    path: '/catalog/:categorySlug',
+    name: 'Category',
+    component: CatalogView,
+    props: true,
+  },
+  {
+    path: '/catalog/:categorySlug/:subcategorySlug',
+    name: 'Subcategory',
+    component: CatalogView,
+    props: true,
   },
   {
     name: Login,
@@ -82,10 +94,11 @@ const routes = [
   },
   {
     name: 'Product',
-    path: '/product',
+    path: '/product/:slug',
     component: ProductView,
+    props: true,
     meta: {
-      title: 'Product',
+      title: 'Product page',
     },
   },
 ];

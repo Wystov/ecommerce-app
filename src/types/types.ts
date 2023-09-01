@@ -1,4 +1,6 @@
-import type { ProductData, ClientResponse } from '@commercetools/platform-sdk';
+import type { ProductProjection, ClientResponse } from '@commercetools/platform-sdk';
+import type { Ref } from 'vue';
+import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -165,12 +167,13 @@ interface StateUser {
 type Attribute = { name: string; value: string };
 interface AppProduct {
   fetching: boolean;
-  productData: null | ProductData;
+  productData: null | ProductProjection;
   product: {
     name: string[];
     attributes?: Attribute[];
     description: string;
     images: string[];
+    keyProduct?: number;
   };
 }
 type SortBy = 'price desc' | 'price asc' | 'name en';
@@ -178,7 +181,7 @@ interface FacetTerm {
   term: string;
   count: number;
 }
-type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.price.centAmount';
+type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.scopedPrice.currentValue.centAmount';
 interface FacetResult {
   terms: FacetTerm[];
   total: number;
@@ -194,7 +197,42 @@ interface FacetResults {
   [key: string]: FacetResult;
 }
 type Filter = 'brand' | 'weight' | 'price';
-
+interface CategoryMap {
+  id: string;
+  parentId: string | null;
+  name: string;
+  routerName: string;
+  params: {
+    categorySlug: string;
+    subcategorySlug?: string;
+  }
+  children: CategoryMap[];
+}
+interface Breadcrumb {
+  route: string;
+  name: string;
+}
+interface ProductFilterType {
+  weightRange: [number, number];
+  priceRange: [number, number];
+  searchValue: string;
+  searchTitle: string
+}
+interface ProductListType {
+  productList: ProductProjection[];
+  init: boolean
+}
+interface SwiperSetup {
+  showPopUp: Ref<boolean>;
+  currentIndexSlide: Ref<number>;
+  openPopUp: (index: number) => void;
+  closePopUp: (index: number) => void;
+  setImgPlaceholder: ($event: Event) => void;
+  thumbsSwiper: Ref<Swiper | null | undefined>;
+  mainSwiper: Ref<Swiper | null | undefined>;
+  setThumbsSwiper: (swiper: Swiper) => void;
+  modules: SwiperModule[];
+}
 export type {
   ButtonClasses,
   SelectClasses,
@@ -224,6 +262,11 @@ export type {
   FacetResults,
   Filter,
   FilterKey,
+  CategoryMap,
+  Breadcrumb,
+  ProductFilterType,
+  ProductListType,
+  SwiperSetup,
   AccountInfoData,
   Address,
 };

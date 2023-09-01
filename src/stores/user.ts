@@ -4,6 +4,7 @@ import api from '@/utils/api/client';
 import { initErrorHandler } from '@/utils/api/error-handler';
 import { LocalStorageKeys } from '@/types/enums';
 import type { Country, StateUser, Address } from '@/types/types';
+import { useFilterStore } from './filter';
 
 export const useUserStore = defineStore('user', {
   state: (): StateUser => ({
@@ -18,6 +19,7 @@ export const useUserStore = defineStore('user', {
     customerData: {} as ClientResponse,
   }),
   getters: {
+    currency: (state) => (state.data.country === 'US' ? 'USD' : 'GBP'),
     getAllAddresses(): Address[] {
       return this.customerData.body.addresses;
     },
@@ -76,6 +78,9 @@ export const useUserStore = defineStore('user', {
       this.authorized = false;
     },
     changeCountry(country: Country) {
+      const filter = useFilterStore();
+      filter.resetStore();
+      filter.refreshFilter();
       this.data.country = country;
       localStorage.setItem(LocalStorageKeys.Country, this.data.country);
     },

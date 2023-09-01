@@ -1,63 +1,69 @@
 <template>
-  <div v-if="fetching" class="spinner-container">
-    <div class="spinner" />
-  </div>
-  <Transition>
-    <div v-if="!fetching" class="product-content">
-      <h1 class="product-name mobile-name">
-        {{ product.name[0] }}
-        <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
-      </h1>
-      <div class="product-slider">
-        <AppSlider :images="product.images" />
-      </div>
-      <div class="product-info">
-        <h1 class="product-name">
+  <Transition mode="out-in">
+    <div v-if="fetching" class="spinner-container">
+      <div class="spinner" />
+    </div>
+    <template v-else>
+      <div v-if="productData" class="product-content">
+        <h1 class="product-name mobile-name">
           {{ product.name[0] }}
           <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
         </h1>
-        <div class="product-price-group">
-          <div class="price-container">
-            <BasePrice
-              v-if="priceDiscounted === ''"
-              :size="40"
-              :symbol="currencyTag"
-              :price="price"
-            />
-            <BasePrice v-else :size="26" :symbol="currencyTag" strikethrough :price="price" />
-            <BasePrice
-              v-if="priceDiscounted !== ''"
-              :size="52"
-              :symbol="currencyTag"
-              discounted
-              :price="priceDiscounted"
-            />
-          </div>
-          <BaseButton
-            v-if="hasProductInCart(keyProduct)"
-            @click="removeProductFromCart(keyProduct)"
-            outline
-            class="button"
-          >Remove from cart</BaseButton
-          >
-          <BaseButton
-            v-else
-            @click="addProductToCart(keyProduct)"
-            class="button"
-          >Add to cart</BaseButton
-          >
+        <div class="product-slider">
+          <AppSliderProductPage :images="product.images" />
         </div>
-        <ul class="specification-list">
-          <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
-            <span class="property">{{ attr.name }}</span>
-            <span class="value">
-              {{ attr.name === 'weight' ? attr.value + ' oz' : attr.value }}
-            </span>
-          </li>
-        </ul>
-        <p class="description">{{ product.description }}</p>
+        <div class="product-info">
+          <h1 class="product-name">
+            {{ product.name[0] }}
+            <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
+          </h1>
+          <div class="product-price-group">
+            <div
+              class="price-container"
+              :class="priceDiscounted && price ? 'two-price' : 'one-price'"
+            >
+              <BasePrice
+                v-if="priceDiscounted === ''"
+                :size="40"
+                :symbol="currencyTag"
+                :price="price"
+              />
+              <BasePrice v-else :size="26" :symbol="currencyTag" strikethrough :price="price" />
+              <BasePrice
+                v-if="priceDiscounted !== ''"
+                :size="52"
+                :symbol="currencyTag"
+                discounted
+                :price="priceDiscounted"
+              />
+            </div>
+            <BaseButton
+              v-if="hasProductInCart(product.keyProduct || -1)"
+              @click="removeProductFromCart(product.keyProduct || -1)"
+              outline
+              class="button"
+            >Remove from cart</BaseButton
+            >
+            <BaseButton
+              v-else
+              @click="addProductToCart(product.keyProduct || -1)"
+              class="button"
+            >Add to cart</BaseButton
+            >
+          </div>
+          <ul class="specification-list">
+            <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
+              <span class="property">{{ attr.name }}</span>
+              <span class="value">
+                {{ attr.name === 'weight' ? attr.value + ' oz' : attr.value }}
+              </span>
+            </li>
+          </ul>
+          <p class="description">{{ product.description }}</p>
+        </div>
       </div>
-    </div>
+      <NotFoundView v-else />
+    </template>
   </Transition>
 </template>
 
@@ -67,21 +73,18 @@ import { mapState, mapActions } from 'pinia';
 import type { AppProduct } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
+import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
+import NotFoundView from '@/views/NotFoundView.vue';
 import BaseButton from './shared/BaseButton.vue';
-import AppSlider from './AppSlider.vue';
+import AppSliderProductPage from './AppSliderProductPage.vue';
 import BasePrice from './shared/BasePrice.vue';
 
 export default {
   components: {
     BaseButton,
-    AppSlider,
+    AppSliderProductPage,
     BasePrice,
-  },
-  props: {
-    keyProduct: {
-      type: Number,
-      required: true,
-    },
+    NotFoundView,
   },
   data(): AppProduct {
     return {
@@ -92,6 +95,7 @@ export default {
         attributes: [],
         description: '',
         images: [],
+        keyProduct: undefined,
       },
     };
   },
@@ -123,22 +127,24 @@ export default {
   methods: {
     ...mapActions(useUserStore, ['addProductToCart', 'removeProductFromCart', 'hasProductInCart']),
     async getProduct(): Promise<void> {
+      const { slug } = this.$route.params;
+      const queryArgs = { where: `slug(en="${slug}")` };
       try {
-        const { body } = await api
-          .call()
-          .products()
-          .withKey({ key: `${this.keyProduct}` })
-          .get()
-          .execute();
-        this.productData = body.masterData.current;
+        const { body } = await api.call().productProjections().get({ queryArgs }).execute();
+        if (!body.results.length) throw new Error('no product');
+        // eslint-disable-next-line prefer-destructuring
+        this.productData = body.results[0];
         const { masterVariant } = this.productData;
 
         this.splittedTitle(this.productData?.name.en);
         this.product.attributes = masterVariant?.attributes;
         this.product.description = this.productData?.description?.en || '';
-        this.product.images = masterVariant.images?.map((img) => img.url) || [];
+        this.product.images = masterVariant.images?.map((img) => img.url ?? imgPlaceholder) || [];
+        if (this.productData.key) {
+          this.product.keyProduct = parseInt(this.productData.key, 10);
+        }
       } catch (error) {
-        console.error('Error getting data from server', error);
+        this.productData = null;
       } finally {
         this.fetching = false;
       }
@@ -194,7 +200,7 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 80px 130px;
+  padding: 30px 90px 60px 90px;
   border-radius: 20px;
   background: var(--second-color);
   height: fit-content;
@@ -209,6 +215,7 @@ export default {
   margin: 0;
   font-weight: 700;
   text-align: center;
+  font-size: 3rem;
   .product-name-light {
     font-weight: 500;
   }
@@ -228,12 +235,20 @@ export default {
   border: 2px solid #eb5461;
 }
 .price-container {
-  display: flex;
-  justify-content: center;
+  display: grid;
   align-items: center;
-  text-align: center;
+  justify-items: center;
   width: 100%;
   gap: 20px;
+  &.one-price {
+    grid-template-columns: 1fr;
+  }
+  &.two-price {
+    grid-template-columns: repeat(3, 1fr);
+    .price:first-child {
+      justify-self: flex-end;
+    }
+  }
 }
 .specification-list {
   display: flex;
@@ -273,7 +288,7 @@ export default {
   .product-slider {
     max-width: 100%;
     width: 30vw;
-    padding: 4vw 5vw;
+    padding: 2vw 5vw 4vw 5vw;
   }
   .product-info {
     max-width: 100%;
@@ -281,6 +296,9 @@ export default {
   }
 }
 @media (max-width: 900px) {
+  .product-name {
+    font-size: 2.5rem;
+  }
   .product-price-group {
     padding: 34px;
   }

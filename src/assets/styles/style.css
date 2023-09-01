@@ -106,6 +106,20 @@ hr {
     db3-1 1.5s  linear infinite alternate,
     db3-2 0.75s cubic-bezier(0,200,.8,200) infinite;
 }
+.spinner-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 
 @keyframes db3-1 {
   100% {left:calc(100% - 8px)}
