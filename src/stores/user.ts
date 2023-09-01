@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
+import type { ClientResponse } from '@commercetools/platform-sdk';
 import api from '@/utils/api/client';
 import { initErrorHandler } from '@/utils/api/error-handler';
 import { LocalStorageKeys } from '@/types/enums';
-import type { Country, StateUser } from '@/types/types';
+import type { Country, StateUser, Address } from '@/types/types';
 import { useFilterStore } from './filter';
 
 export const useUserStore = defineStore('user', {
@@ -15,15 +16,53 @@ export const useUserStore = defineStore('user', {
         product: [],
       },
     },
+    customerData: {} as ClientResponse,
   }),
   getters: {
     currency: (state) => (state.data.country === 'US' ? 'USD' : 'GBP'),
+    getAllAddresses(): Address[] {
+      return this.customerData.body.addresses;
+    },
+    getShippingAddressesIds(): string[] {
+      return this.customerData.body.shippingAddressIds;
+    },
+    shippingAddresses(): Address[] {
+      const noDefaultAddresses = this.getAllAddresses
+        .filter((el) => el.id !== this.getDefaultShippingAddressId);
+      return noDefaultAddresses.filter((el) => this.getShippingAddressesIds
+        .includes(el.id));
+    },
+    getDefaultShippingAddressId(): string {
+      return this.customerData.body.defaultShippingAddressId ?? '';
+    },
+    defaultShippingAddress(): string {
+      const address = (this.getAllAddresses
+        .filter((el) => el.id === this.getDefaultShippingAddressId))[0];
+      return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
+    },
+    getBillingAddressesIds(): string[] {
+      return this.customerData.body.billingAddressIds;
+    },
+    billingAddresses(): Address[] {
+      const noDefaultAddress = this.getAllAddresses
+        .filter((el) => el.id !== this.getDefaultBillingAddressId);
+      return noDefaultAddress.filter((el) => this.getBillingAddressesIds
+        .includes(el.id));
+    },
+    getDefaultBillingAddressId(): string {
+      return this.customerData.body.defaultBillingAddressId;
+    },
+    defaultBillingAddress(): string {
+      const address = (this.getAllAddresses
+        .filter((el) => el.id === this.getDefaultBillingAddressId))[0];
+      return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
+    },
   },
   actions: {
     async init() {
       try {
         const response = await api.call().me().get().execute();
-        if (response.statusCode === 200) this.loginUser();
+        if (response.statusCode === 200) this.loginUser(response);
       } catch (error) {
         this.logoutUser();
         initErrorHandler(error);
@@ -31,8 +70,9 @@ export const useUserStore = defineStore('user', {
         this.fetching = false;
       }
     },
-    loginUser() {
+    loginUser(response?: ClientResponse) {
       this.authorized = true;
+      if (response) this.setCustomerData(response);
     },
     logoutUser() {
       this.authorized = false;
@@ -53,6 +93,9 @@ export const useUserStore = defineStore('user', {
     removeProductFromCart(keyProduct: number) {
       const index = this.data.cart.product.findIndex(((product) => product === keyProduct));
       this.data.cart.product.splice(index, 1);
+    },
+    setCustomerData(data: ClientResponse): void {
+      this.customerData = data;
     },
   },
 });

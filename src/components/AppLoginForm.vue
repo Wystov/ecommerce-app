@@ -1,6 +1,6 @@
 <template>
   <div class="login-form">
-    <h1 class="main-header">Login to Crunch</h1>
+    <h1 class="title">Login to Crunch</h1>
     <BaseInput
       type="text"
       name="email"

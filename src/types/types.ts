@@ -1,4 +1,4 @@
-import type { ProductProjection } from '@commercetools/platform-sdk';
+import type { ProductProjection, ClientResponse } from '@commercetools/platform-sdk';
 import type { Ref } from 'vue';
 import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
@@ -139,6 +139,18 @@ interface RegistrationAddressData {
     value: string;
   };
 }
+interface AccountInfoData {
+  name: string | undefined;
+  surname: string | undefined;
+  date: string | undefined;
+}
+interface Address {
+  city: string;
+  country: string;
+  id: string;
+  postalCode: string;
+  streetName: string;
+}
 type Country = 'US' | 'GB';
 
 interface StateUser {
@@ -150,6 +162,7 @@ interface StateUser {
           product: number[];
       };
   };
+  customerData: ClientResponse,
 }
 type Attribute = { name: string; value: string };
 interface AppProduct {
@@ -254,4 +267,6 @@ export type {
   ProductFilterType,
   ProductListType,
   SwiperSetup,
+  AccountInfoData,
+  Address,
 };

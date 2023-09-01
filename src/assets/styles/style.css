@@ -61,8 +61,8 @@ hr {
   overflow: hidden;
 }
 
-.main-header {
-  font-size: 1.65rem;
+.title {
+  font-size: 2rem;
   font-weight: 600;
 }
 
