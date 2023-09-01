@@ -1,4 +1,6 @@
 import type { ProductProjection } from '@commercetools/platform-sdk';
+import type { Ref } from 'vue';
+import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -158,6 +160,7 @@ interface AppProduct {
     attributes?: Attribute[];
     description: string;
     images: string[];
+    keyProduct?: number;
   };
 }
 type SortBy = 'price desc' | 'price asc' | 'name en';
@@ -206,7 +209,17 @@ interface ProductListType {
   productList: ProductProjection[];
   init: boolean
 }
-
+interface SwiperSetup {
+  showPopUp: Ref<boolean>;
+  currentIndexSlide: Ref<number>;
+  openPopUp: (index: number) => void;
+  closePopUp: (index: number) => void;
+  setImgPlaceholder: ($event: Event) => void;
+  thumbsSwiper: Ref<Swiper | null | undefined>;
+  mainSwiper: Ref<Swiper | null | undefined>;
+  setThumbsSwiper: (swiper: Swiper) => void;
+  modules: SwiperModule[];
+}
 export type {
   ButtonClasses,
   SelectClasses,
@@ -240,4 +253,5 @@ export type {
   Breadcrumb,
   ProductFilterType,
   ProductListType,
+  SwiperSetup,
 };

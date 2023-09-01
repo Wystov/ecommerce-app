@@ -10,7 +10,7 @@
           <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
         </h1>
         <div class="product-slider">
-          <AppSlider :images="product.images" />
+          <AppSliderProductPage :images="product.images" />
         </div>
         <div class="product-info">
           <h1 class="product-name">
@@ -18,7 +18,10 @@
             <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
           </h1>
           <div class="product-price-group">
-            <div class="price-container">
+            <div
+              class="price-container"
+              :class="priceDiscounted && price ? 'two-price' : 'one-price'"
+            >
               <BasePrice
                 v-if="priceDiscounted === ''"
                 :size="40"
@@ -35,15 +38,15 @@
               />
             </div>
             <BaseButton
-              v-if="hasProductInCart(keyProduct)"
-              @click="removeProductFromCart(keyProduct)"
+              v-if="hasProductInCart(product.keyProduct || -1)"
+              @click="removeProductFromCart(product.keyProduct || -1)"
               outline
               class="button"
             >Remove from cart</BaseButton
             >
             <BaseButton
               v-else
-              @click="addProductToCart(keyProduct)"
+              @click="addProductToCart(product.keyProduct || -1)"
               class="button"
             >Add to cart</BaseButton
             >
@@ -70,23 +73,18 @@ import { mapState, mapActions } from 'pinia';
 import type { AppProduct } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
+import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 import NotFoundView from '@/views/NotFoundView.vue';
 import BaseButton from './shared/BaseButton.vue';
-import AppSlider from './AppSlider.vue';
+import AppSliderProductPage from './AppSliderProductPage.vue';
 import BasePrice from './shared/BasePrice.vue';
 
 export default {
   components: {
     BaseButton,
-    AppSlider,
+    AppSliderProductPage,
     BasePrice,
     NotFoundView,
-  },
-  props: {
-    keyProduct: {
-      type: Number,
-      required: true,
-    },
   },
   data(): AppProduct {
     return {
@@ -97,6 +95,7 @@ export default {
         attributes: [],
         description: '',
         images: [],
+        keyProduct: undefined,
       },
     };
   },
@@ -131,9 +130,7 @@ export default {
       const { slug } = this.$route.params;
       const queryArgs = { where: `slug(en="${slug}")` };
       try {
-        const { body } = await api.call()
-          .productProjections().get({ queryArgs })
-          .execute();
+        const { body } = await api.call().productProjections().get({ queryArgs }).execute();
         if (!body.results.length) throw new Error('no product');
         // eslint-disable-next-line prefer-destructuring
         this.productData = body.results[0];
@@ -142,7 +139,10 @@ export default {
         this.splittedTitle(this.productData?.name.en);
         this.product.attributes = masterVariant?.attributes;
         this.product.description = this.productData?.description?.en || '';
-        this.product.images = masterVariant.images?.map((img) => img.url) || [];
+        this.product.images = masterVariant.images?.map((img) => img.url ?? imgPlaceholder) || [];
+        if (this.productData.key) {
+          this.product.keyProduct = parseInt(this.productData.key, 10);
+        }
       } catch (error) {
         this.productData = null;
       } finally {
@@ -200,7 +200,7 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 80px 130px;
+  padding: 30px 90px 60px 90px;
   border-radius: 20px;
   background: var(--second-color);
   height: fit-content;
@@ -215,6 +215,7 @@ export default {
   margin: 0;
   font-weight: 700;
   text-align: center;
+  font-size: 3rem;
   .product-name-light {
     font-weight: 500;
   }
@@ -234,12 +235,20 @@ export default {
   border: 2px solid #eb5461;
 }
 .price-container {
-  display: flex;
-  justify-content: center;
+  display: grid;
   align-items: center;
-  text-align: center;
+  justify-items: center;
   width: 100%;
   gap: 20px;
+  &.one-price {
+    grid-template-columns: 1fr;
+  }
+  &.two-price {
+    grid-template-columns: repeat(3, 1fr);
+    .price:first-child {
+      justify-self: flex-end;
+    }
+  }
 }
 .specification-list {
   display: flex;
@@ -279,7 +288,7 @@ export default {
   .product-slider {
     max-width: 100%;
     width: 30vw;
-    padding: 4vw 5vw;
+    padding: 2vw 5vw 4vw 5vw;
   }
   .product-info {
     max-width: 100%;
@@ -287,6 +296,9 @@ export default {
   }
 }
 @media (max-width: 900px) {
+  .product-name {
+    font-size: 2.5rem;
+  }
   .product-price-group {
     padding: 34px;
   }
