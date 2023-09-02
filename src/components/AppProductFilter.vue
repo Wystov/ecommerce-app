@@ -2,22 +2,6 @@
   <Transition name="slide">
     <div class="filter-container">
       <AppProductCategories />
-      <div
-        v-if="mappedAppliedFilters?.length"
-        class="applied-filters">
-        <span class="filter-title">Applied filters</span>
-        <ul
-          v-for="filter in mappedAppliedFilters"
-          :key="filter">
-          <li class="filter-list-item">{{ filter }}</li>
-        </ul>
-        <button
-          @click="reset"
-          class="button-reset"
-          type="button">
-          Reset filters
-        </button>
-      </div>
       <Transition mode="out-in">
         <div v-if="loaded">
           <div class="search">
@@ -96,6 +80,22 @@
           <div class="spinner" />
         </div>
       </Transition>
+      <div
+        v-if="mappedAppliedFilters?.length"
+        class="applied-filters">
+        <span class="filter-title">Applied filters</span>
+        <ul
+          v-for="filter in mappedAppliedFilters"
+          :key="filter">
+          <li class="filter-list-item">{{ filter }}</li>
+        </ul>
+        <button
+          @click="reset"
+          class="button-reset"
+          type="button">
+          Reset filters
+        </button>
+      </div>
     </div>
   </Transition>
 </template>
