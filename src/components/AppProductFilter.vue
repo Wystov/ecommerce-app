@@ -1,94 +1,96 @@
 <template>
-  <div class="filter-container">
-    <AppProductCategories />
-    <div
-      v-if="mappedAppliedFilters?.length"
-      class="applied-filters">
-      <span class="filter-title">Applied filters</span>
-      <ul
-        v-for="filter in mappedAppliedFilters"
-        :key="filter">
-        <li>{{ filter }}</li>
-      </ul>
-      <button
-        @click="reset"
-        class="button-reset"
-        type="button">
-        Reset filters
-      </button>
-    </div>
-    <template v-if="loaded">
-      <div class="search">
-        <span class="filter-title">{{ searchTitle }}</span>
-        <div class="search-container">
-          <BaseInput
-            @keyup.enter="setSearch"
-            id="search"
-            ref="searchInput"
-            width="75%" />
+  <Transition name="slide">
+    <div class="filter-container">
+      <AppProductCategories />
+      <div
+        v-if="mappedAppliedFilters?.length"
+        class="applied-filters">
+        <span class="filter-title">Applied filters</span>
+        <ul
+          v-for="filter in mappedAppliedFilters"
+          :key="filter">
+          <li>{{ filter }}</li>
+        </ul>
+        <button
+          @click="reset"
+          class="button-reset"
+          type="button">
+          Reset filters
+        </button>
+      </div>
+      <template v-if="loaded">
+        <div class="search">
+          <span class="filter-title">{{ searchTitle }}</span>
+          <div class="search-container">
+            <BaseInput
+              @keyup.enter="setSearch"
+              id="search"
+              ref="searchInput"
+              width="75%" />
+            <BaseButton
+              size="small"
+              @click="setSearch"
+              class="search-btn">
+              &#x1F50D;&#xFE0E;
+            </BaseButton>
+          </div>
+        </div>
+        <div class="checkbox-filter">
+          <span class="filter-title">
+            Brand<span class="count">{{ brands.length }}</span>
+          </span>
+          <BaseCheckbox
+            v-for="item in brands"
+            @change="changeCheckFilterOptions('brand', item.term)"
+            :key="item.term"
+            :id="item.term"
+            :label="item.term"
+            :checked="isBrandChecked(item.term)"
+            name="brand"
+            class="variant">
+            <span class="weight-range">&nbsp;({{ item.count }})</span>
+          </BaseCheckbox>
+        </div>
+        <div class="range-filter">
+          <span class="filter-title">Price</span>
+          <Slider
+            v-model="priceRange"
+            :min="minPrice"
+            :max="maxPrice"
+            :step="1"
+            :tooltips="false"
+            :lazy="false"
+            class="range-slider" />
+          <span class="nums-range">
+            {{ currencyTag }}{{ priceRange[0] / 100 }} - {{ currencyTag }}{{ priceRange[1] / 100 }}
+          </span>
           <BaseButton
-            size="small"
-            @click="setSearch"
-            class="search-btn">
-            &#x1F50D;&#xFE0E;
+            @click="changeRangeFilterOptions('price', priceRange, 'build')"
+            size="small">
+            Apply
           </BaseButton>
         </div>
-      </div>
-      <div class="checkbox-filter">
-        <span class="filter-title">
-          Brand<span class="count">{{ brands.length }}</span>
-        </span>
-        <BaseCheckbox
-          v-for="item in brands"
-          @change="changeCheckFilterOptions('brand', item.term)"
-          :key="item.term"
-          :id="item.term"
-          :label="item.term"
-          :checked="isBrandChecked(item.term)"
-          name="brand"
-          class="variant">
-          <span class="weight-range">&nbsp;({{ item.count }})</span>
-        </BaseCheckbox>
-      </div>
-      <div class="range-filter">
-        <span class="filter-title">Price</span>
-        <Slider
-          v-model="priceRange"
-          :min="minPrice"
-          :max="maxPrice"
-          :step="1"
-          :tooltips="false"
-          :lazy="false"
-          class="range-slider" />
-        <span class="nums-range">
-          {{ currencyTag }}{{ priceRange[0] / 100 }} - {{ currencyTag }}{{ priceRange[1] / 100 }}
-        </span>
-        <BaseButton
-          @click="changeRangeFilterOptions('price', priceRange, 'build')"
-          size="small">
-          Apply
-        </BaseButton>
-      </div>
-      <div class="range-filter">
-        <span class="filter-title">Weight</span>
-        <Slider
-          v-model="weightRange"
-          :min="minWeight"
-          :max="maxWeight"
-          :step="0.1"
-          :tooltips="false"
-          :lazy="false"
-          class="range-slider" />
-        <span class="nums-range"> {{ weightRange[0] }} oz. - {{ weightRange[1] }} oz. </span>
-        <BaseButton
-          @click="changeRangeFilterOptions('weight', weightRange, 'build')"
-          class="button"
-          size="small">
-          Apply
-        </BaseButton>
-      </div>
-    </template>
-  </div>
+        <div class="range-filter">
+          <span class="filter-title">Weight</span>
+          <Slider
+            v-model="weightRange"
+            :min="minWeight"
+            :max="maxWeight"
+            :step="0.1"
+            :tooltips="false"
+            :lazy="false"
+            class="range-slider" />
+          <span class="nums-range"> {{ weightRange[0] }} oz. - {{ weightRange[1] }} oz. </span>
+          <BaseButton
+            @click="changeRangeFilterOptions('weight', weightRange, 'build')"
+            class="button"
+            size="small">
+            Apply
+          </BaseButton>
+        </div>
+      </template>
+    </div>
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -212,15 +214,28 @@ export default {
       },
     );
   },
+
 };
 </script>
 
 <style scoped>
 .filter-container {
+  position: relative;
   width: 200px;
   border-top: 1px solid #e9e9e9;
   padding-right: 1rem;
   margin-top: -1px;
+  background-color: white;
+  transition: 0.6s;
+
+  @media (max-width: 800px) {
+    position: absolute;
+    height: fit-content;
+    width: 81.5vw;
+    border-bottom: 1px solid #e9e9e9;
+    margin-left: -1px;
+    z-index: 10;
+  }
 }
 .filter-title {
   display: block;
@@ -280,5 +295,17 @@ export default {
 .applied-filters {
   padding-bottom: 1rem;
   border-bottom: 1px solid #e9e9e9;
+}
+.slide-enter-active {
+  transition: all 0.3s;
+}
+
+.slide-leave-active {
+  transition: all 0.8s;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100vw);
 }
 </style>

@@ -114,6 +114,14 @@ export default defineComponent({
   @media (max-width: 1000px) {
     width: calc(33.333% + 1px);
   }
+
+  @media (max-width: 700px) {
+    width: calc(50% + 1px);
+  }
+
+  @media (max-width: 380px) {
+    width: calc(100% + 1px);
+  }
 }
 .product-content {
   margin-top: 20px;
