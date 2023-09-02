@@ -98,4 +98,10 @@ export default {
   border: 0.75px solid var(--main-font-color);
   grid-area: divider;
 }
+
+@media(max-width: 550px) {
+  .buttons-block :deep(.button) {
+    padding: 15px 13px;
+  }
+}
 </style>

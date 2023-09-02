@@ -10,18 +10,18 @@
               <span class="default">Default</span>
             </div>
             <div class="address-line">
-              <span>{{ userStore.defaultShippingAddress }}</span>
-              <PencilSquareIcon class="icon" />
-              <ArchiveBoxXMarkIcon class="icon" />
+              <span class="address">{{ userStore.defaultShippingAddress }}</span>
+              <PencilSquareIcon class="icon edit" />
+              <ArchiveBoxXMarkIcon class="icon delete" />
             </div>
           </div>
           <template v-for="(address) in userStore.shippingAddresses" :key="address.id">
             <div class="address-item">
               <div v-if="userStore.getDefaultShippingAddressId" class="divider" />
               <div class="address-line">
-                <span>{{ addressName(address) }}</span>
-                <PencilSquareIcon class="icon" />
-                <ArchiveBoxXMarkIcon class="icon" />
+                <span class="address">{{ addressName(address) }}</span>
+                <PencilSquareIcon class="icon edit" />
+                <ArchiveBoxXMarkIcon class="icon delete" />
                 <div class="set-default">Set as default</div>
               </div>
             </div>
@@ -174,5 +174,26 @@ border: 0.5px solid #3A3E3F;
   width: 100%;
   border: 0.75px solid var(--main-font-color);
   grid-area: divider;
+}
+
+@media(max-width: 700px) {
+  .address-line {
+    display: grid;
+    grid-template-areas: "address edit delete" "set-default set-default set-default";
+    justify-items: end;
+    row-gap: 1rem;
+  }
+  .address {
+    grid-area: address;
+  }
+  .edit {
+    grid-area: edit;
+  }
+  .delete {
+    grid-area: delete;
+  }
+  .set-default {
+    grid-area: set-default;
+  }
 }
 </style>
