@@ -97,7 +97,6 @@
         </div>
       </Transition>
     </div>
-
   </Transition>
 </template>
 
@@ -228,7 +227,6 @@ export default {
       },
     );
   },
-
 };
 </script>
 
