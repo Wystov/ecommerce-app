@@ -18,78 +18,86 @@
           Reset filters
         </button>
       </div>
-      <template v-if="loaded">
-        <div class="search">
-          <span class="filter-title">{{ searchTitle }}</span>
-          <div class="search-container">
-            <BaseInput
-              @keyup.enter="setSearch"
-              id="search"
-              ref="searchInput"
-              width="75%" />
+      <Transition mode="out-in">
+        <div v-if="loaded">
+          <div class="search">
+            <span class="filter-title">{{ searchTitle }}</span>
+            <div class="search-container">
+              <BaseInput
+                @keyup.enter="setSearch"
+                id="search"
+                ref="searchInput"
+                width="75%" />
+              <BaseButton
+                size="small"
+                @click="setSearch"
+                class="search-btn">
+                &#x1F50D;&#xFE0E;
+              </BaseButton>
+            </div>
+          </div>
+          <div class="checkbox-filter">
+            <span class="filter-title">
+              Brand<span class="count">{{ brands.length }}</span>
+            </span>
+            <BaseCheckbox
+              v-for="item in brands"
+              @change="changeCheckFilterOptions('brand', item.term)"
+              :key="item.term"
+              :id="item.term"
+              :label="item.term"
+              :checked="isBrandChecked(item.term)"
+              name="brand"
+              class="variant">
+              <span class="weight-range">&nbsp;({{ item.count }})</span>
+            </BaseCheckbox>
+          </div>
+          <div class="range-filter">
+            <span class="filter-title">Price</span>
+            <Slider
+              v-model="priceRange"
+              :min="minPrice"
+              :max="maxPrice"
+              :step="1"
+              :tooltips="false"
+              :lazy="false"
+              class="range-slider" />
+            <span class="nums-range">
+              {{ priceRangeReadable }}
+            </span>
             <BaseButton
-              size="small"
-              @click="setSearch"
-              class="search-btn">
-              &#x1F50D;&#xFE0E;
+              @click="changeRangeFilterOptions('price', priceRange, 'build')"
+              size="small">
+              Apply
+            </BaseButton>
+          </div>
+          <div class="range-filter">
+            <span class="filter-title">Weight</span>
+            <Slider
+              v-model="weightRange"
+              :min="minWeight"
+              :max="maxWeight"
+              :step="0.1"
+              :tooltips="false"
+              :lazy="false"
+              class="range-slider" />
+            <span class="nums-range">{{ weightRangeReadable }}</span>
+            <BaseButton
+              @click="changeRangeFilterOptions('weight', weightRange, 'build')"
+              class="button"
+              size="small">
+              Apply
             </BaseButton>
           </div>
         </div>
-        <div class="checkbox-filter">
-          <span class="filter-title">
-            Brand<span class="count">{{ brands.length }}</span>
-          </span>
-          <BaseCheckbox
-            v-for="item in brands"
-            @change="changeCheckFilterOptions('brand', item.term)"
-            :key="item.term"
-            :id="item.term"
-            :label="item.term"
-            :checked="isBrandChecked(item.term)"
-            name="brand"
-            class="variant">
-            <span class="weight-range">&nbsp;({{ item.count }})</span>
-          </BaseCheckbox>
+        <div
+          v-else
+          class="spinner-container">
+          <div class="spinner" />
         </div>
-        <div class="range-filter">
-          <span class="filter-title">Price</span>
-          <Slider
-            v-model="priceRange"
-            :min="minPrice"
-            :max="maxPrice"
-            :step="1"
-            :tooltips="false"
-            :lazy="false"
-            class="range-slider" />
-          <span class="nums-range">
-            {{ currencyTag }}{{ priceRange[0] / 100 }} - {{ currencyTag }}{{ priceRange[1] / 100 }}
-          </span>
-          <BaseButton
-            @click="changeRangeFilterOptions('price', priceRange, 'build')"
-            size="small">
-            Apply
-          </BaseButton>
-        </div>
-        <div class="range-filter">
-          <span class="filter-title">Weight</span>
-          <Slider
-            v-model="weightRange"
-            :min="minWeight"
-            :max="maxWeight"
-            :step="0.1"
-            :tooltips="false"
-            :lazy="false"
-            class="range-slider" />
-          <span class="nums-range"> {{ weightRange[0] }} oz. - {{ weightRange[1] }} oz. </span>
-          <BaseButton
-            @click="changeRangeFilterOptions('weight', weightRange, 'build')"
-            class="button"
-            size="small">
-            Apply
-          </BaseButton>
-        </div>
-      </template>
+      </Transition>
     </div>
+
   </Transition>
 </template>
 
@@ -162,6 +170,12 @@ export default {
       }
       return filters;
     },
+    priceRangeReadable(): string {
+      return `${this.currencyTag}${(this.priceRange[0] / 100).toFixed(2)} - ${this.currencyTag}${(this.priceRange[1] / 100).toFixed(2)}`;
+    },
+    weightRangeReadable(): string {
+      return `${this.weightRange[0]} oz. - ${this.weightRange[1]} oz.`;
+    },
   },
   methods: {
     ...mapActions(useFilterStore, [
@@ -221,14 +235,16 @@ export default {
 <style scoped>
 .filter-container {
   position: relative;
+  flex-shrink: 0;
   width: 200px;
   border-top: 1px solid #e9e9e9;
   padding-right: 1rem;
   margin-top: -1px;
   background-color: white;
   transition: 0.6s;
-
-  @media (max-width: 800px) {
+}
+@media (max-width: 800px) {
+  .filter-container {
     position: absolute;
     height: fit-content;
     width: 81.5vw;
@@ -307,5 +323,9 @@ export default {
 .slide-enter-from,
 .slide-leave-to {
   transform: translateX(-100vw);
+}
+.spinner-container {
+  place-items: start center;
+  padding-top: 50px;
 }
 </style>

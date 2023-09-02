@@ -96,4 +96,7 @@ export default {
 .card-move {
   transition: all 500ms ease-in-out;
 }
+.spinner-container {
+  height: 50vh;
+}
 </style>

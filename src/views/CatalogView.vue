@@ -11,7 +11,7 @@
         class="wrapper w-100 container">
         <div class="top-container">
           <AppBreadcrumbs />
-          <AppProductSort :visible="showSidebar" />
+          <AppProductSort />
           <BaseButton
             size="small"
             class="filter-btn"
@@ -91,18 +91,12 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr;
-}
 .top-container {
   display: flex;
   column-gap: 1rem;
   row-gap: 0.5rem;
   justify-content: space-between;
   align-items: center;
-  grid-column: span 2;
   margin-bottom: 20px;
 
   @media (max-width: 700px) {
