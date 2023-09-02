@@ -9,7 +9,7 @@
         <ul
           v-for="filter in mappedAppliedFilters"
           :key="filter">
-          <li>{{ filter }}</li>
+          <li class="filter-list-item">{{ filter }}</li>
         </ul>
         <button
           @click="reset"
@@ -325,5 +325,8 @@ export default {
 .spinner-container {
   place-items: start center;
   padding-top: 50px;
+}
+.filter-list-item {
+  padding-bottom: 0.5rem;
 }
 </style>
