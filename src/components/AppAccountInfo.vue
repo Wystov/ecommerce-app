@@ -1,18 +1,4 @@
 <template>
-  <div class="popup-container">
-    <BasePopup
-      :show="showPopup === true"
-      :closeOnDelete="false"
-      @close="closePopup">
-      <div v-if="updateInfo === true">
-        <h3 class="info-edit-header">Please fill only the fields you want to change and press "Update" button:</h3>
-        <EditInfoBlock @close="closePopup" />
-      </div>
-      <div v-if="updateInfo === false">
-        <EditPassBlock @close="closePopup" />
-      </div>
-    </BasePopup>
-  </div>
   <div class="info-container">
     <div class="info-block">
       <span class="content-name">First name</span>
@@ -27,6 +13,20 @@
       <BaseButton label="Change password" @click="openPasswordPopup" />
       <div class="divider-final" />
     </div>
+  </div>
+  <div class="popup-container">
+    <BasePopup
+      :show="showPopup === true"
+      :closeOnDelete="false"
+      @close="closePopup">
+      <div v-if="updateInfo === true">
+        <h3 class="info-edit-header">Please fill only the fields you want to change and press "Update" button:</h3>
+        <EditInfoBlock @close="closePopup" />
+      </div>
+      <div v-if="updateInfo === false">
+        <EditPassBlock @close="closePopup" />
+      </div>
+    </BasePopup>
   </div>
 </template>
 

@@ -54,7 +54,7 @@ import BaseMessage from '@/components/shared/BaseMessage.vue';
 import api from '@/utils/api/client';
 import { useUserStore } from '@/stores/user';
 import { InvalidMessage } from '@/types/enums';
-import type { RegistrationMainData, MainFields } from '@/types/types';
+import type { RegistrationMainData, MainFields, PasswordEditBlock } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
@@ -74,6 +74,15 @@ export default {
         newPassword: this.newPass,
       };
     },
+    invalidFields(): boolean {
+      return this.fields.every((elem) => elem.valid === 'valid');
+    },
+    fieldsNotComplete(): boolean {
+      return this.fields.every((elem) => elem.value !== '');
+    },
+    readyToUpdate(): boolean {
+      return this.fields[1].value === this.fields[2].value;
+    },
   },
   components: {
     BaseInput,
@@ -81,14 +90,7 @@ export default {
     BaseButton,
   },
   // eslint-disable-next-line max-lines-per-function
-  data(): {
-    mainFields: MainFields;
-    fields: RegistrationMainData[];
-    notMatch: boolean;
-    notMatchText: string;
-    wrongOldPass: boolean;
-    wrongOldPassText: string;
-    } {
+  data(): PasswordEditBlock {
     return {
       mainFields: {} as MainFields,
       fields: [
@@ -167,11 +169,12 @@ export default {
       this.$emit('valid-all-main-fields', { ...this.mainFields, nextStepClick: true });
     },
     async updateInfo(): Promise<void> {
-      if (!this.fields.every((elem) => elem.valid === 'valid')) return;
-      if (this.fields.every((elem) => elem.value !== '') && this.fields[1].value !== this.fields[2].value) {
+      if (!this.invalidFields) return;
+      if (!this.fieldsNotComplete) return;
+      if (!this.readyToUpdate) {
         this.notMatch = true;
       }
-      if (this.fields.every((elem) => elem.value !== '') && this.fields[1].value === this.fields[2].value) {
+      if (this.readyToUpdate) {
         try {
           const { email } = this.userStore.customerData.body;
           await api.call().me().password().post({ body: this.postNewData }).execute();

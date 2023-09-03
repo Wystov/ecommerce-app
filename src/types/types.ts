@@ -247,6 +247,14 @@ interface MainFields {
   valid: boolean;
   response: {};
 }
+interface PasswordEditBlock {
+  mainFields: MainFields;
+  fields: RegistrationMainData[];
+  notMatch: boolean;
+  notMatchText: string;
+  wrongOldPass: boolean;
+  wrongOldPassText: string;
+  }
 export type {
   ButtonClasses,
   SelectClasses,
@@ -285,4 +293,5 @@ export type {
   AccountInfoData,
   Address,
   MainFields,
+  PasswordEditBlock,
 };

@@ -55,9 +55,10 @@ export default {
     },
     newEmailData(): MyCustomerChangeEmailAction {
       const emailIndex = 3;
-      if (this.fields[emailIndex].value && this.fields[emailIndex].value !== '') {
+      const emailValue = this.fields[emailIndex].value;
+      if (emailValue && emailValue !== '') {
         return { action: 'changeEmail',
-          email: this.fields[emailIndex].value,
+          email: emailValue,
         };
       }
       return {
@@ -67,9 +68,10 @@ export default {
     },
     newFirstNameData(): MyCustomerSetFirstNameAction {
       const nameIndex = 0;
-      if (this.fields[nameIndex].value && this.fields[nameIndex].value !== '') {
+      const nameValue = this.fields[nameIndex].value;
+      if (nameValue && nameValue !== '') {
         return { action: 'setFirstName',
-          firstName: this.fields[nameIndex].value,
+          firstName: nameValue,
         };
       }
       return {
@@ -79,9 +81,10 @@ export default {
     },
     newLastNameData(): MyCustomerSetLastNameAction {
       const lastNameIndex = 1;
-      if (this.fields[lastNameIndex].value && this.fields[lastNameIndex].value !== '') {
+      const lastNameValue = this.fields[lastNameIndex].value;
+      if (lastNameValue && lastNameValue !== '') {
         return { action: 'setLastName',
-          lastName: this.fields[lastNameIndex].value,
+          lastName: lastNameValue,
         };
       }
       return {
@@ -91,9 +94,10 @@ export default {
     },
     newDateOfBirthData(): MyCustomerSetDateOfBirthAction {
       const birthDateIndex = 2;
-      if (this.fields[birthDateIndex].value && this.fields[birthDateIndex].value !== '') {
+      const birthDateValue = this.fields[birthDateIndex].value;
+      if (birthDateValue && birthDateValue !== '') {
         return { action: 'setDateOfBirth',
-          dateOfBirth: this.fields[birthDateIndex].value,
+          dateOfBirth: birthDateValue,
         };
       }
       return {
@@ -111,6 +115,13 @@ export default {
           this.newDateOfBirthData,
         ],
       };
+    },
+    allFieldsValid(): boolean {
+      const checkingFields = this.fields.filter((elem) => elem.value !== '');
+      return checkingFields.every((elem) => elem.valid === 'valid');
+    },
+    fieldFilled(): boolean {
+      return this.fields.some((elem) => elem.value !== '');
     },
   },
   components: {
@@ -227,9 +238,8 @@ export default {
       return this.userStore.customerData.body[dataName ?? ''];
     },
     async updateInfo(): Promise<void> {
-      const checkingFields = this.fields.filter((elem) => elem.value !== '');
-      if (!checkingFields.every((elem) => elem.valid === 'valid')) return;
-      if (this.fields.some((elem) => elem.value !== '')) {
+      if (!this.allFieldsValid) return;
+      if (this.fieldFilled) {
         try {
           await api.call().me().post({ body: this.postData }).execute();
           await this.userStore.getData();
