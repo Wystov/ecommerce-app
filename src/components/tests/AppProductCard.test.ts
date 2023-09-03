@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 import AppProductCard from '@/components/AppProductCard.vue';
 
-describe('AppProductCard', () => {
+describe('AppProductCard in catalog', () => {
   const global = {
     components: {
       RouterLink: RouterLinkStub,

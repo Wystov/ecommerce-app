@@ -16,7 +16,7 @@
                 size="small"
                 @click="setSearch"
                 class="search-btn">
-                &#x1F50D;&#xFE0E;
+                <MagnifyingGlassIcon class="icon" />
               </BaseButton>
             </div>
           </div>
@@ -88,6 +88,7 @@
 <script lang="ts">
 import { mapActions, mapState } from 'pinia';
 import Slider from '@vueform/slider';
+import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
 import { useFilterStore } from '@/stores/filter';
 import { useUserStore } from '@/stores/user';
 import type { BaseInputType, FacetTerm, ProductFilterType } from '@/types/types';
@@ -106,6 +107,7 @@ export default {
     AppProductCategories,
     BaseInput,
     AppProductAppliedFiltersList,
+    MagnifyingGlassIcon,
   },
   data(): ProductFilterType {
     return {
@@ -259,5 +261,9 @@ export default {
 .spinner-container {
   place-items: start center;
   padding-top: 50px;
+}
+.icon {
+  height: 1.8rem;
+  fill: white;
 }
 </style>
