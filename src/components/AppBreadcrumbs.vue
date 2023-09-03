@@ -3,9 +3,7 @@
     <li>
       <RouterLink
         :to="{ name: 'Home' }"
-        class="link">
-        Home
-      </RouterLink>
+        class="link-home" />
     </li>
     <template
       v-for="item in breadcrumbs"
@@ -42,11 +40,16 @@ export default {
 .breadcrumbs {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
 }
 .divider {
   margin: 0 5px;
   user-select: none;
+}
+.link-home {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-image: url('@/assets/icons/home.svg');
 }
 .link {
   text-decoration: none;

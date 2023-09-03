@@ -91,6 +91,8 @@ export default defineComponent({
 
 <style scoped>
 .card {
+  position: relative;
+  z-index: 1;
   box-sizing: border-box;
   width: calc(20% + 1px);
   max-height: fit-content;
@@ -100,9 +102,25 @@ export default defineComponent({
   margin-top: -1px;
   text-decoration: none;
   background-color: white;
+  transition: all 0.1s;
+
+  @media (hover: hover) {
+    &:hover {
+      z-index: 2;
+      box-shadow: 0 2px 16px #0000003d;
+    }
+  }
 
   @media (max-width: 1000px) {
     width: calc(33.333% + 1px);
+  }
+
+  @media (max-width: 700px) {
+    width: calc(50% + 1px);
+  }
+
+  @media (max-width: 380px) {
+    width: calc(100% + 1px);
   }
 }
 .product-content {

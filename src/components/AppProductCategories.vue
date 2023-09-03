@@ -1,6 +1,6 @@
 <template>
   <template v-if="categoriesLoaded">
-    <span class="title">Categories</span>
+    <span class="category-title">Categories</span>
     <nav class="links">
       <ul class="categories">
         <li class="category-item">
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style scoped>
-.title {
+.category-title {
   display: block;
   font-weight: 600;
   padding-bottom: 1rem;
