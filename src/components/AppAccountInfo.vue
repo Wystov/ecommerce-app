@@ -5,7 +5,7 @@
       :closeOnDelete="false"
       @close="closePopup">
       <div v-if="updateInfo === true">
-        <h3>Please fill only the fields you want to change and press "Update" button:</h3>
+        <h3 class="info-edit-header">Please fill only the fields you want to change and press "Update" button:</h3>
         <EditInfoBlock @close="closePopup" />
       </div>
       <div v-if="updateInfo === false">
@@ -131,10 +131,40 @@ export default {
 .popup-container :deep(.button:not(.circle)) {
   margin-top: 20px;
 }
-
+.popup-container :deep(.edit-form) {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+@media(max-width: 768px) {
+  .popup-container :deep(.circle) {
+    width: 50px;
+    height: 50px;
+    right: 0.5em;
+    top: 0.5em;
+  }
+  .info-edit-header {
+    width: 90%;
+  }
+}
 @media(max-width: 550px) {
+  .popup-container :deep(.popup-default) {
+    width: min(90vh, 90vw);
+  }
+  .info-edit-header {
+    width: 87%;
+    font-size: 1.2rem;
+  }
   .buttons-block :deep(.button) {
     padding: 15px 13px;
+  }
+  .popup-container :deep(.circle) {
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+    right: 1em;
+    top: 1em;
   }
 }
 </style>

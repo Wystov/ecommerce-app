@@ -227,13 +227,13 @@ export default {
       return this.userStore.customerData.body[dataName ?? ''];
     },
     async updateInfo(): Promise<void> {
-      if (!this.fields.every((elem) => elem.valid === 'valid')) return;
+      const checkingFields = this.fields.filter((elem) => elem.value !== '');
+      if (!checkingFields.every((elem) => elem.valid === 'valid')) return;
       if (this.fields.some((elem) => elem.value !== '')) {
         try {
           await api.call().me().post({ body: this.postData }).execute();
           await this.userStore.getData();
           this.$emit('close');
-          // console.log('DATA:', this.userStore.customerData);
         } catch (error) {
           console.error('Error:', error);
         }
@@ -244,12 +244,6 @@ export default {
 </script>
 
 <style scoped>
-.edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-}
 .field-container {
   position: relative;
   &:nth-child(1),

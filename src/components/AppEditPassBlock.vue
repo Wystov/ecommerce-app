@@ -32,7 +32,7 @@
         arrow="top"
         v-if="notMatch === true"
         alert="danger"
-      >{{ notMatchMessage }}</BaseMessage
+      >{{ notMatchText }}</BaseMessage
       >
     </Transition>
     <BaseButton @click="updateInfo" class="btn-update">Update</BaseButton>
@@ -40,7 +40,7 @@
       <BaseMessage
         v-if="wrongOldPass === true"
         alert="danger"
-      >{{ notCorrectOldPassMessage }}</BaseMessage
+      >{{ wrongOldPassText }}</BaseMessage
       >
     </Transition>
   </div>
@@ -74,12 +74,6 @@ export default {
         newPassword: this.newPass,
       };
     },
-    notMatchMessage(): string {
-      return InvalidMessage.NotMatch;
-    },
-    notCorrectOldPassMessage(): string {
-      return InvalidMessage.WrongPassword;
-    },
   },
   components: {
     BaseInput,
@@ -91,7 +85,9 @@ export default {
     mainFields: MainFields;
     fields: RegistrationMainData[];
     notMatch: boolean;
+    notMatchText: string;
     wrongOldPass: boolean;
+    wrongOldPassText: string;
     } {
     return {
       mainFields: {} as MainFields,
@@ -128,7 +124,9 @@ export default {
         },
       ],
       notMatch: false,
+      notMatchText: InvalidMessage.NotMatch,
       wrongOldPass: false,
+      wrongOldPassText: InvalidMessage.WrongPassword,
     };
   },
   methods: {
@@ -187,19 +185,12 @@ export default {
           this.wrongOldPass = true;
         }
       }
-      // console.log('DATA:', this.userStore.customerData);
     },
   },
 };
 </script>
 
 <style scoped>
-.edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-}
 .container :deep(.message-field) {
   margin: 20px 0 0 0;
 }
@@ -224,5 +215,10 @@ export default {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+@media(max-width: 768px) {
+  .container {
+    margin-top: 30px;
+  }
 }
 </style>
