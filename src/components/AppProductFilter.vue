@@ -80,22 +80,7 @@
           <div class="spinner" />
         </div>
       </Transition>
-      <div
-        v-if="mappedAppliedFilters?.length"
-        class="applied-filters">
-        <span class="filter-title">Applied filters</span>
-        <ul
-          v-for="filter in mappedAppliedFilters"
-          :key="filter">
-          <li class="filter-list-item">{{ filter }}</li>
-        </ul>
-        <button
-          @click="reset"
-          class="button-reset"
-          type="button">
-          Reset filters
-        </button>
-      </div>
+      <AppProductAppliedFiltersList />
     </div>
   </Transition>
 </template>
@@ -111,6 +96,7 @@ import BaseButton from './shared/BaseButton.vue';
 import '@vueform/slider/themes/default.css';
 import AppProductCategories from './AppProductCategories.vue';
 import BaseInput from './shared/BaseInput.vue';
+import AppProductAppliedFiltersList from './AppProductAppliedFiltersList.vue';
 
 export default {
   components: {
@@ -119,6 +105,7 @@ export default {
     Slider,
     AppProductCategories,
     BaseInput,
+    AppProductAppliedFiltersList,
   },
   data(): ProductFilterType {
     return {
@@ -129,45 +116,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'appliedFilters']),
-    ...mapState(useUserStore, ['currency']),
+    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'minWeight', 'maxWeight', 'minPrice', 'maxPrice']),
+    ...mapState(useUserStore, ['currencyTag']),
     brands(): FacetTerm[] {
       return this.filterOptions.brand.terms;
-    },
-    minWeight(): number {
-      return parseFloat(this.filterOptions.weight.terms[0]?.term ?? 0);
-    },
-    maxWeight(): number {
-      const i = this.filterOptions.weight.terms.length - 1;
-      return parseFloat(this.filterOptions.weight.terms[i]?.term ?? 0);
-    },
-    minPrice(): number {
-      return parseFloat(this.filterOptions.price.terms[0]?.term ?? 0);
-    },
-    maxPrice(): number {
-      const i = this.filterOptions.price.terms.length - 1;
-      return parseFloat(this.filterOptions.price.terms[i]?.term ?? 0);
-    },
-    currencyTag(): string {
-      return this.currency === 'USD' ? '$' : '£';
-    },
-    mappedAppliedFilters(): string[] {
-      if (!this.loaded) return [];
-      const filters = [];
-      const { search, brand, price, weight } = this.appliedFilters;
-      if (search?.length) filters.push(`Search: ${search}`);
-      if (brand?.length) filters.push(`Brand: ${brand.join(', ')}`);
-      if (Array.isArray(price) && (price[0] !== this.minPrice || price[1] !== this.maxPrice)) {
-        const priceStr = price
-          .map((p) => `${this.currencyTag}${(+p / 100).toFixed(2)}`)
-          .join(' - ');
-        filters.push(`Price: ${priceStr}`);
-      }
-      if (Array.isArray(weight) && (weight[0] !== this.minWeight || weight[1] !== this.maxWeight)) {
-        const weightStr = weight.map((w) => `${w} oz.`).join(' - ');
-        filters.push(`Weight: ${weightStr}`);
-      }
-      return filters;
     },
     priceRangeReadable(): string {
       return `${this.currencyTag}${(this.priceRange[0] / 100).toFixed(2)} - ${this.currencyTag}${(this.priceRange[1] / 100).toFixed(2)}`;
@@ -190,10 +142,6 @@ export default {
         return selected.has(brand);
       }
       return false;
-    },
-    reset(): void {
-      this.resetStore();
-      this.refreshFilter();
     },
     setSearch(): void {
       const value = (this.$refs.searchInput as BaseInputType).inputValue.trim().toLowerCase();
@@ -283,16 +231,6 @@ export default {
 .nums-range {
   display: block;
 }
-.button-reset {
-  cursor: pointer;
-  max-width: fit-content;
-  font-size: 1rem;
-  margin-top: 1rem;
-  background-color: transparent;
-  padding: 0;
-  color: var(--main-color);
-  border: none;
-}
 .search-container {
   display: flex;
   gap: 0.5rem;
@@ -305,10 +243,6 @@ export default {
   font-size: 1.5rem;
   padding: 0.25rem 0.5rem;
   min-width: 0;
-}
-.applied-filters {
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e9e9e9;
 }
 .slide-enter-active {
   transition: all 0.3s;
@@ -325,8 +259,5 @@ export default {
 .spinner-container {
   place-items: start center;
   padding-top: 50px;
-}
-.filter-list-item {
-  padding-bottom: 0.5rem;
 }
 </style>

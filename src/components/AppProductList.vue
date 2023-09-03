@@ -18,7 +18,10 @@
           :currency="currency"
           :currencyTag="currencyTag" />
       </TransitionGroup>
-      <div v-else>No products found</div>
+      <div v-else class="no-products">
+        <h3>No products found, try to reset filters</h3>
+        <AppProductAppliedFiltersList />
+      </div>
     </template>
   </Transition>
 </template>
@@ -31,10 +34,12 @@ import { useCategoriesStore } from '@/stores/categories';
 import api from '@/utils/api/client';
 import type { FacetResults, ProductListType } from '@/types/types';
 import AppProductCard from './AppProductCard.vue';
+import AppProductAppliedFiltersList from './AppProductAppliedFiltersList.vue';
 
 export default {
   components: {
     AppProductCard,
+    AppProductAppliedFiltersList,
   },
   data(): ProductListType {
     return {
@@ -43,12 +48,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUserStore, { userData: 'data', currency: 'currency' }),
+    ...mapState(useUserStore, { userData: 'data', currency: 'currency', currencyTag: 'currencyTag' }),
     ...mapState(useFilterStore, ['queryArgs', 'loaded', 'refresh']),
     ...mapState(useCategoriesStore, ['categories', 'categoriesLoaded']),
-    currencyTag(): string {
-      return this.currency === 'USD' ? '$' : '£';
-    },
   },
   methods: {
     ...mapActions(useFilterStore, ['setFilterOptions']),
@@ -98,5 +100,13 @@ export default {
 }
 .spinner-container {
   height: 50vh;
+}
+.no-products {
+  margin-left: 50px;
+}
+@media (max-width: 800px) {
+  .no-products {
+    margin: 0 auto;
+  }
 }
 </style>
