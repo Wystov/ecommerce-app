@@ -6,19 +6,21 @@
       @close="closePopup">
       <div v-if="updateInfo === true">
         <h3>Please fill only the fields you want to change and press "Update" button:</h3>
-        <EditInfoBlock />
+        <EditInfoBlock @close="closePopup" />
       </div>
-      <div v-if="updateInfo === false"> <EditPassBlock /></div>
+      <div v-if="updateInfo === false">
+        <EditPassBlock @close="closePopup" />
+      </div>
     </BasePopup>
   </div>
   <div class="info-container">
     <div class="info-block">
       <span class="content-name">First name</span>
-      <span class="content">{{ firstName }}</span>
+      <span class="content">{{ name }}</span>
       <span class="content-name">Last Name</span>
-      <span class="content">{{ lastName }}</span>
+      <span class="content">{{ surname }}</span>
       <span class="content-name">Date of birth</span>
-      <span class="content">{{ birthDate }}</span>
+      <span class="content">{{ date }}</span>
     </div>
     <div class="buttons-block">
       <BaseButton label="Update info" @click="openInfoPopup" />
@@ -56,15 +58,6 @@ export default {
   },
   computed: {
     ...mapStores(useUserStore),
-    firstName(): string {
-      return this.name ?? '';
-    },
-    lastName(): string {
-      return this.surname ?? '';
-    },
-    birthDate(): string {
-      return this.date ?? '';
-    },
   },
   methods: {
     async getData(): Promise<void> {
@@ -87,6 +80,7 @@ export default {
     },
     closePopup(): void {
       this.showPopup = false;
+      this.getData();
     },
   },
   created(): void {

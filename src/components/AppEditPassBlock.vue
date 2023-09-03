@@ -11,7 +11,7 @@
           :valid="field.valid"
           :value="field.value"
           :type="field.type"
-          :id="'field-registration-' + field.label.toLowerCase()"
+          :id="field.label.toLowerCase()"
           @focusin="field.showMessage = true; notMatch = false; wrongOldPass = false"
           @focusout="field.showMessage = false"
         />
@@ -58,7 +58,7 @@ import type { RegistrationMainData, MainFields } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
-  emits: ['valid-all-main-fields'],
+  emits: ['valid-all-main-fields', 'close'],
   computed: {
     ...mapStores(useUserStore),
     currentPass(): string {
@@ -182,15 +182,12 @@ export default {
             password: this.newPass,
           });
           this.userStore.loginUser();
+          this.$emit('close');
         } catch (error) {
           this.wrongOldPass = true;
         }
       }
       // console.log('DATA:', this.userStore.customerData);
-      this.closePopupInParent();
-    },
-    closePopupInParent(): void {
-      // console.log('close method works');
     },
   },
 };

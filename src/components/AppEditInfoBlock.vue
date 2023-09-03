@@ -8,7 +8,7 @@
         :valid="field.valid"
         :value="field.dateValue ? dateOfBirth : field.value"
         :type="field.type"
-        :id="'field-registration-' + field.label.toLowerCase()"
+        :id="field.label.toLowerCase()"
         max="9999-12-31"
         @focusin="field.showMessage = true"
         @focusout="field.showMessage = false"
@@ -44,18 +44,10 @@ import api from '@/utils/api/client';
 import { useUserStore } from '@/stores/user';
 import { InvalidMessage } from '@/types/enums';
 import type { RegistrationMainData, MainFields } from '@/types/types';
-import toCamelCase from '@/utils/toCamelCase';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
   emits: ['valid-all-main-fields', 'close'],
-  // props: {
-  //   isPopupVisible: { type: Boolean },
-  //   closePopup: {
-  //     type: Function as PropType<() => void>,
-  //     required: true,
-  //   },
-  // },
   computed: {
     ...mapStores(useUserStore),
     dateOfBirth(): string {
@@ -183,7 +175,6 @@ export default {
     handleInput(event: Event, index: number): void {
       this.setValue(event, index);
       this.checkValid(index);
-      // this.readyData();
     },
 
     setValue(e: Event, i: number): void {
@@ -229,19 +220,6 @@ export default {
       1000,
       { leading: true },
     ),
-
-    readyData(): void {
-      if (this.fields.every((elem) => elem.value === '' || elem.valid === 'valid')) {
-        const body = this.fields.map((elem) => [toCamelCase(elem.label), elem.value]);
-        // console.log('body:', body);
-        const response = Object.fromEntries(body);
-        this.mainFields = { valid: true, response };
-      } else {
-        this.mainFields = { valid: false, response: {} };
-      }
-      this.$emit('valid-all-main-fields', this.mainFields);
-    },
-
     nextStep(): void {
       this.$emit('valid-all-main-fields', { ...this.mainFields, nextStepClick: true });
     },
@@ -249,21 +227,17 @@ export default {
       return this.userStore.customerData.body[dataName ?? ''];
     },
     async updateInfo(): Promise<void> {
-      this.closePopupInParent();
+      if (!this.fields.every((elem) => elem.valid === 'valid')) return;
       if (this.fields.some((elem) => elem.value !== '')) {
         try {
           await api.call().me().post({ body: this.postData }).execute();
           await this.userStore.getData();
+          this.$emit('close');
           // console.log('DATA:', this.userStore.customerData);
         } catch (error) {
           console.error('Error:', error);
         }
       }
-    },
-    closePopupInParent(): void {
-      // console.log('close method works');
-      // this.closePopup();
-      this.$emit('close');
     },
   },
 };
