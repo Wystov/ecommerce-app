@@ -1,4 +1,16 @@
 <template>
+  <div class="popup-container">
+    <BasePopup
+      :show="showPopup === true"
+      :closeOnDelete="false"
+      @close="closePopup">
+      <div v-if="updateInfo === true">
+        <h3>Please fill only the fields you want to change and press "Update" button:</h3>
+        <EditInfoBlock />
+      </div>
+      <div v-if="updateInfo === false"> <EditPassBlock /></div>
+    </BasePopup>
+  </div>
   <div class="info-container">
     <div class="info-block">
       <span class="content-name">First name</span>
@@ -9,8 +21,8 @@
       <span class="content">{{ birthDate }}</span>
     </div>
     <div class="buttons-block">
-      <BaseButton label="Update info" />
-      <BaseButton label="Change password" />
+      <BaseButton label="Update info" @click="openInfoPopup" />
+      <BaseButton label="Change password" @click="openPasswordPopup" />
       <div class="divider-final" />
     </div>
   </div>
@@ -20,18 +32,26 @@
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import BaseButton from '@/components/shared/BaseButton.vue';
+import BasePopup from '@/components/shared/BasePopup.vue';
+import EditInfoBlock from '@/components/AppEditInfoBlock.vue';
+import EditPassBlock from '@/components/AppEditPassBlock.vue';
 import type { AccountInfoData } from '@/types/types';
 import api from '@/utils/api/client';
 
 export default {
   components: {
     BaseButton,
+    BasePopup,
+    EditInfoBlock,
+    EditPassBlock,
   },
   data(): AccountInfoData {
     return {
       name: '',
       surname: '',
       date: '',
+      showPopup: false,
+      updateInfo: true,
     };
   },
   computed: {
@@ -56,6 +76,17 @@ export default {
       } catch (error) {
         console.error('Error:', error);
       }
+    },
+    openInfoPopup(): void {
+      this.showPopup = true;
+      this.updateInfo = true;
+    },
+    openPasswordPopup(): void {
+      this.showPopup = true;
+      this.updateInfo = false;
+    },
+    closePopup(): void {
+      this.showPopup = false;
     },
   },
   created(): void {
@@ -97,6 +128,14 @@ export default {
   width: 100%;
   border: 0.75px solid var(--main-font-color);
   grid-area: divider;
+}
+
+.popup-container :deep(.modal-container) {
+  padding: 20px;
+}
+
+.popup-container :deep(.button:not(.circle)) {
+  margin-top: 20px;
 }
 
 @media(max-width: 550px) {

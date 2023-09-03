@@ -76,6 +76,12 @@ interface UserSignUpMain {
   lastName: string;
   dateOfBirth: string;
 }
+interface UserUpdate {
+  email: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+}
 interface DefaultAddressProps {
   defaultShipping: boolean;
   defaultBilling: boolean;
@@ -114,11 +120,13 @@ interface RegistrationMainData {
   label: string;
   type?: string;
   value?: string;
+  dateValue?: string;
   placeholder?: string;
   pattern?: RegExp;
   valid?: 'valid' | 'invalid' | '';
   invalidMessage?: string;
   showMessage: boolean;
+  hidePass?: string;
 }
 interface RegistrationAddressData {
   fields: {
@@ -143,6 +151,8 @@ interface AccountInfoData {
   name: string | undefined;
   surname: string | undefined;
   date: string | undefined;
+  showPopup: boolean;
+  updateInfo: boolean;
 }
 interface Address {
   city: string;
@@ -233,6 +243,10 @@ interface SwiperSetup {
   setThumbsSwiper: (swiper: Swiper) => void;
   modules: SwiperModule[];
 }
+interface MainFields {
+  valid: boolean;
+  response: {};
+}
 export type {
   ButtonClasses,
   SelectClasses,
@@ -241,6 +255,7 @@ export type {
   DataAuthorization,
   TokenResponse,
   UserSignUp,
+  UserUpdate,
   UserAddress,
   DefaultAddressProps,
   ApiResponse,
@@ -269,4 +284,5 @@ export type {
   SwiperSetup,
   AccountInfoData,
   Address,
+  MainFields,
 };
