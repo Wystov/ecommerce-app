@@ -36,14 +36,9 @@ import BaseMessage from '@/components/shared/BaseMessage.vue';
 import isOlder from '@/utils/isOlder';
 import api from '@/utils/api/client';
 import { InvalidMessage } from '@/types/enums';
-import type { RegistrationMainData } from '@/types/types';
+import type { RegistrationMainData, MainFields } from '@/types/types';
 import toCamelCase from '@/utils/toCamelCase';
 import BaseButton from './shared/BaseButton.vue';
-
-interface MainFields {
-  valid: boolean;
-  response: {};
-}
 
 export default {
   emits: ['valid-all-main-fields'],
@@ -196,9 +191,6 @@ export default {
 };
 </script>
 <style scoped>
-.field-container :deep(.input-icon) {
-  cursor: pointer;
-}
 .registration-main {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

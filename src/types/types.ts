@@ -76,6 +76,12 @@ interface UserSignUpMain {
   lastName: string;
   dateOfBirth: string;
 }
+interface UserUpdate {
+  email: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+}
 interface DefaultAddressProps {
   defaultShipping: boolean;
   defaultBilling: boolean;
@@ -114,15 +120,18 @@ interface RegistrationMainData {
   label: string;
   type?: string;
   value?: string;
+  dateValue?: string;
   placeholder?: string;
   pattern?: RegExp;
   valid?: 'valid' | 'invalid' | '';
   invalidMessage?: string;
   showMessage: boolean;
+  hidePass?: string;
 }
 interface RegistrationAddressData {
   fields: {
     label: string;
+    fieldName?: string;
     type?: string;
     value?: string;
     placeholder?: string;
@@ -143,6 +152,18 @@ interface AccountInfoData {
   name: string | undefined;
   surname: string | undefined;
   date: string | undefined;
+  showPopup: boolean;
+  updateInfo: boolean;
+  showMessageEditSuccess: boolean;
+  createCustomerMessage: { text: string; alert: string; title: string }
+}
+interface AccountAddressData {
+  loaded: boolean;
+  showPopup: boolean;
+  addressSection: string;
+  addressId: string,
+  showMessageEditSuccess: boolean,
+  createCustomerMessage: { text: string; alert: string; title: string }
 }
 interface Address {
   city: string;
@@ -238,6 +259,18 @@ interface CatalogViewType {
   screenWidth: number,
 }
 
+interface MainFields {
+  valid: boolean;
+  response: {};
+}
+interface PasswordEditBlock {
+  mainFields: MainFields;
+  fields: RegistrationMainData[];
+  notMatch: boolean;
+  notMatchText: string;
+  wrongOldPass: boolean;
+  wrongOldPassText: string;
+  }
 export type {
   ButtonClasses,
   SelectClasses,
@@ -246,6 +279,7 @@ export type {
   DataAuthorization,
   TokenResponse,
   UserSignUp,
+  UserUpdate,
   UserAddress,
   DefaultAddressProps,
   ApiResponse,
@@ -275,4 +309,7 @@ export type {
   AccountInfoData,
   Address,
   CatalogViewType,
+  MainFields,
+  PasswordEditBlock,
+  AccountAddressData,
 };

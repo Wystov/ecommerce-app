@@ -196,9 +196,6 @@ export default {
   width: 100%;
   padding: 0;
 }
-.login-form :deep(.input-icon) {
-  cursor: pointer;
-}
 .button {
   width: 100%;
   height: 3rem;

@@ -65,7 +65,7 @@ export const useUserStore = defineStore('user', {
     async init() {
       try {
         const response = await api.call().me().get().execute();
-        if (response.statusCode === 200) this.loginUser(response);
+        if (response.statusCode === 200) this.loginUser();
       } catch (error) {
         this.logoutUser();
         initErrorHandler(error);
@@ -73,9 +73,17 @@ export const useUserStore = defineStore('user', {
         this.fetching = false;
       }
     },
-    loginUser(response?: ClientResponse) {
+    async getData(): Promise<void> {
+      try {
+        const response = await api.call().me().get().execute();
+        this.setCustomerData(response);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+    loginUser() {
       this.authorized = true;
-      if (response) this.setCustomerData(response);
+      this.getData();
     },
     logoutUser() {
       this.authorized = false;

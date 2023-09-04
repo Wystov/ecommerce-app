@@ -138,6 +138,7 @@ export default {
 
 .input-icon {
   position: absolute;
+  cursor: pointer;
   bottom: 1.3rem;
   right: 1rem;
   transform: translateY(50%);

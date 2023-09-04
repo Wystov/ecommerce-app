@@ -42,6 +42,8 @@ const enum InvalidMessage {
   Street = 'Street is not correct. Must contain at least one character',
   City = 'City is not correct. Must contain at least one character and no special characters or numbers',
   PostalCode = 'Postal Code is not correct. Must follow the format for the country',
+  NotMatch = 'Passwords are not similar',
+  WrongPassword = 'Old password is incorrect, please, try again',
 }
 
 export {
