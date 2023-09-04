@@ -47,7 +47,7 @@ import type { RegistrationMainData, MainFields } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
-  emits: ['valid-all-main-fields', 'close'],
+  emits: ['valid-all-main-fields', 'close', 'showSuccessMessage'],
   computed: {
     ...mapStores(useUserStore),
     dateOfBirth(): string {
@@ -244,6 +244,7 @@ export default {
           await api.call().me().post({ body: this.postData }).execute();
           await this.userStore.getData();
           this.$emit('close');
+          this.$emit('showSuccessMessage');
         } catch (error) {
           console.error('Error:', error);
         }

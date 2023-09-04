@@ -154,6 +154,16 @@ interface AccountInfoData {
   date: string | undefined;
   showPopup: boolean;
   updateInfo: boolean;
+  showMessageEditSuccess: boolean;
+  createCustomerMessage: { text: string; alert: string; title: string }
+}
+interface AccountAddressData {
+  loaded: boolean;
+  showPopup: boolean;
+  addressSection: string;
+  addressId: string,
+  showMessageEditSuccess: boolean,
+  createCustomerMessage: { text: string; alert: string; title: string }
 }
 interface Address {
   city: string;
@@ -295,4 +305,5 @@ export type {
   Address,
   MainFields,
   PasswordEditBlock,
+  AccountAddressData,
 };

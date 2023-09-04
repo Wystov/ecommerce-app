@@ -57,7 +57,7 @@ import { useUserStore } from '@/stores/user';
 import toCamelCase from '../utils/toCamelCase';
 
 export default {
-  emits: ['valid-all-address-fields', 'close'],
+  emits: ['valid-all-address-fields', 'close', 'showSuccessMessage'],
   components: {
     BaseInput,
     BaseMessage,
@@ -141,9 +141,10 @@ export default {
       return this.fields[1].value === '' ? this.existingStreet : this.fields[1].value;
     },
     existingPostalCode(): string {
+      const defaultValue = this.existingCountry === 'US' ? '10001' : 'W10BB';
       return this.editAddressId !== '' ?
         this.userStore.customerData.body.addresses[this.editingAddressIndex].postalCode :
-        '10001';
+        defaultValue;
     },
     editPostalCodeValue(): string | undefined {
       return this.fields[2].value === '' ? this.existingPostalCode : this.fields[2].value;
@@ -288,6 +289,7 @@ export default {
             await api.call().me().post({ body: this.postData(this.addressIdData('addShippingAddressId', newAddressId)) }).execute();
           await this.userStore.getData();
           this.$emit('close');
+          this.$emit('showSuccessMessage');
         } catch (error) {
           console.error('Error:', error);
         }
@@ -299,6 +301,7 @@ export default {
           await api.call().me().post({ body: this.postData(this.postEditData()) }).execute();
           await this.userStore.getData();
           this.$emit('close');
+          this.$emit('showSuccessMessage');
         } catch (error) {
           console.error('Error:', error);
         }

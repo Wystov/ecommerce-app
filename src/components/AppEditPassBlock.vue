@@ -58,7 +58,7 @@ import type { MainFields, PasswordEditBlock } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
-  emits: ['valid-all-main-fields', 'close'],
+  emits: ['valid-all-main-fields', 'close', 'showSuccessMessage'],
   computed: {
     ...mapStores(useUserStore),
     currentPass(): string {
@@ -184,6 +184,7 @@ export default {
           });
           this.userStore.loginUser();
           this.$emit('close');
+          this.$emit('showSuccessMessage');
         } catch (error) {
           this.wrongOldPass = true;
         }

@@ -68,10 +68,29 @@
       :closeOnDelete="false"
       @close="closePopup">
       <div>
-        <AppEditAddressBlock title="" id="addressEditBlock" :section="getAddressSection" @close="closePopup" :editAddressId="addressId" />
+        <AppEditAddressBlock
+          title=""
+          id="addressEditBlock"
+          :section="getAddressSection"
+          @close="closePopup"
+          @showSuccessMessage="showSuccessMessage"
+          :editAddressId="addressId" />
       </div>
     </BasePopup>
   </div>
+  <Transition>
+    <div v-if="showMessageEditSuccess" class="success-message-container">
+      <Transition
+      ><BaseMessage
+        rounded
+        class="success-base-message"
+        :title="createCustomerMessage.title"
+        :alert="createCustomerMessage.alert"
+      ><p class="success-message">{{ createCustomerMessage.text }}</p>
+      </BaseMessage>
+      </Transition>
+    </div>
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -88,8 +107,9 @@ import type {
 import { useUserStore } from '@/stores/user';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BasePopup from '@/components/shared/BasePopup.vue';
+import BaseMessage from '@/components/shared/BaseMessage.vue';
 import AppEditAddressBlock from '@/components/AppEditAddressBlock.vue';
-import type { Address } from '@/types/types';
+import type { Address, AccountAddressData } from '@/types/types';
 import api from '@/utils/api/client';
 
 export default {
@@ -100,13 +120,20 @@ export default {
     BaseButton,
     BasePopup,
     AppEditAddressBlock,
+    BaseMessage,
   },
-  data(): {loaded: boolean; showPopup: boolean; addressSection: string; addressId: string} {
+  data(): AccountAddressData {
     return {
       loaded: false,
       showPopup: false,
       addressSection: 'shipping',
       addressId: '',
+      showMessageEditSuccess: false,
+      createCustomerMessage: {
+        text: 'You will be able to see the changes in a few seconds...',
+        alert: 'success',
+        title: 'Changes made successfully!',
+      },
     };
   },
   computed: {
@@ -212,6 +239,10 @@ export default {
         await this.userStore.getData();
       }
     },
+    showSuccessMessage(): void {
+      this.showMessageEditSuccess = true;
+      setTimeout(() => { this.showMessageEditSuccess = false; }, 1500);
+    },
   },
   async created(): Promise<void> {
     try {
@@ -295,7 +326,32 @@ border: 0.5px solid #3A3E3F;
 .popup-container :deep(.modal-container) {
   padding: 20px;
 }
-
+.success-message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0 20px;
+  backdrop-filter: blur(4px);
+  z-index: 1;
+  box-sizing: border-box;
+}
+.success-base-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 40px;
+}
+.success-message {
+  font-size: 22px;
+}
 @media(max-width: 700px) {
   .address-line {
     display: grid;
