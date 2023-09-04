@@ -1,8 +1,9 @@
 <template>
+  <h3 class="info-edit-header" v-if="editAddressId !== ''">Please fill only the fields you want to change and press "Edit" button:</h3>
   <div class="address-block">
     <BaseSelect
       @selectOption="selectCountry"
-      :defaultSelected="countryField.defaultSelectedCountry"
+      :defaultSelected="existingCountry"
       :id="id + '-select-country'"
       :label="countryField.label"
       valid="valid"
@@ -11,7 +12,7 @@
     <div class="field-container" v-for="(field, i) in fields" :key="i">
       <BaseInput
         :label="field.label.replace('Name', '')"
-        :name="field.placeholder"
+        :name="getPlaceholder(field.fieldName)"
         @input="handleInput($event, i)"
         :valid="field.valid"
         :id="id + field.label.toLowerCase()"
@@ -30,11 +31,11 @@
       </Transition>
     </div>
   </div>
-  <BaseButton @click="updateInfo" class="btn-update">Add {{ buttonName }} address</BaseButton>
+  <BaseButton v-if="editAddressId === ''" @click="updateInfo" class="btn-update">Add {{ buttonName }} address</BaseButton>
+  <BaseButton v-if="editAddressId !== ''" @click="editInfo" class="btn-update">Edit</BaseButton>
 </template>
 
 <script lang="ts">
-// import type { StringDecoder } from 'string_decoder';
 import { mapStores } from 'pinia';
 import { postcodeValidator } from 'postcode-validator';
 import type {
@@ -42,6 +43,7 @@ import type {
   MyCustomerUpdate,
   MyCustomerAddBillingAddressIdAction,
   MyCustomerAddShippingAddressIdAction,
+  MyCustomerChangeAddressAction,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/me';
 import type { BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import BaseInput from '@/components/shared/BaseInput.vue';
@@ -66,6 +68,7 @@ export default {
     title: { type: String, required: true },
     id: { type: String, required: true },
     section: { type: String, required: true },
+    editAddressId: { type: String, default: '' },
   },
   computed: {
     ...mapStores(useUserStore),
@@ -78,6 +81,14 @@ export default {
         streetName: this.fields[1].value,
         postalCode: this.fields[2].value,
         city: this.fields[0].value,
+      };
+    },
+    editAddressData(): BaseAddress {
+      return {
+        country: this.editCountryValue,
+        streetName: this.editStreetValue,
+        postalCode: this.editPostalCodeValue,
+        city: this.editCityValue,
       };
     },
     postAddressData(): MyCustomerAddAddressAction {
@@ -96,7 +107,49 @@ export default {
     allFieldsReady(): boolean {
       return this.fields.every((el) => el.value !== '');
     },
+    readyToEdit(): boolean {
+      return this.fields.some((el) => el.value !== '') || this.countryField.value !== this.existingCountry;
+    },
+    editingAddressIndex(): number {
+      return this.userStore.customerData.body.addresses
+        .findIndex((el: Address) => el.id === this.editAddressId);
+    },
+    existingCity(): string {
+      return this.editAddressId !== '' ?
+        this.userStore.customerData.body.addresses[this.editingAddressIndex].city :
+        'New York';
+    },
+    editCityValue(): string | undefined {
+      return this.fields[0].value === '' ? this.existingCity : this.fields[0].value;
+    },
+    existingCountry(): string {
+      return this.editAddressId !== '' ?
+        this.userStore.customerData.body.addresses[this.editingAddressIndex].country :
+        'US';
+    },
+    editCountryValue(): string {
+      return this.countryField.value === this.existingCountry ?
+        this.existingCountry :
+        this.countryField.value;
+    },
+    existingStreet(): string {
+      return this.editAddressId !== '' ?
+        this.userStore.customerData.body.addresses[this.editingAddressIndex].streetName :
+        'Wall Street';
+    },
+    editStreetValue(): string | undefined {
+      return this.fields[1].value === '' ? this.existingStreet : this.fields[1].value;
+    },
+    existingPostalCode(): string {
+      return this.editAddressId !== '' ?
+        this.userStore.customerData.body.addresses[this.editingAddressIndex].postalCode :
+        '10001';
+    },
+    editPostalCodeValue(): string | undefined {
+      return this.fields[2].value === '' ? this.existingPostalCode : this.fields[2].value;
+    },
   },
+  // eslint-disable-next-line max-lines-per-function
   data(): RegistrationAddressData {
     return {
       countryField: {
@@ -112,6 +165,7 @@ export default {
       fields: [
         {
           label: 'City',
+          fieldName: 'city',
           pattern: /^[a-zA-Z\s]+$/,
           placeholder: 'New York',
           value: '',
@@ -120,6 +174,7 @@ export default {
         },
         {
           label: 'Street Name',
+          fieldName: 'streetName',
           pattern: /^.*\S.*$/,
           placeholder: 'Wall Street',
           value: '',
@@ -128,6 +183,7 @@ export default {
         },
         {
           label: 'Postal Code',
+          fieldName: 'postalCode',
           placeholder: '10001',
           value: '',
           invalidMessage: InvalidMessage.PostalCode,
@@ -142,7 +198,6 @@ export default {
       this.checkValid(index);
       this.readyData();
     },
-
     selectCountry(value: string): void {
       this.countryField.value = value;
       const field = this.fields.find((elem) => elem.label === 'Postal Code');
@@ -157,14 +212,12 @@ export default {
       }
       this.readyData();
     },
-
     setValue(e: Event, i: number): void {
       const input = e.target as HTMLInputElement;
       const field = this.fields[i];
 
       field.value = input.value.trim();
     },
-
     checkValid(i: number): void {
       const field = this.fields[i];
 
@@ -179,7 +232,6 @@ export default {
         field.valid = postcodeValidator(postCode, this.countryField.value) ? 'valid' : 'invalid';
       }
     },
-
     readyData(): void {
       const fields = [...this.fields, this.countryField];
       const isAllFieldsValid = fields.every(
@@ -194,14 +246,28 @@ export default {
         this.$emit('valid-all-address-fields', { valid: false, response });
       }
     },
+    getPlaceholder(dataName: string | undefined): string {
+      if (dataName === 'city') return this.existingCity;
+      if (dataName === 'postalCode') return this.existingPostalCode;
+      if (dataName === 'streetName') return this.existingStreet;
+      return '';
+    },
     postData(action:
     MyCustomerAddAddressAction
     | MyCustomerAddShippingAddressIdAction
-    | MyCustomerAddBillingAddressIdAction):
+    | MyCustomerAddBillingAddressIdAction
+    | MyCustomerChangeAddressAction):
     MyCustomerUpdate {
       return {
         version: this.userStore.customerData.body.version,
         actions: [action],
+      };
+    },
+    postEditData(): MyCustomerChangeAddressAction {
+      return {
+        action: 'changeAddress',
+        addressId: this.editAddressId,
+        address: this.editAddressData,
       };
     },
     addressIdData(action: 'addShippingAddressId' | 'addBillingAddressId', id: string):
@@ -220,6 +286,17 @@ export default {
           this.section === 'billing' ?
             await api.call().me().post({ body: this.postData(this.addressIdData('addBillingAddressId', newAddressId)) }).execute() :
             await api.call().me().post({ body: this.postData(this.addressIdData('addShippingAddressId', newAddressId)) }).execute();
+          await this.userStore.getData();
+          this.$emit('close');
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    },
+    async editInfo(): Promise<void> {
+      if (this.readyToEdit) {
+        try {
+          await api.call().me().post({ body: this.postData(this.postEditData()) }).execute();
           await this.userStore.getData();
           this.$emit('close');
         } catch (error) {

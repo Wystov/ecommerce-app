@@ -11,7 +11,7 @@
             </div>
             <div class="address-line">
               <span class="address">{{ userStore.defaultShippingAddress }}</span>
-              <PencilSquareIcon class="icon edit" />
+              <PencilSquareIcon class="icon edit" @click="openPopupForEdit" />
               <ArchiveBoxXMarkIcon class="icon delete" @click="deleteAddress" />
             </div>
           </div>
@@ -20,7 +20,7 @@
               <div v-if="userStore.getDefaultShippingAddressId" class="divider" />
               <div class="address-line">
                 <span class="address">{{ addressName(address) }}</span>
-                <PencilSquareIcon class="icon edit" />
+                <PencilSquareIcon class="icon edit" @click="openPopupForEdit" />
                 <ArchiveBoxXMarkIcon class="icon delete" @click="deleteAddress" />
                 <div class="set-default" @click="setDefaultAddress" @keydown="setDefaultAddress">Set as default</div>
               </div>
@@ -29,7 +29,7 @@
         </template>
       </div>
     </div>
-    <BaseButton label="Add shipping address" @click="openPopup('shipping')" />
+    <BaseButton label="Add shipping address" @click="openPopupForCreate('shipping')" />
     <div class="info-container">
       <h3>Billing addresses</h3>
       <div class="address-block">
@@ -41,7 +41,7 @@
             </div>
             <div class="address-line">
               <span>{{ userStore.defaultBillingAddress }}</span>
-              <PencilSquareIcon class="icon" />
+              <PencilSquareIcon class="icon" @click="openPopupForEdit" />
               <ArchiveBoxXMarkIcon class="icon" @click="deleteAddress" />
             </div>
           </div>
@@ -50,7 +50,7 @@
               <div v-if="userStore.getDefaultBillingAddressId" class="divider" />
               <div class="address-line">
                 <span>{{ addressName(address) }}</span>
-                <PencilSquareIcon class="icon" />
+                <PencilSquareIcon class="icon" @click="openPopupForEdit" />
                 <ArchiveBoxXMarkIcon class="icon" @click="deleteAddress" />
                 <div class="set-default" @click="setDefaultAddress" @keydown="setDefaultAddress">Set as default</div>
               </div>
@@ -59,7 +59,7 @@
         </template>
       </div>
     </div>
-    <BaseButton label="Add billing address" @click="openPopup('billing')" />
+    <BaseButton label="Add billing address" @click="openPopupForCreate('billing')" />
     <div class="divider-final" />
   </div>
   <div class="popup-container">
@@ -68,7 +68,7 @@
       :closeOnDelete="false"
       @close="closePopup">
       <div>
-        <AppEditAddressBlock title="" id="addressEditBlock" :section="getAddressSection" @close="closePopup" />
+        <AppEditAddressBlock title="" id="addressEditBlock" :section="getAddressSection" @close="closePopup" :editAddressId="addressId" />
       </div>
     </BasePopup>
   </div>
@@ -101,11 +101,12 @@ export default {
     BasePopup,
     AppEditAddressBlock,
   },
-  data(): {loaded: boolean; showPopup: boolean; addressSection: string} {
+  data(): {loaded: boolean; showPopup: boolean; addressSection: string; addressId: string} {
     return {
       loaded: false,
       showPopup: false,
       addressSection: 'shipping',
+      addressId: '',
     };
   },
   computed: {
@@ -126,8 +127,14 @@ export default {
         console.error('Error:', error);
       }
     },
-    openPopup(addressSection: string): void {
+    openPopupForCreate(addressSection: string): void {
+      this.addressId = '';
       this.addressSection = addressSection;
+      this.showPopup = true;
+    },
+    openPopupForEdit(event: MouseEvent): void {
+      const id = this.getId(event);
+      this.addressId = id;
       this.showPopup = true;
     },
     deleteAddressData(id: string,

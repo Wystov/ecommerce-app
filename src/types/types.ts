@@ -131,6 +131,7 @@ interface RegistrationMainData {
 interface RegistrationAddressData {
   fields: {
     label: string;
+    fieldName?: string;
     type?: string;
     value?: string;
     placeholder?: string;
