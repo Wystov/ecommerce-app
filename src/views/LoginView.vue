@@ -1,8 +1,12 @@
 <template>
-  <div v-if="userStore.fetching" class="spinner-container">
+  <div
+    v-if="userStore.fetching"
+    class="spinner-container">
     <div class="spinner" />
   </div>
-  <AppLogin v-else />
+  <AppLogin
+    v-else
+    class="wrapper" />
 </template>
 
 <script lang="ts">
@@ -19,9 +23,12 @@ export default {
   },
   created(): void {
     if (this.userStore.fetching) {
-      this.$watch(() => this.userStore.fetching, () => {
-        if (this.userStore.authorized) this.$router.push({ name: 'Home' });
-      });
+      this.$watch(
+        () => this.userStore.fetching,
+        () => {
+          if (this.userStore.authorized) this.$router.push({ name: 'Home' });
+        },
+      );
     }
   },
 };

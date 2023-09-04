@@ -1,14 +1,23 @@
 <template>
   <nav class="navigation">
     <ul class="navigation-list">
-      <template v-for="(page, i) in navigation" :key="i">
+      <template
+        v-for="(page, i) in navigation"
+        :key="i">
         <li class="navigation-item">
-          <RouterLink :to="{ name: page }" class="navigation-link">
+          <RouterLink
+            :to="{ name: page }"
+            class="navigation-link">
             {{ page }}
           </RouterLink>
         </li>
-        <li class="decoration-item" v-if="i < navigation.length - 1">
-          <img :src="decoration" class="decoration-svg" alt="decoration" />
+        <li
+          v-if="i < navigation.length - 1"
+          class="decoration-item">
+          <img
+            :src="decoration"
+            class="decoration-svg"
+            alt="decoration" />
         </li>
       </template>
     </ul>
@@ -55,9 +64,18 @@ export default {
   color: var(--main-color);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1680px) {
   .navigation-link {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  .navigation-link {
+    font-size: 1rem;
+  }
+  .navigation-list {
+    gap: 12px;
   }
 }
 </style>

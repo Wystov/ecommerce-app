@@ -1,9 +1,15 @@
 <template>
-  <div v-if="userStore.fetching" class="spinner-container">
+  <div
+    v-if="userStore.fetching"
+    class="spinner-container">
     <div class="spinner" />
   </div>
-  <section v-else class="registration container">
-    <h1 class="title">Sign up to Crunch</h1>
+  <section
+    v-else
+    class="wrapper registration">
+    <h1 class="title">
+      Sign up to Crunch
+    </h1>
     <AppRegistration />
   </section>
 </template>
@@ -45,11 +51,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 34px;
-  margin: 50px auto;
   overflow: hidden;
-}
-.container {
-  max-width: 740px;
 }
 .spinner-container {
   width: 100%;

@@ -1,19 +1,58 @@
 <template>
-  <div class="center">
-    <h1 class="container">Account</h1>
-    <BaseButton @click="logOut" label="Log out" />
-  </div>
+  <Transition mode="out-in">
+    <div
+      v-if="userStore.fetching || !userStore.authorized"
+      class="spinner-container">
+      <div class="spinner" />
+    </div>
+    <div
+      v-else
+      class="wrapper main-block">
+      <h1 class="title">
+        Account
+      </h1>
+      <div class="sections-nav">
+        <template
+          v-for="(section, i) in sections"
+          :key="i">
+          <li
+            class="section-nav-item"
+            :class="{ active: activeIndex === i }"
+            @click="setActiveSection(i)"
+            @keydown="setActiveSection(i)">
+            {{ section }}
+          </li>
+          <div
+            v-if="i < sections.length - 1"
+            class="divider" />
+        </template>
+      </div>
+      <AppAccountInfo v-if="activeIndex === 0" />
+      <AppAccountAddresses v-if="activeIndex === 1" />
+      <BaseButton
+        label="Log out"
+        @click="logOut" />
+    </div>
+  </Transition>
 </template>
 
 <script lang="ts">
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/user';
-import BaseButton from '@/components/shared/BaseButton.vue';
 import { LocalStorageKeys } from '@/types/enums';
+import AppAccountInfo from '@/components/AppAccountInfo.vue';
+import AppAccountAddresses from '@/components/AppAccountAddresses.vue';
+import BaseButton from '@/components/shared/BaseButton.vue';
 import api from '@/utils/api/client';
 
 export default {
-  components: { BaseButton },
+  components: { AppAccountInfo, AppAccountAddresses, BaseButton },
+  data(): { sections: string[]; activeIndex: number } {
+    return {
+      sections: ['INFO', 'ADDRESSES'],
+      activeIndex: 0,
+    };
+  },
   computed: {
     ...mapStores(useUserStore),
   },
@@ -24,23 +63,59 @@ export default {
       this.userStore.logoutUser();
       this.$router.push({ name: 'Home' });
     },
+    setActiveSection(index: number): void {
+      this.activeIndex = index;
+    },
+    checkRedirect(): void {
+      if (!this.userStore.fetching && !this.userStore.authorized) {
+        this.$router.push({ name: 'Log in' });
+      }
+    },
   },
   created(): void {
-    if (this.userStore.fetching) {
-      this.$watch(() => this.userStore.fetching, () => {
-        if (this.userStore.authorized) this.$router.push({ name: 'Home' });
-      });
-    }
+    this.checkRedirect();
+    this.$watch(
+      () => this.userStore.fetching,
+      () => this.checkRedirect(),
+    );
   },
 };
 </script>
 
 <style scoped>
-.center {
+.main-block {
+  width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+}
+.sections-nav {
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  margin-top: 50px;
   gap: 25px;
+  margin-bottom: 1rem;
+}
+.section-nav-item {
+  color: var(--main-font-color);
+  font-size: 1.5rem;
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    color: var(--main-color);
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+.active {
+  color: var(--main-color);
+  cursor: default;
+}
+.divider {
+  height: 2rem;
+  border: 1px solid var(--main-font-color);
 }
 </style>

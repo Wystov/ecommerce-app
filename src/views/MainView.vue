@@ -3,52 +3,65 @@
     <div class="first-screen">
       <div class="hero flex">
         <div class="hero-text-container">
-          <h1 class="title">The crunchiest breakfasts in one place.</h1>
-          <p class="description">Order today, crunch tomorrow. Choose yours!</p>
+          <h1 class="title">
+            The crunchiest breakfasts in one place.
+          </h1>
+          <p class="description">
+            Order today, crunch tomorrow. Choose yours!
+          </p>
           <BaseButton
-            @click="$router.push({ name: 'Catalog' })"
-            size="large"
+            size="medium"
             class="button"
             label="Explore"
-          />
+            @click="$router.push({ name: 'Catalog' })" />
         </div>
         <div class="hero-image">
-          <img src="@/assets/images/hero-image.svg" alt="hero" class="hero-img" />
+          <img
+            src="@/assets/images/hero-image.svg"
+            alt="hero"
+            class="hero-img" />
         </div>
       </div>
       <div class="promo">
         <div class="promo-text-container">
-          <h1 class="title">Promos</h1>
+          <h1 class="title">
+            Promos
+          </h1>
           <div class="promo-image">
-            <img src="@/assets/images/promo.svg" alt="promo label" class="promo-img" />
+            <img
+              src="@/assets/images/promo.svg"
+              alt="promo label"
+              class="promo-img" />
           </div>
-          <p class="description">Enjoy special promocodes for registered customers</p>
+          <p class="description">
+            Enjoy special promocodes for registered customers
+          </p>
           <BaseButton
             v-if="!authorized"
-            @click="$router.push({ name: 'Sign Up' })"
-            size="large"
+            size="medium"
             class="button"
             label="Join us"
-          />
+            @click="$router.push({ name: 'Sign Up' })" />
           <template v-else>
-            <div class="promocode">CROSS-CHECK</div>
+            <div class="promocode">
+              CROSS-CHECK
+            </div>
             <BaseButton
-              @click="copyPromo"
               ref="copyButton"
-              size="large"
+              size="medium"
               class="button"
               :label="promoBtnText"
-            />
+              @click="copyPromo" />
           </template>
         </div>
       </div>
     </div>
     <div class="links-list">
       <RouterLink
-        v-for="link, i in sitemap"
+        v-for="(link, i) in sitemap"
+        :key="i"
         :to="{ name: link }"
-        class="button button-link"
-        v-bind:key="i">
+        class="button button-link">
         {{ link }}
       </RouterLink>
     </div>
@@ -63,7 +76,7 @@ import { NamePages } from '@/types/enums';
 
 export default {
   components: { BaseButton },
-  data(): { sitemap: Record<string, string>, promoBtnText: string } {
+  data(): { sitemap: Record<string, string>; promoBtnText: string } {
     return {
       sitemap: {
         login: NamePages.Login,
@@ -92,7 +105,6 @@ export default {
   justify-content: space-between;
   justify-items: stretch;
   width: 100%;
-  margin-top: 50px;
 }
 .hero {
   display: flex;
@@ -111,7 +123,7 @@ export default {
 }
 .title {
   color: white;
-  font-size: 62px;
+  font-size: 2.5rem;
   font-weight: 600;
   margin: 0;
 }
@@ -125,6 +137,8 @@ export default {
   color: var(--main-font-color);
 }
 .promo {
+  display: flex;
+  align-items: center;
   position: relative;
   border-radius: 10px;
   background-color: var(--main-color);
@@ -168,9 +182,6 @@ export default {
   border: 2px solid var(--main-color);
 }
 @media (max-width: 1500px) {
-  .title {
-    font-size: 3rem;
-  }
   .description {
     font-size: 1.6rem;
   }
@@ -221,7 +232,7 @@ export default {
     margin-top: 1rem;
   }
 }
-@media(max-width: 470px) {
+@media (max-width: 470px) {
   .button-link {
     padding: 15px 0;
     width: 33%;

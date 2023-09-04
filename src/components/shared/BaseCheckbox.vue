@@ -1,15 +1,19 @@
 <template>
   <div class="checkbox-block">
     <input
-      type="checkbox"
       :id="id"
+      type="checkbox"
       :name="name"
       class="checkbox"
       :class="{ 'dark-theme-checkbox': isDark }"
       :checked="checked"
-      :disabled="disabled"
-    />
-    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }">{{ label }}</label>
+      :disabled="disabled" />
+    <label
+      :for="id"
+      class="label"
+      :class="{ 'dark-theme-label': isDark }">
+      {{ label }}<slot />
+    </label>
   </div>
 </template>
 

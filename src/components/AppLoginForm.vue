@@ -1,42 +1,59 @@
 <template>
   <div class="login-form">
-    <h1 class="main-header">Login to Crunch</h1>
+    <h1 class="title">
+      Login to Crunch
+    </h1>
     <BaseInput
+      id="emailInput"
+      ref="emailInput"
       type="text"
       name="email"
-      id="emailInput"
-      @input="emailValidation"
-      @change="emailValidation"
-      @keydown.enter="blurInput"
       :valid="emailValue"
       class="custom-input-style"
-      ref="emailInput"
-    />
+      @input="emailValidation"
+      @change="emailValidation"
+      @keydown.enter="blurInput" />
     <Transition>
-      <BaseMessage v-if="emailValue === 'invalid'" alert="danger" :text="emailMessageText" />
+      <BaseMessage
+        v-if="emailValue === 'invalid'"
+        alert="danger"
+        :text="emailMessageText" />
     </Transition>
     <BaseInput
+      id="passInput"
+      ref="passInput"
       :type="passInputType"
       name="password"
-      id="passInput"
       :hidePass="hidePass"
+      :valid="passValue"
       @input="passwordValidation"
       @change="passwordValidation"
       @click="showPassword"
-      @keydown.enter="blurInput"
-      :valid="passValue"
-      ref="passInput"
-    />
+      @keydown.enter="blurInput" />
     <Transition>
-      <BaseMessage v-if="passValue === 'invalid'" alert="danger" :text="passMessageText" />
+      <BaseMessage
+        v-if="passValue === 'invalid'"
+        alert="danger"
+        :text="passMessageText" />
     </Transition>
-    <BaseButton label="Sign in" size="medium" @click="signIn" />
+    <BaseButton
+      label="Sign in"
+      size="medium"
+      @click="signIn" />
     <p>
       Don't have an account yet?
-      <router-link class="register-link" :to="{ name: registration }"> Sign up </router-link>
+      <router-link
+        class="register-link"
+        :to="{ name: registration }">
+        Sign up
+      </router-link>
     </p>
     <Transition>
-      <BaseMessage v-if="wrongData" alert="danger" :text="wrongDataText" title="Ooops!" />
+      <BaseMessage
+        v-if="wrongData"
+        alert="danger"
+        :text="wrongDataText"
+        title="Ooops!" />
     </Transition>
   </div>
 </template>
@@ -91,9 +108,9 @@ export default {
       const domainArr = value.split('.');
       const domain = domainArr[domainArr.length - 1];
       if (
-        ats.length > 1
-        || domain.length < 2
-        || domain.search(/[!#$%^&*()-_=+'"`~?><,.|;:±§]/) !== -1
+        ats.length > 1 ||
+        domain.length < 2 ||
+        domain.search(/[!#$%^&*()-_=+'"`~?><,.|;:±§]/) !== -1
       ) {
         return false;
       }
@@ -150,10 +167,10 @@ export default {
     },
     async signIn(): Promise<void> {
       if (
-        this.passValue === ''
-        || this.passValue === 'invalid'
-        || this.emailValue === ''
-        || this.emailValue === 'invalid'
+        this.passValue === '' ||
+        this.passValue === 'invalid' ||
+        this.emailValue === '' ||
+        this.emailValue === 'invalid'
       ) {
         return;
       }
@@ -186,17 +203,15 @@ export default {
   align-items: center;
   font-family: var(--main-font-style);
   color: var(--main-font-color);
-  margin: 10% auto auto;
+  margin: 6% auto;
   width: 420px;
   padding: 1rem 3rem 2rem 3rem;
   gap: 19px;
+  box-sizing: content-box;
 }
 .input-block {
   width: 100%;
   padding: 0;
-}
-.login-form :deep(.input-icon) {
-  cursor: pointer;
 }
 .button {
   width: 100%;
@@ -219,7 +234,7 @@ export default {
 .v-leave-to {
   opacity: 0;
 }
-@media(max-width: 550px) {
+@media (max-width: 550px) {
   .login-form {
     width: 90%;
     padding: 1rem 0 2rem 0;

@@ -61,20 +61,17 @@ hr {
   overflow: hidden;
 }
 
-.main-header {
-  font-size: 1.65rem;
+.title {
+  font-size: 2rem;
   font-weight: 600;
-}
-
-.container {
-  padding: 0 3vw;
-  margin: 0 auto;
 }
 
 .wrapper {
   margin: 0 auto;
+  height: 100%;
   max-width: 1680px;
-  padding: 0 20px;
+  padding: 0 120px;
+  box-sizing: border-box;
 }
 
 .flex {
@@ -89,31 +86,66 @@ hr {
   height: 26px;
   --c: linear-gradient(#eb5461 0 0);
   background:
-    var(--c) 0    100%,
-    var(--c) 50%  100%,
+    var(--c) 0 100%,
+    var(--c) 50% 100%,
     var(--c) 100% 100%;
-  background-size:8px calc(100% - 4px);
+  background-size: 8px calc(100% - 4px);
   background-repeat: no-repeat;
   position: relative;
 }
 .spinner:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background:#eb5461;
-  left:0;
-  top:0;
+  background: #eb5461;
+  left: 0;
+  top: 0;
   animation:
-    db3-1 1.5s  linear infinite alternate,
-    db3-2 0.75s cubic-bezier(0,200,.8,200) infinite;
+    db3-1 1.5s linear infinite alternate,
+    db3-2 0.75s cubic-bezier(0, 200, 0.8, 200) infinite;
+}
+.spinner-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
 @keyframes db3-1 {
-  100% {left:calc(100% - 8px)}
+  100% {
+    left: calc(100% - 8px);
+  }
 }
 
 @keyframes db3-2 {
-  100% {top:-0.1px}
+  100% {
+    top: -0.1px;
+  }
+}
+
+.w-100 {
+  width: 100%;
+}
+
+@media (max-width: 1680px) {
+  .wrapper {
+    max-width: 1360px;
+    padding: 0 60px;
+  }
+}
+
+@media (max-width: 500px) {
+  .wrapper {
+    padding: 0 20px;
+  }
 }

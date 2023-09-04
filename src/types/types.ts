@@ -1,3 +1,6 @@
+import type { ProductProjection, ClientResponse } from '@commercetools/platform-sdk';
+import type { Ref } from 'vue';
+import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
 
 interface ButtonClasses {
@@ -11,11 +14,13 @@ interface ButtonClasses {
   circle: boolean;
   active: boolean;
   disabled: boolean;
+  outline: boolean;
 }
 interface SelectClasses {
   'dark-theme-input': boolean;
   'valid-focus-decorator': boolean;
   'invalid-focus-decorator': boolean;
+  'plain-input': boolean;
 }
 interface BaseMessageClasses {
   primary: boolean;
@@ -29,6 +34,10 @@ interface BaseMessageClasses {
 interface TokenResponse {
   refresh_token?: string;
 }
+interface SelectOptions {
+  text: string;
+  value: string;
+}
 interface AuthorizationList {
   name: NamePages;
   authorization?: boolean;
@@ -37,6 +46,9 @@ interface AuthorizationList {
 }
 interface DataAuthorization {
   authorizationList: AuthorizationList[];
+}
+interface BaseDataAuthorization extends DataAuthorization {
+  country: SelectOptions[];
 }
 interface UserAddress {
   country: 'US' | 'GB';
@@ -60,6 +72,12 @@ interface UserSignUp {
 interface UserSignUpMain {
   email: string;
   password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+}
+interface UserUpdate {
+  email: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
@@ -98,23 +116,22 @@ interface BaseInputProps {
   hidePass: string;
   inputValue: string;
 }
-interface SelectOptions {
-  text: string;
-  value: string;
-}
 interface RegistrationMainData {
   label: string;
   type?: string;
   value?: string;
+  dateValue?: string;
   placeholder?: string;
   pattern?: RegExp;
   valid?: 'valid' | 'invalid' | '';
   invalidMessage?: string;
   showMessage: boolean;
+  hidePass?: string;
 }
 interface RegistrationAddressData {
   fields: {
     label: string;
+    fieldName?: string;
     type?: string;
     value?: string;
     placeholder?: string;
@@ -131,6 +148,132 @@ interface RegistrationAddressData {
     value: string;
   };
 }
+interface AccountInfoData {
+  name: string | undefined;
+  surname: string | undefined;
+  date: string | undefined;
+  showPopup: boolean;
+  updateInfo: boolean;
+  showMessageEditSuccess: boolean;
+  createCustomerMessage: { text: string; alert: string; title: string };
+}
+interface AccountAddressData {
+  loaded: boolean;
+  showPopup: boolean;
+  addressSection: string;
+  addressId: string;
+  showMessageEditSuccess: boolean;
+  createCustomerMessage: { text: string; alert: string; title: string };
+}
+interface Address {
+  city: string;
+  country: string;
+  id: string;
+  postalCode: string;
+  streetName: string;
+}
+type Country = 'US' | 'GB';
+
+interface StateUser {
+  authorized: boolean;
+  fetching: boolean;
+  data: {
+    country: string;
+    cart: {
+      product: number[];
+    };
+  };
+  customerData: ClientResponse;
+}
+type Attribute = { name: string; value: string };
+interface AppProduct {
+  fetching: boolean;
+  productData: null | ProductProjection;
+  product: {
+    name: string[];
+    attributes?: Attribute[];
+    description: string;
+    images: string[];
+    keyProduct?: number;
+  };
+}
+type SortBy = 'price desc' | 'price asc' | 'name en';
+interface FacetTerm {
+  term: string;
+  count: number;
+}
+type FilterKey =
+  | 'variants.attributes.brand'
+  | 'variants.attributes.weight'
+  | 'variants.scopedPrice.currentValue.centAmount';
+interface FacetResult {
+  terms: FacetTerm[];
+  total: number;
+  key: FilterKey;
+  selected: Set<string> | [number, number];
+}
+interface FilterOptions {
+  brand: FacetResult;
+  weight: FacetResult;
+  price: FacetResult;
+}
+interface FacetResults {
+  [key: string]: FacetResult;
+}
+type Filter = 'brand' | 'weight' | 'price';
+interface CategoryMap {
+  id: string;
+  parentId: string | null;
+  name: string;
+  routerName: string;
+  params: {
+    categorySlug: string;
+    subcategorySlug?: string;
+  };
+  children: CategoryMap[];
+}
+interface Breadcrumb {
+  route: string;
+  name: string;
+}
+interface ProductFilterType {
+  weightRange: [number, number];
+  priceRange: [number, number];
+  searchValue: string;
+  searchTitle: string;
+}
+interface ProductListType {
+  productList: ProductProjection[];
+  init: boolean;
+}
+interface SwiperSetup {
+  showPopUp: Ref<boolean>;
+  currentIndexSlide: Ref<number>;
+  openPopUp: (index: number) => void;
+  closePopUp: (index: number) => void;
+  setImgPlaceholder: ($event: Event) => void;
+  thumbsSwiper: Ref<Swiper | null | undefined>;
+  mainSwiper: Ref<Swiper | null | undefined>;
+  setThumbsSwiper: (swiper: Swiper) => void;
+  modules: SwiperModule[];
+}
+interface CatalogViewType {
+  showSidebar: boolean;
+  screenWidth: number;
+}
+
+interface MainFields {
+  valid: boolean;
+  response: {};
+}
+interface PasswordEditBlock {
+  mainFields: MainFields;
+  fields: RegistrationMainData[];
+  notMatch: boolean;
+  notMatchText: string;
+  wrongOldPass: boolean;
+  wrongOldPassText: string;
+}
 export type {
   ButtonClasses,
   SelectClasses,
@@ -139,6 +282,7 @@ export type {
   DataAuthorization,
   TokenResponse,
   UserSignUp,
+  UserUpdate,
   UserAddress,
   DefaultAddressProps,
   ApiResponse,
@@ -149,4 +293,26 @@ export type {
   RegistrationMainData,
   RegistrationAddressData,
   UserSignUpMain,
+  BaseDataAuthorization,
+  Country,
+  StateUser,
+  AppProduct,
+  SortBy,
+  FilterOptions,
+  FacetTerm,
+  FacetResult,
+  FacetResults,
+  Filter,
+  FilterKey,
+  CategoryMap,
+  Breadcrumb,
+  ProductFilterType,
+  ProductListType,
+  SwiperSetup,
+  AccountInfoData,
+  Address,
+  CatalogViewType,
+  MainFields,
+  PasswordEditBlock,
+  AccountAddressData,
 };

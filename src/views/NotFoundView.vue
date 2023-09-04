@@ -1,11 +1,22 @@
 <template>
-  <section class="container not-found-container">
-    <img :src="image" class="image" alt="Not Found Page" />
+  <section class="wrapper not-found-container">
+    <img
+      :src="image"
+      class="image"
+      alt="Not Found Page" />
     <div class="caption">
-      <h2 class="title">{{ title }}</h2>
-      <p class="subtitle">{{ subtitle }}</p>
+      <h2 class="title">
+        {{ title }}
+      </h2>
+      <p class="subtitle">
+        {{ subtitle }}
+      </p>
     </div>
-    <BaseButton :size="buttonSize" @click="$router.go(-1)">Go back</BaseButton>
+    <BaseButton
+      :size="buttonSize"
+      @click="$router.go(-1)">
+      Go back
+    </BaseButton>
   </section>
 </template>
 
@@ -30,13 +41,6 @@ export default {
       buttonSize: 'medium',
     };
   },
-  mounted(): void {
-    this.updateButtonSize();
-    window.addEventListener('resize', this.updateButtonSize);
-  },
-  beforeUnmount(): void {
-    window.removeEventListener('resize', this.updateButtonSize);
-  },
   methods: {
     updateButtonSize(): void {
       if (window.innerWidth < 768) {
@@ -46,6 +50,13 @@ export default {
       }
     },
   },
+  mounted(): void {
+    this.updateButtonSize();
+    window.addEventListener('resize', this.updateButtonSize);
+  },
+  beforeUnmount(): void {
+    window.removeEventListener('resize', this.updateButtonSize);
+  },
 };
 </script>
 
@@ -53,10 +64,9 @@ export default {
 .not-found-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 46px;
-  margin-top: 160px;
+  margin-top: 110px;
 }
 
 .image {

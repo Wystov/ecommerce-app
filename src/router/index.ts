@@ -9,10 +9,9 @@ import CartView from '@/views/CartView.vue';
 import { NamePages, PathPages } from '@/types/enums';
 import AccountView from '@/views/AccountView.vue';
 import { useUserStore } from '@/stores/user';
+import ProductView from '@/views/ProductView.vue';
 
-const {
-  Home, AboutUs, Catalog, Login, Registration, NotFound, Cart, Account,
-} = NamePages;
+const { Home, AboutUs, Catalog, Login, Registration, NotFound, Cart, Account } = NamePages;
 
 const routes = [
   {
@@ -33,8 +32,26 @@ const routes = [
   },
   {
     name: Catalog,
-    path: PathPages.Catalog,
+    path: '/catalog',
     component: CatalogView,
+    meta: {
+      title: Catalog,
+    },
+  },
+  {
+    path: '/catalog/:categorySlug',
+    name: 'Category',
+    component: CatalogView,
+    props: true,
+    meta: {
+      title: Catalog,
+    },
+  },
+  {
+    path: '/catalog/:categorySlug/:subcategorySlug',
+    name: 'Subcategory',
+    component: CatalogView,
+    props: true,
     meta: {
       title: Catalog,
     },
@@ -79,6 +96,15 @@ const routes = [
       title: Account,
     },
   },
+  {
+    name: 'Product',
+    path: '/product/:slug',
+    component: ProductView,
+    props: true,
+    meta: {
+      title: 'Product page',
+    },
+  },
 ];
 
 const router = createRouter({
@@ -88,10 +114,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const { authorized } = useUserStore();
-  const isNeedRedirect = (authorized && (to.name === Login || to.name === Registration))
-  || (!authorized && to.name === Account);
+  const isNeedRedirectToMain = authorized && (to.name === Login || to.name === Registration);
 
-  if (isNeedRedirect) {
+  if (isNeedRedirectToMain) {
     next(PathPages.Home);
   } else {
     document.title = `Crunch! ${to.meta.title}`;

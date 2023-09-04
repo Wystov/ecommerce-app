@@ -1,8 +1,20 @@
 <template>
   <div class="select-group">
-    <label v-if="label" :for="id"> {{ label }}</label>
-    <select :id="id" class="select" @input="checkValid" v-model="selected" :class="classes">
-      <option v-for="option in options" :value="option.value" :key="option.value">
+    <label
+      v-if="label"
+      :for="id">
+      {{ label }}
+    </label>
+    <select
+      :id="id"
+      v-model="selected"
+      class="select"
+      :class="classes"
+      @input="checkValid">
+      <option
+        v-for="option in options"
+        :key="option.value"
+        :value="option.value">
         {{ option.text }}
       </option>
     </select>
@@ -12,11 +24,6 @@
 import type { SelectOptions, SelectClasses } from '../../types/types';
 
 export default {
-  data(): { selected: string } {
-    return {
-      selected: '',
-    };
-  },
   props: {
     label: {
       type: String,
@@ -27,6 +34,10 @@ export default {
       required: true,
     },
     isDark: {
+      type: Boolean,
+      default: false,
+    },
+    isPlain: {
       type: Boolean,
       default: false,
     },
@@ -43,12 +54,19 @@ export default {
       required: true,
     },
   },
+  emits: ['selectOption'],
+  data(): { selected: string } {
+    return {
+      selected: '',
+    };
+  },
   computed: {
     classes(): SelectClasses {
       return {
         'dark-theme-input': this.isDark,
         'valid-focus-decorator': this.valid === 'valid',
         'invalid-focus-decorator': this.valid === 'invalid',
+        'plain-input': this.isPlain,
       };
     },
   },
@@ -56,6 +74,7 @@ export default {
     checkValid(e: Event): void {
       const select = e.target as HTMLSelectElement;
       if (select) {
+        this.selected = select.value;
         this.$emit('selectOption', select.value);
       }
     },
@@ -83,6 +102,7 @@ label {
 }
 
 .select {
+  cursor: pointer;
   border: 1.5px solid var(--main-color-outline);
   font-size: 1rem;
   outline: none;
@@ -118,5 +138,9 @@ label {
 
 .dark-theme-input::placeholder {
   color: var(--dark-theme-font-color);
+}
+.plain-input {
+  border: none;
+  background-position-x: right;
 }
 </style>

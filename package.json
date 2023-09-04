@@ -24,10 +24,12 @@
     "@commercetools/sdk-client-v2": "^2.2.0",
     "@heroicons/vue": "^2.0.18",
     "@types/lodash": "^4.14.197",
+    "@vueform/slider": "^2.1.7",
     "axios": "^1.4.0",
     "lodash": "^4.17.21",
     "pinia": "^2.1.4",
     "postcode-validator": "^3.8.14",
+    "swiper": "^10.2.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },

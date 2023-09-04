@@ -1,32 +1,41 @@
 <template>
-  <div class="registration-main" @keydown.enter="showButton && nextStep()">
-    <div class="field-container" v-for="(field, i) in fields" :key="i">
+  <div
+    class="registration-main"
+    @keydown.enter="showButton && nextStep()">
+    <div
+      v-for="(field, i) in fields"
+      :key="i"
+      class="field-container">
       <BaseInput
+        :id="'field-registration-' + field.label.toLowerCase()"
         :label="field.label"
         :hidePass="field.label === 'Password' ? hidePass : ''"
-        @click="showPassword($event, i)"
         :name="field.placeholder"
-        @input="handleInput($event, i)"
         :valid="field.valid"
         :value="field.value"
         :type="field.type"
-        :id="'field-registration-' + field.label.toLowerCase()"
         max="9999-12-31"
+        @click="showPassword($event, i)"
+        @input="handleInput($event, i)"
         @focusin="field.showMessage = true"
-        @focusout="field.showMessage = false"
-      />
+        @focusout="field.showMessage = false" />
       <Transition>
         <BaseMessage
+          v-if="field.showMessage && field.valid === 'invalid'"
           absolute
           arrow="top"
-          v-if="field.showMessage && field.valid === 'invalid'"
-          alert="danger"
-        >{{ field.invalidMessage }}</BaseMessage
-        >
+          alert="danger">
+          {{ field.invalidMessage }}
+        </BaseMessage>
       </Transition>
     </div>
   </div>
-  <BaseButton v-if="showButton" @click="nextStep" class="btn-continue">Continue</BaseButton>
+  <BaseButton
+    v-if="showButton"
+    class="btn-continue"
+    @click="nextStep">
+    Continue
+  </BaseButton>
 </template>
 
 <script lang="ts">
@@ -36,22 +45,17 @@ import BaseMessage from '@/components/shared/BaseMessage.vue';
 import isOlder from '@/utils/isOlder';
 import api from '@/utils/api/client';
 import { InvalidMessage } from '@/types/enums';
-import type { RegistrationMainData } from '@/types/types';
+import type { RegistrationMainData, MainFields } from '@/types/types';
 import toCamelCase from '@/utils/toCamelCase';
 import BaseButton from './shared/BaseButton.vue';
 
-interface MainFields {
-  valid: boolean;
-  response: {};
-}
-
 export default {
-  emits: ['valid-all-main-fields'],
   components: {
     BaseInput,
     BaseMessage,
     BaseButton,
   },
+  emits: ['valid-all-main-fields'],
   // eslint-disable-next-line max-lines-per-function
   data(): {
     hidePass: string;
@@ -67,7 +71,7 @@ export default {
         {
           label: 'Email',
           pattern:
-            /^((?:[A-Za-z0-9!#$%&'*+\-\\/=?^_`{|}~]|(?<=^|\.)"|"(?=$|\.|@)|(?<=".*)[ .](?=.*")|(?<!\.)\.){1,64})(@)((?:[A-Za-z0-9.\\-])*(?:[A-Za-z0-9])\.(?:[A-Za-z0-9]){2,})$/,
+            /^((?:[A-Za-z0-9!#$%&'*+\-\\/=?^_`{|}~]|(?:=^|\.)"|"(?=$|\.|@)|(?:=".*)[ .](?=.*")|(?:!\.)\.){1,64})(@)((?:[A-Za-z0-9.\\-])*(?:[A-Za-z0-9])\.(?:[A-Za-z0-9]){2,})$/,
           placeholder: 'example@email.com',
           type: 'text',
           invalidMessage: InvalidMessage.Email,
@@ -196,9 +200,6 @@ export default {
 };
 </script>
 <style scoped>
-.field-container :deep(.input-icon) {
-  cursor: pointer;
-}
 .registration-main {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
