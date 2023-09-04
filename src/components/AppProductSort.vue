@@ -47,10 +47,8 @@ export default {
 <style scoped>
 .sort-select {
   flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
   gap: 0;
-  margin-bottom: 25px;
 }
 :deep(.select) {
   padding-left: 0.8rem;

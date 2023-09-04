@@ -1,99 +1,94 @@
 <template>
-  <div class="filter-container">
-    <AppProductCategories />
-    <div
-      v-if="mappedAppliedFilters?.length"
-      class="applied-filters">
-      <span class="filter-title">Applied filters</span>
-      <ul
-        v-for="filter in mappedAppliedFilters"
-        :key="filter">
-        <li>{{ filter }}</li>
-      </ul>
-      <button
-        @click="reset"
-        class="button-reset"
-        type="button">
-        Reset filters
-      </button>
-    </div>
-    <template v-if="loaded">
-      <div class="search">
-        <span class="filter-title">{{ searchTitle }}</span>
-        <div class="search-container">
-          <BaseInput
-            @keyup.enter="setSearch"
-            id="search"
-            ref="searchInput"
-            width="75%" />
-          <BaseButton
-            size="small"
-            @click="setSearch"
-            class="search-btn">
-            &#x1F50D;&#xFE0E;
-          </BaseButton>
+  <Transition name="slide">
+    <div class="filter-container">
+      <AppProductCategories />
+      <Transition mode="out-in">
+        <div v-if="loaded">
+          <div class="search">
+            <span class="filter-title">{{ searchTitle }}</span>
+            <div class="search-container">
+              <BaseInput
+                @keyup.enter="setSearch"
+                id="search"
+                ref="searchInput"
+                width="75%" />
+              <BaseButton
+                size="small"
+                @click="setSearch"
+                class="search-btn">
+                <MagnifyingGlassIcon class="icon" />
+              </BaseButton>
+            </div>
+          </div>
+          <div class="checkbox-filter">
+            <span class="filter-title">
+              Brand<span class="count">{{ brands.length }}</span>
+            </span>
+            <BaseCheckbox
+              v-for="item in brands"
+              @change="changeCheckFilterOptions('brand', item.term)"
+              :key="item.term"
+              :id="item.term"
+              :label="item.term"
+              :checked="isBrandChecked(item.term)"
+              name="brand"
+              class="variant">
+              <span class="weight-range">&nbsp;({{ item.count }})</span>
+            </BaseCheckbox>
+          </div>
+          <div class="range-filter">
+            <span class="filter-title">Price</span>
+            <Slider
+              v-model="priceRange"
+              :min="minPrice"
+              :max="maxPrice"
+              :step="1"
+              :tooltips="false"
+              :lazy="false"
+              class="range-slider" />
+            <span class="nums-range">
+              {{ priceRangeReadable }}
+            </span>
+            <BaseButton
+              @click="changeRangeFilterOptions('price', priceRange, 'build')"
+              size="small">
+              Apply
+            </BaseButton>
+          </div>
+          <div class="range-filter">
+            <span class="filter-title">Weight</span>
+            <Slider
+              v-model="weightRange"
+              :min="minWeight"
+              :max="maxWeight"
+              :step="0.1"
+              :tooltips="false"
+              :lazy="false"
+              class="range-slider" />
+            <span class="nums-range">{{ weightRangeReadable }}</span>
+            <BaseButton
+              @click="changeRangeFilterOptions('weight', weightRange, 'build')"
+              class="button"
+              size="small">
+              Apply
+            </BaseButton>
+          </div>
         </div>
-      </div>
-      <div class="checkbox-filter">
-        <span class="filter-title">
-          Brand<span class="count">{{ brands.length }}</span>
-        </span>
-        <BaseCheckbox
-          v-for="item in brands"
-          @change="changeCheckFilterOptions('brand', item.term)"
-          :key="item.term"
-          :id="item.term"
-          :label="item.term"
-          :checked="isBrandChecked(item.term)"
-          name="brand"
-          class="variant">
-          <span class="weight-range">&nbsp;({{ item.count }})</span>
-        </BaseCheckbox>
-      </div>
-      <div class="range-filter">
-        <span class="filter-title">Price</span>
-        <Slider
-          v-model="priceRange"
-          :min="minPrice"
-          :max="maxPrice"
-          :step="1"
-          :tooltips="false"
-          :lazy="false"
-          class="range-slider" />
-        <span class="nums-range">
-          {{ currencyTag }}{{ priceRange[0] / 100 }} - {{ currencyTag }}{{ priceRange[1] / 100 }}
-        </span>
-        <BaseButton
-          @click="changeRangeFilterOptions('price', priceRange, 'build')"
-          size="small">
-          Apply
-        </BaseButton>
-      </div>
-      <div class="range-filter">
-        <span class="filter-title">Weight</span>
-        <Slider
-          v-model="weightRange"
-          :min="minWeight"
-          :max="maxWeight"
-          :step="0.1"
-          :tooltips="false"
-          :lazy="false"
-          class="range-slider" />
-        <span class="nums-range"> {{ weightRange[0] }} oz. - {{ weightRange[1] }} oz. </span>
-        <BaseButton
-          @click="changeRangeFilterOptions('weight', weightRange, 'build')"
-          class="button"
-          size="small">
-          Apply
-        </BaseButton>
-      </div>
-    </template>
-  </div>
+        <div
+          v-else
+          class="spinner-container">
+          <div class="spinner" />
+        </div>
+      </Transition>
+      <AppProductAppliedFiltersList />
+    </div>
+  </Transition>
 </template>
 
 <script lang="ts">
 import { mapActions, mapState } from 'pinia';
 import Slider from '@vueform/slider';
+import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
 import { useFilterStore } from '@/stores/filter';
 import { useUserStore } from '@/stores/user';
 import type { BaseInputType, FacetTerm, ProductFilterType } from '@/types/types';
@@ -102,6 +97,7 @@ import BaseButton from './shared/BaseButton.vue';
 import '@vueform/slider/themes/default.css';
 import AppProductCategories from './AppProductCategories.vue';
 import BaseInput from './shared/BaseInput.vue';
+import AppProductAppliedFiltersList from './AppProductAppliedFiltersList.vue';
 
 export default {
   components: {
@@ -110,6 +106,8 @@ export default {
     Slider,
     AppProductCategories,
     BaseInput,
+    AppProductAppliedFiltersList,
+    MagnifyingGlassIcon,
   },
   data(): ProductFilterType {
     return {
@@ -120,45 +118,16 @@ export default {
     };
   },
   computed: {
-    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'appliedFilters']),
-    ...mapState(useUserStore, ['currency']),
+    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'minWeight', 'maxWeight', 'minPrice', 'maxPrice']),
+    ...mapState(useUserStore, ['currencyTag']),
     brands(): FacetTerm[] {
       return this.filterOptions.brand.terms;
     },
-    minWeight(): number {
-      return parseFloat(this.filterOptions.weight.terms[0]?.term ?? 0);
+    priceRangeReadable(): string {
+      return `${this.currencyTag}${(this.priceRange[0] / 100).toFixed(2)} - ${this.currencyTag}${(this.priceRange[1] / 100).toFixed(2)}`;
     },
-    maxWeight(): number {
-      const i = this.filterOptions.weight.terms.length - 1;
-      return parseFloat(this.filterOptions.weight.terms[i]?.term ?? 0);
-    },
-    minPrice(): number {
-      return parseFloat(this.filterOptions.price.terms[0]?.term ?? 0);
-    },
-    maxPrice(): number {
-      const i = this.filterOptions.price.terms.length - 1;
-      return parseFloat(this.filterOptions.price.terms[i]?.term ?? 0);
-    },
-    currencyTag(): string {
-      return this.currency === 'USD' ? '$' : '£';
-    },
-    mappedAppliedFilters(): string[] {
-      if (!this.loaded) return [];
-      const filters = [];
-      const { search, brand, price, weight } = this.appliedFilters;
-      if (search?.length) filters.push(`Search: ${search}`);
-      if (brand?.length) filters.push(`Brand: ${brand.join(', ')}`);
-      if (Array.isArray(price) && (price[0] !== this.minPrice || price[1] !== this.maxPrice)) {
-        const priceStr = price
-          .map((p) => `${this.currencyTag}${(+p / 100).toFixed(2)}`)
-          .join(' - ');
-        filters.push(`Price: ${priceStr}`);
-      }
-      if (Array.isArray(weight) && (weight[0] !== this.minWeight || weight[1] !== this.maxWeight)) {
-        const weightStr = weight.map((w) => `${w} oz.`).join(' - ');
-        filters.push(`Weight: ${weightStr}`);
-      }
-      return filters;
+    weightRangeReadable(): string {
+      return `${this.weightRange[0]} oz. - ${this.weightRange[1]} oz.`;
     },
   },
   methods: {
@@ -175,10 +144,6 @@ export default {
         return selected.has(brand);
       }
       return false;
-    },
-    reset(): void {
-      this.resetStore();
-      this.refreshFilter();
     },
     setSearch(): void {
       const value = (this.$refs.searchInput as BaseInputType).inputValue.trim().toLowerCase();
@@ -217,10 +182,24 @@ export default {
 
 <style scoped>
 .filter-container {
+  position: relative;
+  flex-shrink: 0;
   width: 200px;
   border-top: 1px solid #e9e9e9;
   padding-right: 1rem;
   margin-top: -1px;
+  background-color: white;
+  transition: 0.6s;
+}
+@media (max-width: 800px) {
+  .filter-container {
+    position: absolute;
+    height: fit-content;
+    width: 81.5vw;
+    border-bottom: 1px solid #e9e9e9;
+    margin-left: -1px;
+    z-index: 10;
+  }
 }
 .filter-title {
   display: block;
@@ -254,16 +233,6 @@ export default {
 .nums-range {
   display: block;
 }
-.button-reset {
-  cursor: pointer;
-  max-width: fit-content;
-  font-size: 1rem;
-  margin-top: 1rem;
-  background-color: transparent;
-  padding: 0;
-  color: var(--main-color);
-  border: none;
-}
 .search-container {
   display: flex;
   gap: 0.5rem;
@@ -277,8 +246,24 @@ export default {
   padding: 0.25rem 0.5rem;
   min-width: 0;
 }
-.applied-filters {
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e9e9e9;
+.slide-enter-active {
+  transition: all 0.3s;
+}
+
+.slide-leave-active {
+  transition: all 0.8s;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100vw);
+}
+.spinner-container {
+  place-items: start center;
+  padding-top: 50px;
+}
+.icon {
+  height: 1.8rem;
+  fill: white;
 }
 </style>

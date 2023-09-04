@@ -20,6 +20,9 @@ export const useUserStore = defineStore('user', {
   }),
   getters: {
     currency: (state) => (state.data.country === 'US' ? 'USD' : 'GBP'),
+    currencyTag(): string {
+      return this.currency === 'USD' ? '$' : '£';
+    },
     getAllAddresses(): Address[] {
       return this.customerData.body.addresses;
     },

@@ -100,12 +100,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUserStore, { userData: 'data' }),
+    ...mapState(useUserStore, { userData: 'data', currencyTag: 'currencyTag' }),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
-    },
-    currencyTag(): string {
-      return this.currency === 'USD' ? '$' : '£';
     },
     price(): string {
       const priceData = this.getPriceData();

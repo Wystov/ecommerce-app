@@ -58,6 +58,20 @@ export const useFilterStore = defineStore('filter', {
         price: [...price.selected],
       };
     },
+    minWeight(): number {
+      return parseFloat(this.filterOptions.weight.terms[0]?.term ?? 0);
+    },
+    maxWeight(): number {
+      const i = this.filterOptions.weight.terms.length - 1;
+      return parseFloat(this.filterOptions.weight.terms[i]?.term ?? 0);
+    },
+    minPrice(): number {
+      return parseFloat(this.filterOptions.price.terms[0]?.term ?? 0);
+    },
+    maxPrice(): number {
+      const i = this.filterOptions.price.terms.length - 1;
+      return parseFloat(this.filterOptions.price.terms[i]?.term ?? 0);
+    },
   },
   actions: {
     setSort(sort: SortBy) {

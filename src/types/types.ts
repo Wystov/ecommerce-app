@@ -237,7 +237,7 @@ interface ProductFilterType {
   weightRange: [number, number];
   priceRange: [number, number];
   searchValue: string;
-  searchTitle: string
+  searchTitle: string;
 }
 interface ProductListType {
   productList: ProductProjection[];
@@ -254,6 +254,11 @@ interface SwiperSetup {
   setThumbsSwiper: (swiper: Swiper) => void;
   modules: SwiperModule[];
 }
+interface CatalogViewType {
+  showSidebar: boolean,
+  screenWidth: number,
+}
+
 interface MainFields {
   valid: boolean;
   response: {};
@@ -303,6 +308,7 @@ export type {
   SwiperSetup,
   AccountInfoData,
   Address,
+  CatalogViewType,
   MainFields,
   PasswordEditBlock,
   AccountAddressData,

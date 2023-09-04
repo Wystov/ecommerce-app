@@ -45,12 +45,18 @@ const routes = [
     name: 'Category',
     component: CatalogView,
     props: true,
+    meta: {
+      title: Catalog,
+    },
   },
   {
     path: '/catalog/:categorySlug/:subcategorySlug',
     name: 'Subcategory',
     component: CatalogView,
     props: true,
+    meta: {
+      title: Catalog,
+    },
   },
   {
     name: Login,
