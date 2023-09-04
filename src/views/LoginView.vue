@@ -1,8 +1,12 @@
 <template>
-  <div v-if="userStore.fetching" class="spinner-container">
+  <div
+    v-if="userStore.fetching"
+    class="spinner-container">
     <div class="spinner" />
   </div>
-  <AppLogin v-else class="wrapper" />
+  <AppLogin
+    v-else
+    class="wrapper" />
 </template>
 
 <script lang="ts">

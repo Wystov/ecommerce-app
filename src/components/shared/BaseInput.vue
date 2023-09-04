@@ -1,8 +1,12 @@
 <template>
-  <div class="input-block" :style="{ width: width }">
-    <label v-if="label" :for="id" class="label" :class="{ 'dark-theme-label': isDark }">{{
-      label
-    }}</label>
+  <div
+    class="input-block"
+    :style="{ width: width }">
+    <label
+      v-if="label"
+      :for="id"
+      class="label"
+      :class="{ 'dark-theme-label': isDark }">{{ label }}</label>
     <input
       :id="id"
       ref="input"
@@ -17,8 +21,12 @@
       }"
       :disabled="disabled"
       :max="max" />
-    <EyeIcon v-if="hidePass === 'show'" class="input-icon" />
-    <EyeSlashIcon v-if="hidePass === 'hide'" class="input-icon" />
+    <EyeIcon
+      v-if="hidePass === 'show'"
+      class="input-icon" />
+    <EyeSlashIcon
+      v-if="hidePass === 'hide'"
+      class="input-icon" />
   </div>
 </template>
 

@@ -118,13 +118,22 @@ export default {
     };
   },
   computed: {
-    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'minWeight', 'maxWeight', 'minPrice', 'maxPrice']),
+    ...mapState(useFilterStore, [
+      'filterOptions',
+      'loaded',
+      'minWeight',
+      'maxWeight',
+      'minPrice',
+      'maxPrice',
+    ]),
     ...mapState(useUserStore, ['currencyTag']),
     brands(): FacetTerm[] {
       return this.filterOptions.brand.terms;
     },
     priceRangeReadable(): string {
-      return `${this.currencyTag}${(this.priceRange[0] / 100).toFixed(2)} - ${this.currencyTag}${(this.priceRange[1] / 100).toFixed(2)}`;
+      return `${this.currencyTag}${(this.priceRange[0] / 100).toFixed(2)} - ${this.currencyTag}${(
+        this.priceRange[1] / 100
+      ).toFixed(2)}`;
     },
     weightRangeReadable(): string {
       return `${this.weightRange[0]} oz. - ${this.weightRange[1]} oz.`;

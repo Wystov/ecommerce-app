@@ -16,7 +16,10 @@
             @click="$router.push({ name: 'Catalog' })" />
         </div>
         <div class="hero-image">
-          <img src="@/assets/images/hero-image.svg" alt="hero" class="hero-img" />
+          <img
+            src="@/assets/images/hero-image.svg"
+            alt="hero"
+            class="hero-img" />
         </div>
       </div>
       <div class="promo">
@@ -25,7 +28,10 @@
             Promos
           </h1>
           <div class="promo-image">
-            <img src="@/assets/images/promo.svg" alt="promo label" class="promo-img" />
+            <img
+              src="@/assets/images/promo.svg"
+              alt="promo label"
+              class="promo-img" />
           </div>
           <p class="description">
             Enjoy special promocodes for registered customers

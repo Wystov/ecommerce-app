@@ -11,9 +11,7 @@ import AccountView from '@/views/AccountView.vue';
 import { useUserStore } from '@/stores/user';
 import ProductView from '@/views/ProductView.vue';
 
-const {
-  Home, AboutUs, Catalog, Login, Registration, NotFound, Cart, Account,
-} = NamePages;
+const { Home, AboutUs, Catalog, Login, Registration, NotFound, Cart, Account } = NamePages;
 
 const routes = [
   {

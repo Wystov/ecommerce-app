@@ -1,6 +1,11 @@
 <template>
-  <div class="registration-main" @keydown.enter="showButton && nextStep()">
-    <div v-for="(field, i) in fields" :key="i" class="field-container">
+  <div
+    class="registration-main"
+    @keydown.enter="showButton && nextStep()">
+    <div
+      v-for="(field, i) in fields"
+      :key="i"
+      class="field-container">
       <BaseInput
         :id="'field-registration-' + field.label.toLowerCase()"
         :label="field.label"
@@ -25,7 +30,10 @@
       </Transition>
     </div>
   </div>
-  <BaseButton v-if="showButton" class="btn-continue" @click="nextStep">
+  <BaseButton
+    v-if="showButton"
+    class="btn-continue"
+    @click="nextStep">
     Continue
   </BaseButton>
 </template>

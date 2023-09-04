@@ -8,7 +8,10 @@
       valid="valid"
       :options="countryField.options"
       @selectOption="selectCountry" />
-    <div v-for="(field, i) in fields" :key="i" class="field-container">
+    <div
+      v-for="(field, i) in fields"
+      :key="i"
+      class="field-container">
       <BaseInput
         :id="id + '-field-registration-' + field.label.toLowerCase()"
         :label="field.label.replace('Name', '')"

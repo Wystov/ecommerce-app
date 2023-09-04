@@ -14,7 +14,10 @@
       @change="emailValidation"
       @keydown.enter="blurInput" />
     <Transition>
-      <BaseMessage v-if="emailValue === 'invalid'" alert="danger" :text="emailMessageText" />
+      <BaseMessage
+        v-if="emailValue === 'invalid'"
+        alert="danger"
+        :text="emailMessageText" />
     </Transition>
     <BaseInput
       id="passInput"
@@ -28,17 +31,29 @@
       @click="showPassword"
       @keydown.enter="blurInput" />
     <Transition>
-      <BaseMessage v-if="passValue === 'invalid'" alert="danger" :text="passMessageText" />
+      <BaseMessage
+        v-if="passValue === 'invalid'"
+        alert="danger"
+        :text="passMessageText" />
     </Transition>
-    <BaseButton label="Sign in" size="medium" @click="signIn" />
+    <BaseButton
+      label="Sign in"
+      size="medium"
+      @click="signIn" />
     <p>
       Don't have an account yet?
-      <router-link class="register-link" :to="{ name: registration }">
+      <router-link
+        class="register-link"
+        :to="{ name: registration }">
         Sign up
       </router-link>
     </p>
     <Transition>
-      <BaseMessage v-if="wrongData" alert="danger" :text="wrongDataText" title="Ooops!" />
+      <BaseMessage
+        v-if="wrongData"
+        alert="danger"
+        :text="wrongDataText"
+        title="Ooops!" />
     </Transition>
   </div>
 </template>
@@ -93,9 +108,9 @@ export default {
       const domainArr = value.split('.');
       const domain = domainArr[domainArr.length - 1];
       if (
-        ats.length > 1
-        || domain.length < 2
-        || domain.search(/[!#$%^&*()-_=+'"`~?><,.|;:±§]/) !== -1
+        ats.length > 1 ||
+        domain.length < 2 ||
+        domain.search(/[!#$%^&*()-_=+'"`~?><,.|;:±§]/) !== -1
       ) {
         return false;
       }
@@ -152,10 +167,10 @@ export default {
     },
     async signIn(): Promise<void> {
       if (
-        this.passValue === ''
-        || this.passValue === 'invalid'
-        || this.emailValue === ''
-        || this.emailValue === 'invalid'
+        this.passValue === '' ||
+        this.passValue === 'invalid' ||
+        this.emailValue === '' ||
+        this.emailValue === 'invalid'
       ) {
         return;
       }

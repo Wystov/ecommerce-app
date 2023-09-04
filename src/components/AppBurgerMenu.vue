@@ -1,8 +1,16 @@
 <template>
-  <nav ref="burger" class="menu">
+  <nav
+    ref="burger"
+    class="menu">
     <ul class="menu-list">
-      <li v-for="(item, i) in updateAuthorizationList" :key="i" class="menu-item">
-        <RouterLink :to="{ name: item.name }" class="menu-link" @click="$emit('close-menu')">
+      <li
+        v-for="(item, i) in updateAuthorizationList"
+        :key="i"
+        class="menu-item">
+        <RouterLink
+          :to="{ name: item.name }"
+          class="menu-link"
+          @click="$emit('close-menu')">
           {{ item.name }}
         </RouterLink>
       </li>
@@ -25,9 +33,7 @@ export default {
   },
   emits: ['close-menu'],
   data(): DataAuthorization {
-    const {
-      Home, Catalog, AboutUs, Login, Registration, Account,
-    } = NamePages;
+    const { Home, Catalog, AboutUs, Login, Registration, Account } = NamePages;
     return {
       authorizationList: [
         {
@@ -58,8 +64,8 @@ export default {
     ...mapStores(useUserStore),
     updateAuthorizationList(): AuthorizationList[] {
       return this.authorizationList.filter(
-        (link) => this.userStore.authorized === link.authorization
-        || link.authorization === undefined,
+        (link) =>
+          this.userStore.authorized === link.authorization || link.authorization === undefined,
       );
     },
   },

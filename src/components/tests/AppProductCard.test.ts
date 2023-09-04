@@ -59,6 +59,8 @@ describe('AppProductCard in catalog', () => {
       props: { productData: productDataWithLongDescription, currency, currencyTag },
     });
 
-    expect(wrapper.find('.product-description').text()).toBe('this pants are so amazing and have four ...');
+    expect(wrapper.find('.product-description').text()).toBe(
+      'this pants are so amazing and have four ...',
+    );
   });
 });

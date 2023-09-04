@@ -4,25 +4,45 @@
       <h3>Shipping addresses</h3>
       <div class="address-block">
         <template v-if="loaded">
-          <div v-if="userStore.getDefaultShippingAddressId" :id="userStore.getDefaultShippingAddressId" class="address-item">
+          <div
+            v-if="userStore.getDefaultShippingAddressId"
+            :id="userStore.getDefaultShippingAddressId"
+            class="address-item">
             <div class="default-block">
               <CheckIcon class="check-icon" />
               <span class="default">Default</span>
             </div>
             <div class="address-line">
               <span class="address">{{ userStore.defaultShippingAddress }}</span>
-              <PencilSquareIcon class="icon edit" @click="openPopupForEdit" />
-              <ArchiveBoxXMarkIcon class="icon delete" @click="deleteAddress" />
+              <PencilSquareIcon
+                class="icon edit"
+                @click="openPopupForEdit" />
+              <ArchiveBoxXMarkIcon
+                class="icon delete"
+                @click="deleteAddress" />
             </div>
           </div>
-          <template v-for="(address) in userStore.shippingAddresses" :key="address.id">
-            <div :id="address.id" class="address-item">
-              <div v-if="userStore.getDefaultShippingAddressId" class="divider" />
+          <template
+            v-for="address in userStore.shippingAddresses"
+            :key="address.id">
+            <div
+              :id="address.id"
+              class="address-item">
+              <div
+                v-if="userStore.getDefaultShippingAddressId"
+                class="divider" />
               <div class="address-line">
                 <span class="address">{{ addressName(address) }}</span>
-                <PencilSquareIcon class="icon edit" @click="openPopupForEdit" />
-                <ArchiveBoxXMarkIcon class="icon delete" @click="deleteAddress" />
-                <div class="set-default" @click="setDefaultAddress" @keydown="setDefaultAddress">
+                <PencilSquareIcon
+                  class="icon edit"
+                  @click="openPopupForEdit" />
+                <ArchiveBoxXMarkIcon
+                  class="icon delete"
+                  @click="deleteAddress" />
+                <div
+                  class="set-default"
+                  @click="setDefaultAddress"
+                  @keydown="setDefaultAddress">
                   Set as default
                 </div>
               </div>
@@ -31,30 +51,52 @@
         </template>
       </div>
     </div>
-    <BaseButton label="Add shipping address" @click="openPopupForCreate('shipping')" />
+    <BaseButton
+      label="Add shipping address"
+      @click="openPopupForCreate('shipping')" />
     <div class="info-container">
       <h3>Billing addresses</h3>
       <div class="address-block">
         <template v-if="loaded">
-          <div v-if="userStore.getDefaultBillingAddressId" :id="userStore.getDefaultBillingAddressId" class="address-item">
+          <div
+            v-if="userStore.getDefaultBillingAddressId"
+            :id="userStore.getDefaultBillingAddressId"
+            class="address-item">
             <div class="default-block">
               <CheckIcon class="check-icon" />
               <span class="default">Default</span>
             </div>
             <div class="address-line">
               <span>{{ userStore.defaultBillingAddress }}</span>
-              <PencilSquareIcon class="icon" @click="openPopupForEdit" />
-              <ArchiveBoxXMarkIcon class="icon" @click="deleteAddress" />
+              <PencilSquareIcon
+                class="icon"
+                @click="openPopupForEdit" />
+              <ArchiveBoxXMarkIcon
+                class="icon"
+                @click="deleteAddress" />
             </div>
           </div>
-          <template v-for="(address) in userStore.billingAddresses" :key="address.id">
-            <div :id="address.id" class="address-item">
-              <div v-if="userStore.getDefaultBillingAddressId" class="divider" />
+          <template
+            v-for="address in userStore.billingAddresses"
+            :key="address.id">
+            <div
+              :id="address.id"
+              class="address-item">
+              <div
+                v-if="userStore.getDefaultBillingAddressId"
+                class="divider" />
               <div class="address-line">
                 <span>{{ addressName(address) }}</span>
-                <PencilSquareIcon class="icon" @click="openPopupForEdit" />
-                <ArchiveBoxXMarkIcon class="icon" @click="deleteAddress" />
-                <div class="set-default" @click="setDefaultAddress" @keydown="setDefaultAddress">
+                <PencilSquareIcon
+                  class="icon"
+                  @click="openPopupForEdit" />
+                <ArchiveBoxXMarkIcon
+                  class="icon"
+                  @click="deleteAddress" />
+                <div
+                  class="set-default"
+                  @click="setDefaultAddress"
+                  @keydown="setDefaultAddress">
                   Set as default
                 </div>
               </div>
@@ -63,7 +105,9 @@
         </template>
       </div>
     </div>
-    <BaseButton label="Add billing address" @click="openPopupForCreate('billing')" />
+    <BaseButton
+      label="Add billing address"
+      @click="openPopupForCreate('billing')" />
     <div class="divider-final" />
   </div>
   <div class="popup-container">
@@ -83,7 +127,9 @@
     </BasePopup>
   </div>
   <Transition>
-    <div v-if="showMessageEditSuccess" class="success-message-container">
+    <div
+      v-if="showMessageEditSuccess"
+      class="success-message-container">
       <Transition>
         <BaseMessage
           rounded
@@ -170,39 +216,39 @@ export default {
       this.addressId = id;
       this.showPopup = true;
     },
-    deleteAddressData(id: string,
-      action: 'removeAddress'
-    | 'removeBillingAddressId'
-    | 'removeShippingAddressId',
-    ): MyCustomerRemoveAddressAction
-    | MyCustomerRemoveBillingAddressIdAction
-    | MyCustomerRemoveShippingAddressIdAction {
+    deleteAddressData(
+      id: string,
+      action: 'removeAddress' | 'removeBillingAddressId' | 'removeShippingAddressId',
+    ):
+      | MyCustomerRemoveAddressAction
+      | MyCustomerRemoveBillingAddressIdAction
+      | MyCustomerRemoveShippingAddressIdAction {
       return {
         action,
         addressId: id,
       };
     },
-    setDefaultAddressData(id: string,
-      action: 'setDefaultBillingAddress'
-    | 'setDefaultShippingAddress',
-    ): MyCustomerSetDefaultBillingAddressAction
-    | MyCustomerSetDefaultShippingAddressAction {
+    setDefaultAddressData(
+      id: string,
+      action: 'setDefaultBillingAddress' | 'setDefaultShippingAddress',
+    ): MyCustomerSetDefaultBillingAddressAction | MyCustomerSetDefaultShippingAddressAction {
       return {
         action,
         addressId: id,
       };
     },
-    postDeletedData(id: string, action: 'removeAddress'
-    | 'removeBillingAddressId'
-    | 'removeShippingAddressId',
+    postDeletedData(
+      id: string,
+      action: 'removeAddress' | 'removeBillingAddressId' | 'removeShippingAddressId',
     ): MyCustomerUpdate {
       return {
         version: this.userStore.customerData.body.version,
         actions: [this.deleteAddressData(id, action)],
       };
     },
-    postDefaultData(id: string, action: 'setDefaultBillingAddress'
-    | 'setDefaultShippingAddress',
+    postDefaultData(
+      id: string,
+      action: 'setDefaultBillingAddress' | 'setDefaultShippingAddress',
     ): MyCustomerUpdate {
       return {
         version: this.userStore.customerData.body.version,
@@ -220,34 +266,56 @@ export default {
     async deleteAddress(event: MouseEvent): Promise<void> {
       const deletedAddressId = this.getId(event);
       if (deletedAddressId !== null) {
-        const billingId = this.userStore.customerData.body.billingAddressIds
-          .indexOf(deletedAddressId) !== -1;
+        const billingId =
+          this.userStore.customerData.body.billingAddressIds.indexOf(deletedAddressId) !== -1;
         if (billingId) {
-          await api.call().me().post({ body: this.postDeletedData(deletedAddressId, 'removeBillingAddressId') }).execute();
+          await api
+            .call()
+            .me()
+            .post({ body: this.postDeletedData(deletedAddressId, 'removeBillingAddressId') })
+            .execute();
           await this.userStore.getData();
         } else {
-          await api.call().me().post({ body: this.postDeletedData(deletedAddressId, 'removeShippingAddressId') }).execute();
+          await api
+            .call()
+            .me()
+            .post({ body: this.postDeletedData(deletedAddressId, 'removeShippingAddressId') })
+            .execute();
           await this.userStore.getData();
         }
-        await api.call().me().post(({ body: this.postDeletedData(deletedAddressId, 'removeAddress') })).execute();
+        await api
+          .call()
+          .me()
+          .post({ body: this.postDeletedData(deletedAddressId, 'removeAddress') })
+          .execute();
         await this.userStore.getData();
       }
     },
     async setDefaultAddress(event: MouseEvent | KeyboardEvent): Promise<void> {
       const newDefaultId = this.getId(event);
-      const billingId = this.userStore.customerData.body.billingAddressIds
-        .indexOf(newDefaultId) !== -1;
+      const billingId =
+        this.userStore.customerData.body.billingAddressIds.indexOf(newDefaultId) !== -1;
       if (billingId) {
-        await api.call().me().post({ body: this.postDefaultData(newDefaultId, 'setDefaultBillingAddress') }).execute();
+        await api
+          .call()
+          .me()
+          .post({ body: this.postDefaultData(newDefaultId, 'setDefaultBillingAddress') })
+          .execute();
         await this.userStore.getData();
       } else {
-        await api.call().me().post({ body: this.postDefaultData(newDefaultId, 'setDefaultShippingAddress') }).execute();
+        await api
+          .call()
+          .me()
+          .post({ body: this.postDefaultData(newDefaultId, 'setDefaultShippingAddress') })
+          .execute();
         await this.userStore.getData();
       }
     },
     showSuccessMessage(): void {
       this.showMessageEditSuccess = true;
-      setTimeout(() => { this.showMessageEditSuccess = false; }, 1500);
+      setTimeout(() => {
+        this.showMessageEditSuccess = false;
+      }, 1500);
     },
   },
   async created(): Promise<void> {
@@ -286,7 +354,7 @@ export default {
 }
 .icon {
   height: 1.5rem;
-  fill: #3A3E3F;
+  fill: #3a3e3f;
   cursor: pointer;
 }
 .check-icon {
@@ -294,8 +362,8 @@ export default {
   fill: var(--main-color);
 }
 .divider {
-width: 200px;
-border: 0.5px solid #3A3E3F;
+  width: 200px;
+  border: 0.5px solid #3a3e3f;
 }
 .default-block {
   display: flex;
@@ -312,7 +380,7 @@ border: 0.5px solid #3A3E3F;
 }
 .buttons-block {
   display: grid;
-  grid-template-areas: "button button" "divider divider";
+  grid-template-areas: 'button button' 'divider divider';
   gap: 2rem;
 }
 .container :deep(.button) {
@@ -358,7 +426,7 @@ border: 0.5px solid #3A3E3F;
 .success-message {
   font-size: 22px;
 }
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   .popup-container :deep(.circle) {
     width: 50px;
     height: 50px;
@@ -369,10 +437,10 @@ border: 0.5px solid #3A3E3F;
     width: 90%;
   }
 }
-@media(max-width: 700px) {
+@media (max-width: 700px) {
   .address-line {
     display: grid;
-    grid-template-areas: "address edit delete" "set-default set-default set-default";
+    grid-template-areas: 'address edit delete' 'set-default set-default set-default';
     justify-items: end;
     row-gap: 1rem;
   }
@@ -389,7 +457,7 @@ border: 0.5px solid #3A3E3F;
     grid-area: set-default;
   }
 }
-@media(max-width: 550px) {
+@media (max-width: 550px) {
   .popup-container :deep(.popup-default) {
     width: min(90vh, 90vw);
   }

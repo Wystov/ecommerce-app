@@ -1,6 +1,10 @@
 <template>
-  <div class="message-field" :class="classes">
-    <h3 v-if="title" class="title">
+  <div
+    class="message-field"
+    :class="classes">
+    <h3
+      v-if="title"
+      class="title">
       {{ title }}
     </h3>
     <p class="message">

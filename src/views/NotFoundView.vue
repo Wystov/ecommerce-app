@@ -1,6 +1,9 @@
 <template>
   <section class="wrapper not-found-container">
-    <img :src="image" class="image" alt="Not Found Page" />
+    <img
+      :src="image"
+      class="image"
+      alt="Not Found Page" />
     <div class="caption">
       <h2 class="title">
         {{ title }}
@@ -9,7 +12,9 @@
         {{ subtitle }}
       </p>
     </div>
-    <BaseButton :size="buttonSize" @click="$router.go(-1)">
+    <BaseButton
+      :size="buttonSize"
+      @click="$router.go(-1)">
       Go back
     </BaseButton>
   </section>

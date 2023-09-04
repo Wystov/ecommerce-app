@@ -1,5 +1,7 @@
 <template>
-  <h3 v-if="editAddressId !== ''" class="info-edit-header">
+  <h3
+    v-if="editAddressId !== ''"
+    class="info-edit-header">
     Please fill only the fields you want to change and press "Edit" button:
   </h3>
   <div class="address-block">
@@ -10,7 +12,10 @@
       valid="valid"
       :options="countryField.options"
       @selectOption="selectCountry" />
-    <div v-for="(field, i) in fields" :key="i" class="field-container">
+    <div
+      v-for="(field, i) in fields"
+      :key="i"
+      class="field-container">
       <BaseInput
         :id="id + field.label.toLowerCase()"
         :label="field.label.replace('Name', '')"
@@ -30,10 +35,16 @@
       </Transition>
     </div>
   </div>
-  <BaseButton v-if="editAddressId === ''" class="btn-update" @click="updateInfo">
+  <BaseButton
+    v-if="editAddressId === ''"
+    class="btn-update"
+    @click="updateInfo">
     Add {{ buttonName }} address
   </BaseButton>
-  <BaseButton v-if="editAddressId !== ''" class="btn-update" @click="editInfo">
+  <BaseButton
+    v-if="editAddressId !== ''"
+    class="btn-update"
+    @click="editInfo">
     Edit
   </BaseButton>
 </template>
@@ -144,53 +155,57 @@ export default {
       };
     },
     newAddress(): string {
-      const billingShippingAddressesArr = this.userStore.customerData.body.billingAddressIds
-        .concat(this.userStore.customerData.body.shippingAddressIds);
+      const billingShippingAddressesArr = this.userStore.customerData.body.billingAddressIds.concat(
+        this.userStore.customerData.body.shippingAddressIds,
+      );
       const addressesArr = this.userStore.customerData.body.addresses.map((el: Address) => el.id);
-      return addressesArr.filter((el: string) => billingShippingAddressesArr
-        .indexOf(el) === -1)[0];
+      return addressesArr.filter((el: string) => billingShippingAddressesArr.indexOf(el) === -1)[0];
     },
     allFieldsReady(): boolean {
       return this.fields.every((el) => el.value !== '');
     },
     readyToEdit(): boolean {
-      return this.fields.some((el) => el.value !== '') || this.countryField.value !== this.existingCountry;
+      return (
+        this.fields.some((el) => el.value !== '') ||
+        this.countryField.value !== this.existingCountry
+      );
     },
     editingAddressIndex(): number {
-      return this.userStore.customerData.body.addresses
-        .findIndex((el: Address) => el.id === this.editAddressId);
+      return this.userStore.customerData.body.addresses.findIndex(
+        (el: Address) => el.id === this.editAddressId,
+      );
     },
     existingCity(): string {
-      return this.editAddressId !== '' ?
-        this.userStore.customerData.body.addresses[this.editingAddressIndex].city :
-        'New York';
+      return this.editAddressId !== ''
+        ? this.userStore.customerData.body.addresses[this.editingAddressIndex].city
+        : 'New York';
     },
     editCityValue(): string | undefined {
       return this.fields[0].value === '' ? this.existingCity : this.fields[0].value;
     },
     existingCountry(): string {
-      return this.editAddressId !== '' ?
-        this.userStore.customerData.body.addresses[this.editingAddressIndex].country :
-        'US';
+      return this.editAddressId !== ''
+        ? this.userStore.customerData.body.addresses[this.editingAddressIndex].country
+        : 'US';
     },
     editCountryValue(): string {
-      return this.countryField.value === this.existingCountry ?
-        this.existingCountry :
-        this.countryField.value;
+      return this.countryField.value === this.existingCountry
+        ? this.existingCountry
+        : this.countryField.value;
     },
     existingStreet(): string {
-      return this.editAddressId !== '' ?
-        this.userStore.customerData.body.addresses[this.editingAddressIndex].streetName :
-        'Wall Street';
+      return this.editAddressId !== ''
+        ? this.userStore.customerData.body.addresses[this.editingAddressIndex].streetName
+        : 'Wall Street';
     },
     editStreetValue(): string | undefined {
       return this.fields[1].value === '' ? this.existingStreet : this.fields[1].value;
     },
     existingPostalCode(): string {
       const defaultValue = this.existingCountry === 'US' ? '10001' : 'W10BB';
-      return this.editAddressId !== '' ?
-        this.userStore.customerData.body.addresses[this.editingAddressIndex].postalCode :
-        defaultValue;
+      return this.editAddressId !== ''
+        ? this.userStore.customerData.body.addresses[this.editingAddressIndex].postalCode
+        : defaultValue;
     },
     editPostalCodeValue(): string | undefined {
       return this.fields[2].value === '' ? this.existingPostalCode : this.fields[2].value;
@@ -256,12 +271,13 @@ export default {
       if (dataName === 'streetName') return this.existingStreet;
       return '';
     },
-    postData(action:
-    MyCustomerAddAddressAction
-    | MyCustomerAddShippingAddressIdAction
-    | MyCustomerAddBillingAddressIdAction
-    | MyCustomerChangeAddressAction):
-    MyCustomerUpdate {
+    postData(
+      action:
+        | MyCustomerAddAddressAction
+        | MyCustomerAddShippingAddressIdAction
+        | MyCustomerAddBillingAddressIdAction
+        | MyCustomerChangeAddressAction,
+    ): MyCustomerUpdate {
       return {
         version: this.userStore.customerData.body.version,
         actions: [action],
@@ -274,8 +290,10 @@ export default {
         address: this.editAddressData,
       };
     },
-    addressIdData(action: 'addShippingAddressId' | 'addBillingAddressId', id: string):
-    MyCustomerAddShippingAddressIdAction | MyCustomerAddBillingAddressIdAction {
+    addressIdData(
+      action: 'addShippingAddressId' | 'addBillingAddressId',
+      id: string,
+    ): MyCustomerAddShippingAddressIdAction | MyCustomerAddBillingAddressIdAction {
       return {
         action,
         addressId: id,
@@ -284,12 +302,24 @@ export default {
     async updateInfo(): Promise<void> {
       if (this.allFieldsReady) {
         try {
-          await api.call().me().post({ body: this.postData(this.postAddressData) }).execute();
+          await api
+            .call()
+            .me()
+            .post({ body: this.postData(this.postAddressData) })
+            .execute();
           await this.userStore.getData();
           const newAddressId = this.newAddress;
-          this.section === 'billing' ?
-            await api.call().me().post({ body: this.postData(this.addressIdData('addBillingAddressId', newAddressId)) }).execute() :
-            await api.call().me().post({ body: this.postData(this.addressIdData('addShippingAddressId', newAddressId)) }).execute();
+          this.section === 'billing'
+            ? await api.call().me()
+              .post({
+                body: this.postData(this.addressIdData('addBillingAddressId', newAddressId)),
+              })
+              .execute()
+            : await api.call().me()
+              .post({
+                body: this.postData(this.addressIdData('addShippingAddressId', newAddressId)),
+              })
+              .execute();
           await this.userStore.getData();
           this.$emit('close');
           this.$emit('showSuccessMessage');
@@ -301,7 +331,11 @@ export default {
     async editInfo(): Promise<void> {
       if (this.readyToEdit) {
         try {
-          await api.call().me().post({ body: this.postData(this.postEditData()) }).execute();
+          await api
+            .call()
+            .me()
+            .post({ body: this.postData(this.postEditData()) })
+            .execute();
           await this.userStore.getData();
           this.$emit('close');
           this.$emit('showSuccessMessage');

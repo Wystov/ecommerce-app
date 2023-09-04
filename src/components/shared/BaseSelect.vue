@@ -1,8 +1,20 @@
 <template>
   <div class="select-group">
-    <label v-if="label" :for="id"> {{ label }}</label>
-    <select :id="id" v-model="selected" class="select" :class="classes" @input="checkValid">
-      <option v-for="option in options" :key="option.value" :value="option.value">
+    <label
+      v-if="label"
+      :for="id">
+      {{ label }}
+    </label>
+    <select
+      :id="id"
+      v-model="selected"
+      class="select"
+      :class="classes"
+      @input="checkValid">
+      <option
+        v-for="option in options"
+        :key="option.value"
+        :value="option.value">
         {{ option.text }}
       </option>
     </select>

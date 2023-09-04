@@ -1,8 +1,15 @@
 <template>
   <Transition name="modal">
-    <div v-if="show" class="modal-mask">
-      <div class="modal-wrapper" @click.self="$emit('close')" @keydown.delete="closeOnDelete && $emit('close')">
-        <div class="modal-container" :class="className">
+    <div
+      v-if="show"
+      class="modal-mask">
+      <div
+        class="modal-wrapper"
+        @click.self="$emit('close')"
+        @keydown.delete="closeOnDelete && $emit('close')">
+        <div
+          class="modal-container"
+          :class="className">
           <BaseButton
             size="large"
             circle

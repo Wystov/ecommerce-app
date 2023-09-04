@@ -9,17 +9,28 @@
     </Transition>
     <div class="wrapper container-header">
       <RouterLink :to="{ name: 'Home' }">
-        <img :src="logoIcon" alt="logo" class="logo" />
+        <img
+          :src="logoIcon"
+          alt="logo"
+          class="logo" />
       </RouterLink>
       <BaseNavigation />
       <div class="flex">
         <BaseAuthorization />
-        <img :src="dividerIcon" alt="" class="divider" />
+        <img
+          :src="dividerIcon"
+          alt=""
+          class="divider" />
         <RouterLink :to="{ name: 'Cart' }">
-          <img class="cart-link" :src="cartIcon" alt="cart" />
+          <img
+            class="cart-link"
+            :src="cartIcon"
+            alt="cart" />
         </RouterLink>
       </div>
-      <BaseBurger :isOpen="isBurgerOpen" @click.stop="toggleMenu" />
+      <BaseBurger
+        :isOpen="isBurgerOpen"
+        @click.stop="toggleMenu" />
     </div>
   </header>
 </template>

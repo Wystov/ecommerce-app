@@ -1,5 +1,7 @@
 <template>
-  <BasePopup :show="showPopUp" @close="closePopUp">
+  <BasePopup
+    :show="showPopUp"
+    @close="closePopUp">
     <swiper
       zoom
       loop
@@ -23,7 +25,10 @@
       </swiper-slide>
     </swiper>
     <p class="popup-describe">
-      <span :style="{ verticalAlign: 'middle' }"><CursorArrowRaysIcon :style="{ width: '1em' }" /></span>Double click on image to zoom
+      <span :style="{ verticalAlign: 'middle' }">
+        <CursorArrowRaysIcon :style="{ width: '1em' }" />
+      </span>
+      Double click on image to zoom
     </p>
   </BasePopup>
   <swiper

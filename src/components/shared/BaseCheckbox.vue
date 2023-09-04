@@ -8,7 +8,10 @@
       :class="{ 'dark-theme-checkbox': isDark }"
       :checked="checked"
       :disabled="disabled" />
-    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }">
+    <label
+      :for="id"
+      class="label"
+      :class="{ 'dark-theme-label': isDark }">
       {{ label }}<slot />
     </label>
   </div>

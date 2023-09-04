@@ -26,7 +26,14 @@ import { useUserStore } from '@/stores/user';
 
 export default {
   computed: {
-    ...mapState(useFilterStore, ['loaded', 'appliedFilters', 'minWeight', 'maxWeight', 'minPrice', 'maxPrice']),
+    ...mapState(useFilterStore, [
+      'loaded',
+      'appliedFilters',
+      'minWeight',
+      'maxWeight',
+      'minPrice',
+      'maxPrice',
+    ]),
     ...mapState(useUserStore, ['currencyTag']),
     mappedAppliedFilters(): string[] {
       if (!this.loaded) return [];

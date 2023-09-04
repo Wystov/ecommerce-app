@@ -22,9 +22,7 @@ const productData = {
   description: { en: 'description' },
   masterVariant: {
     images: ['url'],
-    prices: [
-      { value: { currencyCode: 'USD', centAmount: 340, fractionDigits: 2 } },
-    ],
+    prices: [{ value: { currencyCode: 'USD', centAmount: 340, fractionDigits: 2 } }],
   },
   key: 1,
 } as unknown as ProductProjection;

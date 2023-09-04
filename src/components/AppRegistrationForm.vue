@@ -1,8 +1,12 @@
 <template>
-  <form class="registration-form" @keydown.enter="!showMessageSignIn && registrationUser()">
+  <form
+    class="registration-form"
+    @keydown.enter="!showMessageSignIn && registrationUser()">
     <RegistrationMain @validAllMainFields="checkMainFields" />
     <Transition>
-      <div v-if="showAddressBlock" class="address shipping">
+      <div
+        v-if="showAddressBlock"
+        class="address shipping">
         <hr />
         <RegistrationAddress
           id="shipping"
@@ -11,7 +15,9 @@
       </div>
     </Transition>
     <Transition>
-      <div v-if="showAddressBlock && !onlyShipping" class="address billing">
+      <div
+        v-if="showAddressBlock && !onlyShipping"
+        class="address billing">
         <RegistrationAddress
           id="billing"
           title="Billing address"
@@ -19,7 +25,9 @@
       </div>
     </Transition>
     <Transition>
-      <div v-if="showAddressBlock" class="checkboxes">
+      <div
+        v-if="showAddressBlock"
+        class="checkboxes">
         <BaseCheckbox
           id="check-def-shipping"
           name="def-shipping"
@@ -41,7 +49,9 @@
       </div>
     </Transition>
     <Transition>
-      <BaseMessage v-if="showMessageInvalid" alert="warning">
+      <BaseMessage
+        v-if="showMessageInvalid"
+        alert="warning">
         {{ invalidMessage }}
       </BaseMessage>
     </Transition>
@@ -55,14 +65,20 @@
     </Transition>
     <p class="footnote">
       Already have an account?
-      <router-link class="login-link" :to="{ name: LOGIN }">
+      <router-link
+        class="login-link"
+        :to="{ name: LOGIN }">
         Log in
       </router-link>
     </p>
   </form>
   <Transition>
-    <div v-if="showMessageSignIn" class="success-message-container">
-      <div v-if="loading" class="spinner" />
+    <div
+      v-if="showMessageSignIn"
+      class="success-message-container">
+      <div
+        v-if="loading"
+        class="spinner" />
       <Transition>
         <BaseMessage
           v-if="createCustomerMessage.show"
@@ -89,9 +105,7 @@ import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import api from '@/utils/api/client';
 import { NamePages, PathPages } from '@/types/enums';
-import type {
-  UserSignUp, UserAddress, DefaultAddressProps, UserSignUpMain,
-} from '../types/types';
+import type { UserSignUp, UserAddress, DefaultAddressProps, UserSignUpMain } from '../types/types';
 
 export default {
   components: {

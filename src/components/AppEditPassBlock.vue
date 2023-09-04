@@ -1,7 +1,12 @@
 <template>
   <div class="container">
-    <div class="edit-form" @keydown.enter="nextStep()">
-      <div v-for="(field, i) in fields" :key="i" class="field-container">
+    <div
+      class="edit-form"
+      @keydown.enter="nextStep()">
+      <div
+        v-for="(field, i) in fields"
+        :key="i"
+        class="field-container">
         <BaseInput
           :id="field.label.toLowerCase()"
           :label="field.label"
@@ -12,7 +17,11 @@
           :type="field.type"
           @click="showPassword($event, i)"
           @input="handleInput($event, i)"
-          @focusin="field.showMessage = true; notMatch = false; wrongOldPass = false"
+          @focusin="
+            field.showMessage = true;
+            notMatch = false;
+            wrongOldPass = false;
+          "
           @focusout="field.showMessage = false" />
         <Transition>
           <BaseMessage
@@ -34,7 +43,9 @@
         {{ notMatchText }}
       </BaseMessage>
     </Transition>
-    <BaseButton class="btn-update" @click="updateInfo">
+    <BaseButton
+      class="btn-update"
+      @click="updateInfo">
       Update
     </BaseButton>
     <Transition>
@@ -221,7 +232,7 @@ export default {
 .v-leave-to {
   opacity: 0;
 }
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   .container {
     margin-top: 30px;
   }

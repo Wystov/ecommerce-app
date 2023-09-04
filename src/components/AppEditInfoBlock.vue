@@ -1,6 +1,11 @@
 <template>
-  <div class="edit-form" @keydown.enter="nextStep()">
-    <div v-for="(field, i) in fields" :key="i" class="field-container">
+  <div
+    class="edit-form"
+    @keydown.enter="nextStep()">
+    <div
+      v-for="(field, i) in fields"
+      :key="i"
+      class="field-container">
       <BaseInput
         :id="field.label.toLowerCase()"
         :label="field.label"
@@ -23,7 +28,9 @@
       </Transition>
     </div>
   </div>
-  <BaseButton class="btn-update" @click="updateInfo">
+  <BaseButton
+    class="btn-update"
+    @click="updateInfo">
     Update
   </BaseButton>
 </template>
@@ -99,12 +106,7 @@ export default {
           value: '',
         },
       ],
-      placeholders: [
-        'name',
-        'last name',
-        'date of birth',
-        'email',
-      ],
+      placeholders: ['name', 'last name', 'date of birth', 'email'],
     };
   },
   computed: {
@@ -116,9 +118,7 @@ export default {
       const emailIndex = 3;
       const emailValue = this.fields[emailIndex].value;
       if (emailValue && emailValue !== '') {
-        return { action: 'changeEmail',
-          email: emailValue,
-        };
+        return { action: 'changeEmail', email: emailValue };
       }
       return {
         action: 'changeEmail',
@@ -129,9 +129,7 @@ export default {
       const nameIndex = 0;
       const nameValue = this.fields[nameIndex].value;
       if (nameValue && nameValue !== '') {
-        return { action: 'setFirstName',
-          firstName: nameValue,
-        };
+        return { action: 'setFirstName', firstName: nameValue };
       }
       return {
         action: 'setFirstName',
@@ -142,9 +140,7 @@ export default {
       const lastNameIndex = 1;
       const lastNameValue = this.fields[lastNameIndex].value;
       if (lastNameValue && lastNameValue !== '') {
-        return { action: 'setLastName',
-          lastName: lastNameValue,
-        };
+        return { action: 'setLastName', lastName: lastNameValue };
       }
       return {
         action: 'setLastName',
@@ -155,9 +151,7 @@ export default {
       const birthDateIndex = 2;
       const birthDateValue = this.fields[birthDateIndex].value;
       if (birthDateValue && birthDateValue !== '') {
-        return { action: 'setDateOfBirth',
-          dateOfBirth: birthDateValue,
-        };
+        return { action: 'setDateOfBirth', dateOfBirth: birthDateValue };
       }
       return {
         action: 'setDateOfBirth',
