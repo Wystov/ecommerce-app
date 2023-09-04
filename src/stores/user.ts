@@ -87,6 +87,7 @@ export const useUserStore = defineStore('user', {
     },
     logoutUser() {
       this.authorized = false;
+      this.customerData = {} as ClientResponse;
     },
     changeCountry(country: Country) {
       const filter = useFilterStore();

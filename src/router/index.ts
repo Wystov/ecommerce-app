@@ -117,12 +117,9 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const { authorized } = useUserStore();
   const isNeedRedirectToMain = authorized && (to.name === Login || to.name === Registration);
-  const isNeedRedirectToLogin = !authorized && to.name === Account;
 
   if (isNeedRedirectToMain) {
     next(PathPages.Home);
-  } else if (isNeedRedirectToLogin) {
-    next(PathPages.Login);
   } else {
     document.title = `Crunch! ${to.meta.title}`;
     next();
