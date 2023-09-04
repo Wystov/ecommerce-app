@@ -7,7 +7,7 @@
             {{ page }}
           </RouterLink>
         </li>
-        <li class="decoration-item" v-if="i < navigation.length - 1">
+        <li v-if="i < navigation.length - 1" class="decoration-item">
           <img :src="decoration" class="decoration-svg" alt="decoration" />
         </li>
       </template>

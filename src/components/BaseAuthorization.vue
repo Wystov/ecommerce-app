@@ -2,21 +2,21 @@
   <div class="authorization-list">
     <BaseSelect
       v-if="!userStore.authorized"
-      @selectOption="userStore.changeCountry"
-      class="country-select"
       id="country"
+      class="country-select"
       :isPlain="true"
       :options="country"
-      :default-selected="userStore.data.country"
-    />
+      :defaultSelected="userStore.data.country"
+      @selectOption="userStore.changeCountry" />
     <RouterLink
       v-for="(link, i) in updateAuthorizationList"
       :key="i"
       :class="link.class"
       class="link"
-      :to="{ name: link.name }"
-    >
-      <template v-if="link.name !== 'Account'">{{ link.name }} </template>
+      :to="{ name: link.name }">
+      <template v-if="link.name !== 'Account'">
+        {{ link.name }}
+      </template>
     </RouterLink>
   </div>
 </template>

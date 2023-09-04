@@ -20,7 +20,9 @@
       :closeOnDelete="false"
       @close="closePopup">
       <div v-if="updateInfo === true">
-        <h3 class="info-edit-header">Please fill only the fields you want to change and press "Update" button:</h3>
+        <h3 class="info-edit-header">
+          Please fill only the fields you want to change and press "Update" button:
+        </h3>
         <EditInfoBlock @close="closePopup" @showSuccessMessage="showSuccessMessage" />
       </div>
       <div v-if="updateInfo === false">
@@ -30,14 +32,16 @@
   </div>
   <Transition>
     <div v-if="showMessageEditSuccess" class="success-message-container">
-      <Transition
-      ><BaseMessage
-        rounded
-        class="success-base-message"
-        :title="createCustomerMessage.title"
-        :alert="createCustomerMessage.alert"
-      ><p class="success-message">{{ createCustomerMessage.text }}</p>
-      </BaseMessage>
+      <Transition>
+        <BaseMessage
+          rounded
+          class="success-base-message"
+          :title="createCustomerMessage.title"
+          :alert="createCustomerMessage.alert">
+          <p class="success-message">
+            {{ createCustomerMessage.text }}
+          </p>
+        </BaseMessage>
       </Transition>
     </div>
   </Transition>

@@ -3,7 +3,9 @@
     <div class="spinner" />
   </div>
   <section v-else class="wrapper registration">
-    <h1 class="title">Sign up to Crunch</h1>
+    <h1 class="title">
+      Sign up to Crunch
+    </h1>
     <AppRegistration />
   </section>
 </template>

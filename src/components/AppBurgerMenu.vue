@@ -2,7 +2,7 @@
   <nav ref="burger" class="menu">
     <ul class="menu-list">
       <li v-for="(item, i) in updateAuthorizationList" :key="i" class="menu-item">
-        <RouterLink :to="{ name: item.name }" @click="$emit('close-menu')" class="menu-link">
+        <RouterLink :to="{ name: item.name }" class="menu-link" @click="$emit('close-menu')">
           {{ item.name }}
         </RouterLink>
       </li>
@@ -23,6 +23,7 @@ export default {
       default: false,
     },
   },
+  emits: ['close-menu'],
   data(): DataAuthorization {
     const {
       Home, Catalog, AboutUs, Login, Registration, Account,

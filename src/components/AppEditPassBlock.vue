@@ -1,47 +1,48 @@
 <template>
   <div class="container">
     <div class="edit-form" @keydown.enter="nextStep()">
-      <div class="field-container" v-for="(field, i) in fields" :key="i">
+      <div v-for="(field, i) in fields" :key="i" class="field-container">
         <BaseInput
+          :id="field.label.toLowerCase()"
           :label="field.label"
           :hidePass="field.placeholder === 'password' ? field.hidePass : ''"
-          @click="showPassword($event, i)"
           :name="field.placeholder"
-          @input="handleInput($event, i)"
           :valid="field.valid"
           :value="field.value"
           :type="field.type"
-          :id="field.label.toLowerCase()"
+          @click="showPassword($event, i)"
+          @input="handleInput($event, i)"
           @focusin="field.showMessage = true; notMatch = false; wrongOldPass = false"
-          @focusout="field.showMessage = false"
-        />
+          @focusout="field.showMessage = false" />
         <Transition>
           <BaseMessage
+            v-if="field.showMessage && field.valid === 'invalid'"
             absolute
             arrow="top"
-            v-if="field.showMessage && field.valid === 'invalid'"
-            alert="danger"
-          >{{ field.invalidMessage }}</BaseMessage
-          >
+            alert="danger">
+            {{ field.invalidMessage }}
+          </BaseMessage>
         </Transition>
       </div>
     </div>
     <Transition>
       <BaseMessage
+        v-if="notMatch === true"
         absolute
         arrow="top"
-        v-if="notMatch === true"
-        alert="danger"
-      >{{ notMatchText }}</BaseMessage
-      >
+        alert="danger">
+        {{ notMatchText }}
+      </BaseMessage>
     </Transition>
-    <BaseButton @click="updateInfo" class="btn-update">Update</BaseButton>
+    <BaseButton class="btn-update" @click="updateInfo">
+      Update
+    </BaseButton>
     <Transition>
       <BaseMessage
         v-if="wrongOldPass === true"
-        alert="danger"
-      >{{ wrongOldPassText }}</BaseMessage
-      >
+        alert="danger">
+        {{ wrongOldPassText }}
+      </BaseMessage>
     </Transition>
   </div>
 </template>
@@ -58,37 +59,12 @@ import type { MainFields, PasswordEditBlock } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
-  emits: ['valid-all-main-fields', 'close', 'showSuccessMessage'],
-  computed: {
-    ...mapStores(useUserStore),
-    currentPass(): string {
-      return this.fields[0].value ?? '';
-    },
-    newPass(): string {
-      return this.fields[1].value ?? '';
-    },
-    postNewData(): MyCustomerChangePassword {
-      return {
-        version: this.userStore.customerData.body.version,
-        currentPassword: this.currentPass,
-        newPassword: this.newPass,
-      };
-    },
-    invalidFields(): boolean {
-      return this.fields.every((elem) => elem.valid === 'valid');
-    },
-    fieldsNotComplete(): boolean {
-      return this.fields.every((elem) => elem.value !== '');
-    },
-    readyToUpdate(): boolean {
-      return this.fields[1].value === this.fields[2].value;
-    },
-  },
   components: {
     BaseInput,
     BaseMessage,
     BaseButton,
   },
+  emits: ['valid-all-main-fields', 'close', 'showSuccessMessage'],
   // eslint-disable-next-line max-lines-per-function
   data(): PasswordEditBlock {
     return {
@@ -130,6 +106,31 @@ export default {
       wrongOldPass: false,
       wrongOldPassText: InvalidMessage.WrongPassword,
     };
+  },
+  computed: {
+    ...mapStores(useUserStore),
+    currentPass(): string {
+      return this.fields[0].value ?? '';
+    },
+    newPass(): string {
+      return this.fields[1].value ?? '';
+    },
+    postNewData(): MyCustomerChangePassword {
+      return {
+        version: this.userStore.customerData.body.version,
+        currentPassword: this.currentPass,
+        newPassword: this.newPass,
+      };
+    },
+    invalidFields(): boolean {
+      return this.fields.every((elem) => elem.valid === 'valid');
+    },
+    fieldsNotComplete(): boolean {
+      return this.fields.every((elem) => elem.value !== '');
+    },
+    readyToUpdate(): boolean {
+      return this.fields[1].value === this.fields[2].value;
+    },
   },
   methods: {
     handleInput(event: Event, index: number): void {

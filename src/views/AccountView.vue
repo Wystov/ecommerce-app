@@ -6,18 +6,20 @@
       <div class="spinner" />
     </div>
     <div v-else class="wrapper main-block">
-      <h1 class="title">Account</h1>
+      <h1 class="title">
+        Account
+      </h1>
       <div class="sections-nav">
         <template v-for="(section, i) in sections" :key="i">
           <li class="section-nav-item" :class="{ active: activeIndex === i }" @click="setActiveSection(i)" @keydown="setActiveSection(i)">
             {{ section }}
           </li>
-          <div class="divider" v-if="i < sections.length - 1" />
+          <div v-if="i < sections.length - 1" class="divider" />
         </template>
       </div>
       <AppAccountInfo v-if="activeIndex === 0" />
       <AppAccountAddresses v-if="activeIndex === 1" />
-      <BaseButton @click="logOut" label="Log out" />
+      <BaseButton label="Log out" @click="logOut" />
     </div>
   </Transition>
 </template>
@@ -33,14 +35,14 @@ import api from '@/utils/api/client';
 
 export default {
   components: { AppAccountInfo, AppAccountAddresses, BaseButton },
-  computed: {
-    ...mapStores(useUserStore),
-  },
   data(): { sections: string[], activeIndex: number } {
     return {
       sections: ['INFO', 'ADDRESSES'],
       activeIndex: 0,
     };
+  },
+  computed: {
+    ...mapStores(useUserStore),
   },
   methods: {
     logOut(): void {

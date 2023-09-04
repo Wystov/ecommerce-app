@@ -1,30 +1,31 @@
 <template>
   <div class="edit-form" @keydown.enter="nextStep()">
-    <div class="field-container" v-for="(field, i) in fields" :key="i">
+    <div v-for="(field, i) in fields" :key="i" class="field-container">
       <BaseInput
+        :id="field.label.toLowerCase()"
         :label="field.label"
         :name="getPlaceholder(field.placeholder)"
-        @input="handleInput($event, i)"
         :valid="field.valid"
         :value="field.dateValue ? dateOfBirth : field.value"
         :type="field.type"
-        :id="field.label.toLowerCase()"
         max="9999-12-31"
+        @input="handleInput($event, i)"
         @focusin="field.showMessage = true"
-        @focusout="field.showMessage = false"
-      />
+        @focusout="field.showMessage = false" />
       <Transition>
         <BaseMessage
+          v-if="field.showMessage && field.valid === 'invalid'"
           absolute
           arrow="top"
-          v-if="field.showMessage && field.valid === 'invalid'"
-          alert="danger"
-        >{{ field.invalidMessage }}</BaseMessage
-        >
+          alert="danger">
+          {{ field.invalidMessage }}
+        </BaseMessage>
       </Transition>
     </div>
   </div>
-  <BaseButton @click="updateInfo" class="btn-update">Update</BaseButton>
+  <BaseButton class="btn-update" @click="updateInfo">
+    Update
+  </BaseButton>
 </template>
 
 <script lang="ts">
@@ -47,7 +48,65 @@ import type { RegistrationMainData, MainFields } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
+  components: {
+    BaseInput,
+    BaseMessage,
+    BaseButton,
+  },
   emits: ['valid-all-main-fields', 'close', 'showSuccessMessage'],
+  // eslint-disable-next-line max-lines-per-function
+  data(): {
+    mainFields: MainFields;
+    fields: RegistrationMainData[];
+    placeholders: string[];
+    } {
+    return {
+      mainFields: {} as MainFields,
+      fields: [
+        {
+          label: 'First Name',
+          pattern: /^[a-zA-Z]+$/,
+          placeholder: 'firstName',
+          invalidMessage: InvalidMessage.FirstName,
+          showMessage: false,
+          value: '',
+        },
+        {
+          label: 'Last Name',
+          pattern: /^[a-zA-Z]+$/,
+          placeholder: 'lastName',
+          invalidMessage: InvalidMessage.LastName,
+          showMessage: false,
+          value: '',
+        },
+        {
+          label: 'Date of birth',
+          placeholder: 'dateOfBirth',
+          type: 'date',
+          invalidMessage: InvalidMessage.Date,
+          showMessage: false,
+          value: '',
+          dateValue: '2000-01-02',
+        },
+        {
+          label: 'Email',
+          pattern:
+            /^((?:[A-Za-z0-9!#$%&'*+\-\\/=?^_`{|}~]|(?:=^|\.)"|"(?=$|\.|@)|(?:=".*)[ .](?=.*")|(?:!\.)\.){1,64})(@)((?:[A-Za-z0-9.\\-])*(?:[A-Za-z0-9])\.(?:[A-Za-z0-9]){2,})$/,
+          placeholder: 'email',
+          type: 'text',
+          invalidMessage: InvalidMessage.Email,
+          showMessage: false,
+          value: '',
+        },
+      ],
+      placeholders: [
+        'name',
+        'last name',
+        'date of birth',
+        'email',
+      ],
+    };
+  },
   computed: {
     ...mapStores(useUserStore),
     dateOfBirth(): string {
@@ -123,64 +182,6 @@ export default {
     fieldFilled(): boolean {
       return this.fields.some((elem) => elem.value !== '');
     },
-  },
-  components: {
-    BaseInput,
-    BaseMessage,
-    BaseButton,
-  },
-  // eslint-disable-next-line max-lines-per-function
-  data(): {
-    mainFields: MainFields;
-    fields: RegistrationMainData[];
-    placeholders: string[];
-    } {
-    return {
-      mainFields: {} as MainFields,
-      fields: [
-        {
-          label: 'First Name',
-          pattern: /^[a-zA-Z]+$/,
-          placeholder: 'firstName',
-          invalidMessage: InvalidMessage.FirstName,
-          showMessage: false,
-          value: '',
-        },
-        {
-          label: 'Last Name',
-          pattern: /^[a-zA-Z]+$/,
-          placeholder: 'lastName',
-          invalidMessage: InvalidMessage.LastName,
-          showMessage: false,
-          value: '',
-        },
-        {
-          label: 'Date of birth',
-          placeholder: 'dateOfBirth',
-          type: 'date',
-          invalidMessage: InvalidMessage.Date,
-          showMessage: false,
-          value: '',
-          dateValue: '2000-01-02',
-        },
-        {
-          label: 'Email',
-          pattern:
-            /^((?:[A-Za-z0-9!#$%&'*+\-\\/=?^_`{|}~]|(?:=^|\.)"|"(?=$|\.|@)|(?:=".*)[ .](?=.*")|(?:!\.)\.){1,64})(@)((?:[A-Za-z0-9.\\-])*(?:[A-Za-z0-9])\.(?:[A-Za-z0-9]){2,})$/,
-          placeholder: 'email',
-          type: 'text',
-          invalidMessage: InvalidMessage.Email,
-          showMessage: false,
-          value: '',
-        },
-      ],
-      placeholders: [
-        'name',
-        'last name',
-        'date of birth',
-        'email',
-      ],
-    };
   },
   methods: {
     handleInput(event: Event, index: number): void {

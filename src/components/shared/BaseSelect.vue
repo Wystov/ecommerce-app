@@ -1,8 +1,8 @@
 <template>
   <div class="select-group">
     <label v-if="label" :for="id"> {{ label }}</label>
-    <select :id="id" class="select" @input="checkValid" v-model="selected" :class="classes">
-      <option v-for="option in options" :value="option.value" :key="option.value">
+    <select :id="id" v-model="selected" class="select" :class="classes" @input="checkValid">
+      <option v-for="option in options" :key="option.value" :value="option.value">
         {{ option.text }}
       </option>
     </select>
@@ -12,11 +12,6 @@
 import type { SelectOptions, SelectClasses } from '../../types/types';
 
 export default {
-  data(): { selected: string } {
-    return {
-      selected: '',
-    };
-  },
   props: {
     label: {
       type: String,
@@ -46,6 +41,12 @@ export default {
       type: String,
       required: true,
     },
+  },
+  emits: ['selectOption'],
+  data(): { selected: string } {
+    return {
+      selected: '',
+    };
   },
   computed: {
     classes(): SelectClasses {

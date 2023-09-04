@@ -4,7 +4,7 @@
       <h3>Shipping addresses</h3>
       <div class="address-block">
         <template v-if="loaded">
-          <div v-if="userStore.getDefaultShippingAddressId" class="address-item" :id="userStore.getDefaultShippingAddressId">
+          <div v-if="userStore.getDefaultShippingAddressId" :id="userStore.getDefaultShippingAddressId" class="address-item">
             <div class="default-block">
               <CheckIcon class="check-icon" />
               <span class="default">Default</span>
@@ -16,13 +16,15 @@
             </div>
           </div>
           <template v-for="(address) in userStore.shippingAddresses" :key="address.id">
-            <div class="address-item" :id=address.id>
+            <div :id="address.id" class="address-item">
               <div v-if="userStore.getDefaultShippingAddressId" class="divider" />
               <div class="address-line">
                 <span class="address">{{ addressName(address) }}</span>
                 <PencilSquareIcon class="icon edit" @click="openPopupForEdit" />
                 <ArchiveBoxXMarkIcon class="icon delete" @click="deleteAddress" />
-                <div class="set-default" @click="setDefaultAddress" @keydown="setDefaultAddress">Set as default</div>
+                <div class="set-default" @click="setDefaultAddress" @keydown="setDefaultAddress">
+                  Set as default
+                </div>
               </div>
             </div>
           </template>
@@ -34,7 +36,7 @@
       <h3>Billing addresses</h3>
       <div class="address-block">
         <template v-if="loaded">
-          <div v-if="userStore.getDefaultBillingAddressId" class="address-item" :id="userStore.getDefaultBillingAddressId">
+          <div v-if="userStore.getDefaultBillingAddressId" :id="userStore.getDefaultBillingAddressId" class="address-item">
             <div class="default-block">
               <CheckIcon class="check-icon" />
               <span class="default">Default</span>
@@ -46,13 +48,15 @@
             </div>
           </div>
           <template v-for="(address) in userStore.billingAddresses" :key="address.id">
-            <div class="address-item" :id="address.id">
+            <div :id="address.id" class="address-item">
               <div v-if="userStore.getDefaultBillingAddressId" class="divider" />
               <div class="address-line">
                 <span>{{ addressName(address) }}</span>
                 <PencilSquareIcon class="icon" @click="openPopupForEdit" />
                 <ArchiveBoxXMarkIcon class="icon" @click="deleteAddress" />
-                <div class="set-default" @click="setDefaultAddress" @keydown="setDefaultAddress">Set as default</div>
+                <div class="set-default" @click="setDefaultAddress" @keydown="setDefaultAddress">
+                  Set as default
+                </div>
               </div>
             </div>
           </template>
@@ -69,25 +73,27 @@
       @close="closePopup">
       <div>
         <AppEditAddressBlock
-          title=""
           id="addressEditBlock"
+          title=""
           :section="getAddressSection"
+          :editAddressId="addressId"
           @close="closePopup"
-          @showSuccessMessage="showSuccessMessage"
-          :editAddressId="addressId" />
+          @showSuccessMessage="showSuccessMessage" />
       </div>
     </BasePopup>
   </div>
   <Transition>
     <div v-if="showMessageEditSuccess" class="success-message-container">
-      <Transition
-      ><BaseMessage
-        rounded
-        class="success-base-message"
-        :title="createCustomerMessage.title"
-        :alert="createCustomerMessage.alert"
-      ><p class="success-message">{{ createCustomerMessage.text }}</p>
-      </BaseMessage>
+      <Transition>
+        <BaseMessage
+          rounded
+          class="success-base-message"
+          :title="createCustomerMessage.title"
+          :alert="createCustomerMessage.alert">
+          <p class="success-message">
+            {{ createCustomerMessage.text }}
+          </p>
+        </BaseMessage>
       </Transition>
     </div>
   </Transition>

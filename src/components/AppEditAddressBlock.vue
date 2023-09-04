@@ -1,38 +1,41 @@
 <template>
-  <h3 class="info-edit-header" v-if="editAddressId !== ''">Please fill only the fields you want to change and press "Edit" button:</h3>
+  <h3 v-if="editAddressId !== ''" class="info-edit-header">
+    Please fill only the fields you want to change and press "Edit" button:
+  </h3>
   <div class="address-block">
     <BaseSelect
-      @selectOption="selectCountry"
-      :defaultSelected="existingCountry"
       :id="id + '-select-country'"
+      :defaultSelected="existingCountry"
       :label="countryField.label"
       valid="valid"
       :options="countryField.options"
-    />
-    <div class="field-container" v-for="(field, i) in fields" :key="i">
+      @selectOption="selectCountry" />
+    <div v-for="(field, i) in fields" :key="i" class="field-container">
       <BaseInput
+        :id="id + field.label.toLowerCase()"
         :label="field.label.replace('Name', '')"
         :name="getPlaceholder(field.fieldName)"
-        @input="handleInput($event, i)"
         :valid="field.valid"
-        :id="id + field.label.toLowerCase()"
+        @input="handleInput($event, i)"
         @focusin="field.showMessage = true"
-        @focusout="field.showMessage = false"
-      />
+        @focusout="field.showMessage = false" />
       <Transition>
         <BaseMessage
+          v-if="field.showMessage && field.valid === 'invalid'"
           absolute
           arrow="top"
-          v-if="field.showMessage && field.valid === 'invalid'"
-          alert="danger"
-        >
-          {{ field.invalidMessage }}</BaseMessage
-        >
+          alert="danger">
+          {{ field.invalidMessage }}
+        </BaseMessage>
       </Transition>
     </div>
   </div>
-  <BaseButton v-if="editAddressId === ''" @click="updateInfo" class="btn-update">Add {{ buttonName }} address</BaseButton>
-  <BaseButton v-if="editAddressId !== ''" @click="editInfo" class="btn-update">Edit</BaseButton>
+  <BaseButton v-if="editAddressId === ''" class="btn-update" @click="updateInfo">
+    Add {{ buttonName }} address
+  </BaseButton>
+  <BaseButton v-if="editAddressId !== ''" class="btn-update" @click="editInfo">
+    Edit
+  </BaseButton>
 </template>
 
 <script lang="ts">
@@ -57,7 +60,6 @@ import { useUserStore } from '@/stores/user';
 import toCamelCase from '../utils/toCamelCase';
 
 export default {
-  emits: ['valid-all-address-fields', 'close', 'showSuccessMessage'],
   components: {
     BaseInput,
     BaseMessage,
@@ -69,6 +71,50 @@ export default {
     id: { type: String, required: true },
     section: { type: String, required: true },
     editAddressId: { type: String, default: '' },
+  },
+  emits: ['valid-all-address-fields', 'close', 'showSuccessMessage'],
+  // eslint-disable-next-line max-lines-per-function
+  data(): RegistrationAddressData {
+    return {
+      countryField: {
+        label: 'Country',
+        options: [
+          { text: Country.US, value: 'US', placeholder: '10001' },
+          { text: Country.GB, value: 'GB', placeholder: 'W10BB' },
+        ],
+        defaultSelectedCountry: 'US',
+        value: 'US',
+        valid: 'valid',
+      },
+      fields: [
+        {
+          label: 'City',
+          fieldName: 'city',
+          pattern: /^[a-zA-Z\s]+$/,
+          placeholder: 'New York',
+          value: '',
+          invalidMessage: InvalidMessage.City,
+          showMessage: false,
+        },
+        {
+          label: 'Street Name',
+          fieldName: 'streetName',
+          pattern: /^.*\S.*$/,
+          placeholder: 'Wall Street',
+          value: '',
+          invalidMessage: InvalidMessage.Street,
+          showMessage: false,
+        },
+        {
+          label: 'Postal Code',
+          fieldName: 'postalCode',
+          placeholder: '10001',
+          value: '',
+          invalidMessage: InvalidMessage.PostalCode,
+          showMessage: false,
+        },
+      ],
+    };
   },
   computed: {
     ...mapStores(useUserStore),
@@ -149,49 +195,6 @@ export default {
     editPostalCodeValue(): string | undefined {
       return this.fields[2].value === '' ? this.existingPostalCode : this.fields[2].value;
     },
-  },
-  // eslint-disable-next-line max-lines-per-function
-  data(): RegistrationAddressData {
-    return {
-      countryField: {
-        label: 'Country',
-        options: [
-          { text: Country.US, value: 'US', placeholder: '10001' },
-          { text: Country.GB, value: 'GB', placeholder: 'W10BB' },
-        ],
-        defaultSelectedCountry: 'US',
-        value: 'US',
-        valid: 'valid',
-      },
-      fields: [
-        {
-          label: 'City',
-          fieldName: 'city',
-          pattern: /^[a-zA-Z\s]+$/,
-          placeholder: 'New York',
-          value: '',
-          invalidMessage: InvalidMessage.City,
-          showMessage: false,
-        },
-        {
-          label: 'Street Name',
-          fieldName: 'streetName',
-          pattern: /^.*\S.*$/,
-          placeholder: 'Wall Street',
-          value: '',
-          invalidMessage: InvalidMessage.Street,
-          showMessage: false,
-        },
-        {
-          label: 'Postal Code',
-          fieldName: 'postalCode',
-          placeholder: '10001',
-          value: '',
-          invalidMessage: InvalidMessage.PostalCode,
-          showMessage: false,
-        },
-      ],
-    };
   },
   methods: {
     handleInput(event: Event, index: number): void {

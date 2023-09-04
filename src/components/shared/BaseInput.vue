@@ -1,13 +1,14 @@
 <template>
   <div class="input-block" :style="{ width: width }">
-    <label :for="id" class="label" :class="{ 'dark-theme-label': isDark }" v-if="label">{{
+    <label v-if="label" :for="id" class="label" :class="{ 'dark-theme-label': isDark }">{{
       label
     }}</label>
     <input
-      :type="type"
       :id="id"
-      :placeholder="name ? name : ''"
+      ref="input"
       v-model.trim="inputValue"
+      :type="type"
+      :placeholder="name ? name : ''"
       class="input"
       :class="{
         'dark-theme-input': isDark,
@@ -15,9 +16,7 @@
         'invalid-focus-decorator': valid === 'invalid',
       }"
       :disabled="disabled"
-      ref="input"
-      :max="max"
-    />
+      :max="max" />
     <EyeIcon v-if="hidePass === 'show'" class="input-icon" />
     <EyeSlashIcon v-if="hidePass === 'hide'" class="input-icon" />
   </div>
@@ -31,11 +30,6 @@ export default {
   components: {
     EyeIcon,
     EyeSlashIcon,
-  },
-  data(): { inputValue: string } {
-    return {
-      inputValue: '',
-    };
   },
   props: {
     label: {
@@ -78,6 +72,11 @@ export default {
       type: String,
       default: '',
     },
+  },
+  data(): { inputValue: string } {
+    return {
+      inputValue: '',
+    };
   },
 };
 </script>

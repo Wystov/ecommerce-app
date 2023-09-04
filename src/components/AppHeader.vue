@@ -3,10 +3,9 @@
     <Transition name="slide">
       <AppBurgerMenu
         v-show="isBurgerOpen"
-        @closeMenu="toggleMenu"
         :isOpen="isBurgerOpen"
         class="menu-block"
-      />
+        @closeMenu="toggleMenu" />
     </Transition>
     <div class="wrapper container-header">
       <RouterLink :to="{ name: 'Home' }">
@@ -20,7 +19,7 @@
           <img class="cart-link" :src="cartIcon" alt="cart" />
         </RouterLink>
       </div>
-      <BaseBurger @click.stop="toggleMenu" :isOpen="isBurgerOpen" />
+      <BaseBurger :isOpen="isBurgerOpen" @click.stop="toggleMenu" />
     </div>
   </header>
 </template>

@@ -7,8 +7,12 @@
       :src="image"
       alt="product image" />
     <div class="product-content">
-      <p class="product-name">{{ name }}</p>
-      <p class="product-description">{{ description }}</p>
+      <p class="product-name">
+        {{ name }}
+      </p>
+      <p class="product-description">
+        {{ description }}
+      </p>
       <div class="product-price">
         <span
           v-if="salePrice"

@@ -3,14 +3,17 @@
     <div class="first-screen">
       <div class="hero flex">
         <div class="hero-text-container">
-          <h1 class="title">The crunchiest breakfasts in one place.</h1>
-          <p class="description">Order today, crunch tomorrow. Choose yours!</p>
+          <h1 class="title">
+            The crunchiest breakfasts in one place.
+          </h1>
+          <p class="description">
+            Order today, crunch tomorrow. Choose yours!
+          </p>
           <BaseButton
-            @click="$router.push({ name: 'Catalog' })"
             size="medium"
             class="button"
             label="Explore"
-          />
+            @click="$router.push({ name: 'Catalog' })" />
         </div>
         <div class="hero-image">
           <img src="@/assets/images/hero-image.svg" alt="hero" class="hero-img" />
@@ -18,27 +21,31 @@
       </div>
       <div class="promo">
         <div class="promo-text-container">
-          <h1 class="title">Promos</h1>
+          <h1 class="title">
+            Promos
+          </h1>
           <div class="promo-image">
             <img src="@/assets/images/promo.svg" alt="promo label" class="promo-img" />
           </div>
-          <p class="description">Enjoy special promocodes for registered customers</p>
+          <p class="description">
+            Enjoy special promocodes for registered customers
+          </p>
           <BaseButton
             v-if="!authorized"
-            @click="$router.push({ name: 'Sign Up' })"
             size="medium"
             class="button"
             label="Join us"
-          />
+            @click="$router.push({ name: 'Sign Up' })" />
           <template v-else>
-            <div class="promocode">CROSS-CHECK</div>
+            <div class="promocode">
+              CROSS-CHECK
+            </div>
             <BaseButton
-              @click="copyPromo"
               ref="copyButton"
               size="medium"
               class="button"
               :label="promoBtnText"
-            />
+              @click="copyPromo" />
           </template>
         </div>
       </div>
@@ -46,10 +53,9 @@
     <div class="links-list">
       <RouterLink
         v-for="(link, i) in sitemap"
+        :key="i"
         :to="{ name: link }"
-        class="button button-link"
-        v-bind:key="i"
-      >
+        class="button button-link">
         {{ link }}
       </RouterLink>
     </div>

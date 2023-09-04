@@ -6,12 +6,14 @@
     <ul
       v-for="filter in mappedAppliedFilters"
       :key="filter">
-      <li class="filter-list-item">{{ filter }}</li>
+      <li class="filter-list-item">
+        {{ filter }}
+      </li>
     </ul>
     <button
-      @click="reset"
       class="button-reset"
-      type="button">
+      type="button"
+      @click="reset">
       Reset filters
     </button>
   </div>

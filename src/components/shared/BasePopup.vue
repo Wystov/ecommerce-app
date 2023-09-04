@@ -7,9 +7,9 @@
             size="large"
             circle
             :class="closeIn ? 'close-btn-in' : 'close-btn'"
-            @click="$emit('close')"
-          ><XMarkIcon class="close-icon"
-          /></BaseButton>
+            @click="$emit('close')">
+            <XMarkIcon class="close-icon" />
+          </BaseButton>
           <slot />
         </div>
       </div>
@@ -32,6 +32,7 @@ export default {
     closeIn: { type: Boolean, default: false },
     closeOnDelete: { type: Boolean, default: true },
   },
+  emits: ['close'],
   watch: {
     show(): void {
       if (this.show) {

@@ -2,7 +2,7 @@
   <div v-if="userStore.fetching" class="spinner-container">
     <div class="spinner" />
   </div>
-  <AppLogin class="wrapper" v-else />
+  <AppLogin v-else class="wrapper" />
 </template>
 
 <script lang="ts">

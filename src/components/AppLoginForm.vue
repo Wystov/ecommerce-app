@@ -1,39 +1,41 @@
 <template>
   <div class="login-form">
-    <h1 class="title">Login to Crunch</h1>
+    <h1 class="title">
+      Login to Crunch
+    </h1>
     <BaseInput
+      id="emailInput"
+      ref="emailInput"
       type="text"
       name="email"
-      id="emailInput"
-      @input="emailValidation"
-      @change="emailValidation"
-      @keydown.enter="blurInput"
       :valid="emailValue"
       class="custom-input-style"
-      ref="emailInput"
-    />
+      @input="emailValidation"
+      @change="emailValidation"
+      @keydown.enter="blurInput" />
     <Transition>
       <BaseMessage v-if="emailValue === 'invalid'" alert="danger" :text="emailMessageText" />
     </Transition>
     <BaseInput
+      id="passInput"
+      ref="passInput"
       :type="passInputType"
       name="password"
-      id="passInput"
       :hidePass="hidePass"
+      :valid="passValue"
       @input="passwordValidation"
       @change="passwordValidation"
       @click="showPassword"
-      @keydown.enter="blurInput"
-      :valid="passValue"
-      ref="passInput"
-    />
+      @keydown.enter="blurInput" />
     <Transition>
       <BaseMessage v-if="passValue === 'invalid'" alert="danger" :text="passMessageText" />
     </Transition>
     <BaseButton label="Sign in" size="medium" @click="signIn" />
     <p>
       Don't have an account yet?
-      <router-link class="register-link" :to="{ name: registration }"> Sign up </router-link>
+      <router-link class="register-link" :to="{ name: registration }">
+        Sign up
+      </router-link>
     </p>
     <Transition>
       <BaseMessage v-if="wrongData" alert="danger" :text="wrongDataText" title="Ooops!" />
