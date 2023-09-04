@@ -334,5 +334,14 @@ export default {
     display: flex;
     flex-direction: column;
   }
+  .info-edit-header {
+    width: 90%;
+  }
+}
+@media (max-width: 550px) {
+  .info-edit-header {
+    width: 87%;
+    font-size: 1.2rem;
+  }
 }
 </style>

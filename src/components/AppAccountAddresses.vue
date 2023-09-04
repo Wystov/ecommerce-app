@@ -352,6 +352,17 @@ border: 0.5px solid #3A3E3F;
 .success-message {
   font-size: 22px;
 }
+@media(max-width: 768px) {
+  .popup-container :deep(.circle) {
+    width: 50px;
+    height: 50px;
+    right: 0.5em;
+    top: 0.5em;
+  }
+  .info-edit-header {
+    width: 90%;
+  }
+}
 @media(max-width: 700px) {
   .address-line {
     display: grid;
@@ -370,6 +381,25 @@ border: 0.5px solid #3A3E3F;
   }
   .set-default {
     grid-area: set-default;
+  }
+}
+@media(max-width: 550px) {
+  .popup-container :deep(.popup-default) {
+    width: min(90vh, 90vw);
+  }
+  .info-edit-header {
+    width: 87%;
+    font-size: 1.2rem;
+  }
+  .buttons-block :deep(.button) {
+    padding: 15px 13px;
+  }
+  .popup-container :deep(.circle) {
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+    right: 1em;
+    top: 1em;
   }
 }
 </style>
