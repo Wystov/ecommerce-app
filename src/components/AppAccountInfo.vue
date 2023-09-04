@@ -38,7 +38,6 @@ import BasePopup from '@/components/shared/BasePopup.vue';
 import EditInfoBlock from '@/components/AppEditInfoBlock.vue';
 import EditPassBlock from '@/components/AppEditPassBlock.vue';
 import type { AccountInfoData } from '@/types/types';
-import api from '@/utils/api/client';
 
 export default {
   components: {
@@ -60,15 +59,10 @@ export default {
     ...mapStores(useUserStore),
   },
   methods: {
-    async getData(): Promise<void> {
-      try {
-        const { body } = await api.call().me().get().execute();
-        this.name = body.firstName;
-        this.surname = body.lastName;
-        this.date = body.dateOfBirth;
-      } catch (error) {
-        console.error('Error:', error);
-      }
+    updateNames(): void {
+      this.name = this.userStore.customerData.body.firstName;
+      this.surname = this.userStore.customerData.body.lastName;
+      this.date = this.userStore.customerData.body.dateOfBirth;
     },
     openInfoPopup(): void {
       this.showPopup = true;
@@ -80,11 +74,12 @@ export default {
     },
     closePopup(): void {
       this.showPopup = false;
-      this.getData();
+      this.updateNames();
     },
   },
   created(): void {
-    this.getData();
+    this.userStore.getData();
+    this.updateNames();
   },
 };
 </script>

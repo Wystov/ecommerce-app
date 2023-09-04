@@ -54,7 +54,7 @@ import BaseMessage from '@/components/shared/BaseMessage.vue';
 import api from '@/utils/api/client';
 import { useUserStore } from '@/stores/user';
 import { InvalidMessage } from '@/types/enums';
-import type { RegistrationMainData, MainFields, PasswordEditBlock } from '@/types/types';
+import type { MainFields, PasswordEditBlock } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
