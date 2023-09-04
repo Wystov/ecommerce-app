@@ -1,80 +1,95 @@
 <template>
-  <form class="registration-form" @keydown.enter="!showMessageSignIn && registrationUser()">
-    <RegistrationMain @valid-all-main-fields="checkMainFields" />
+  <form
+    class="registration-form"
+    @keydown.enter="!showMessageSignIn && registrationUser()">
+    <RegistrationMain @validAllMainFields="checkMainFields" />
     <Transition>
-      <div class="address shipping" v-if="showAddressBlock">
+      <div
+        v-if="showAddressBlock"
+        class="address shipping">
         <hr />
         <RegistrationAddress
-          title="Shipping address"
           id="shipping"
-          @valid-all-address-fields="checkAddressFields"
-        />
+          title="Shipping address"
+          @validAllAddressFields="checkAddressFields" />
       </div>
     </Transition>
     <Transition>
-      <div class="address billing" v-if="showAddressBlock && !onlyShipping">
+      <div
+        v-if="showAddressBlock && !onlyShipping"
+        class="address billing">
         <RegistrationAddress
-          title="Billing address"
           id="billing"
-          @valid-all-address-fields="checkAddressFields"
-        />
+          title="Billing address"
+          @validAllAddressFields="checkAddressFields" />
       </div>
     </Transition>
     <Transition>
-      <div class="checkboxes" v-if="showAddressBlock">
+      <div
+        v-if="showAddressBlock"
+        class="checkboxes">
         <BaseCheckbox
           id="check-def-shipping"
           name="def-shipping"
           label="Set default shipping address"
-          @change="() => (defaultAddresses.defaultShipping = !defaultAddresses.defaultShipping)"
           :checked="defaultAddresses.defaultShipping"
-        />
+          @change="() => (defaultAddresses.defaultShipping = !defaultAddresses.defaultShipping)" />
         <BaseCheckbox
           id="check-def-billing"
           name="def-billing"
           label="Set default billing address"
-          @change="() => (defaultAddresses.defaultBilling = !defaultAddresses.defaultBilling)"
           :checked="defaultAddresses.defaultBilling"
-        />
+          @change="() => (defaultAddresses.defaultBilling = !defaultAddresses.defaultBilling)" />
         <BaseCheckbox
           id="check-only-shipping"
           name="only-shipping"
           label="Use the shipping address as the billing address"
-          @change="toggleOnlyShipping"
           :checked="onlyShipping"
-        />
+          @change="toggleOnlyShipping" />
       </div>
     </Transition>
     <Transition>
-      <BaseMessage alert="warning" v-if="showMessageInvalid">
+      <BaseMessage
+        v-if="showMessageInvalid"
+        alert="warning">
         {{ invalidMessage }}
       </BaseMessage>
     </Transition>
     <Transition>
       <BaseButton
-        class="btn-create-account"
         v-if="showAddressBlock"
-        @click="registrationUser"
-      >Create account</BaseButton
-      >
+        class="btn-create-account"
+        @click="registrationUser">
+        Create account
+      </BaseButton>
     </Transition>
     <p class="footnote">
       Already have an account?
-      <router-link class="login-link" :to="{ name: LOGIN }"> Log in </router-link>
+      <router-link
+        class="login-link"
+        :to="{ name: LOGIN }">
+        Log in
+      </router-link>
     </p>
   </form>
   <Transition>
-    <div v-if="showMessageSignIn" class="success-message-container">
-      <div v-if="loading" class="spinner" />
-      <Transition
-      ><BaseMessage
-        rounded
-        class="success-base-message"
-        v-if="createCustomerMessage.show"
-        :title="createCustomerMessage.title"
-        :alert="createCustomerMessage.alert"
-      ><p class="success-message">{{ createCustomerMessage.text }}</p>
-      </BaseMessage>
+    <div
+      v-if="showMessageSignIn"
+      class="success-message-container">
+      <div
+        v-if="loading"
+        class="spinner" />
+      <Transition>
+        <BaseMessage
+          v-if="createCustomerMessage.show"
+          rounded
+          class="success-base-message"
+          :title="createCustomerMessage.title"
+          :alert="createCustomerMessage.alert">
+          <p class="success-message">
+            {{ createCustomerMessage.text }}
+          </p>
+        </BaseMessage>
       </Transition>
     </div>
   </Transition>
@@ -90,9 +105,7 @@ import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 import BaseMessage from '@/components/shared/BaseMessage.vue';
 import api from '@/utils/api/client';
 import { NamePages, PathPages } from '@/types/enums';
-import type {
-  UserSignUp, UserAddress, DefaultAddressProps, UserSignUpMain,
-} from '../types/types';
+import type { UserSignUp, UserAddress, DefaultAddressProps, UserSignUpMain } from '../types/types';
 
 export default {
   components: {

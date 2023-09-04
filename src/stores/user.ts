@@ -30,34 +30,36 @@ export const useUserStore = defineStore('user', {
       return this.customerData.body.shippingAddressIds;
     },
     shippingAddresses(): Address[] {
-      const noDefaultAddresses = this.getAllAddresses
-        .filter((el) => el.id !== this.getDefaultShippingAddressId);
-      return noDefaultAddresses.filter((el) => this.getShippingAddressesIds
-        .includes(el.id));
+      const noDefaultAddresses = this.getAllAddresses.filter(
+        (el) => el.id !== this.getDefaultShippingAddressId,
+      );
+      return noDefaultAddresses.filter((el) => this.getShippingAddressesIds.includes(el.id));
     },
     getDefaultShippingAddressId(): string {
       return this.customerData.body.defaultShippingAddressId ?? '';
     },
     defaultShippingAddress(): string {
-      const address = (this.getAllAddresses
-        .filter((el) => el.id === this.getDefaultShippingAddressId))[0];
+      const address = this.getAllAddresses.filter(
+        (el) => el.id === this.getDefaultShippingAddressId,
+      )[0];
       return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
     },
     getBillingAddressesIds(): string[] {
       return this.customerData.body.billingAddressIds;
     },
     billingAddresses(): Address[] {
-      const noDefaultAddress = this.getAllAddresses
-        .filter((el) => el.id !== this.getDefaultBillingAddressId);
-      return noDefaultAddress.filter((el) => this.getBillingAddressesIds
-        .includes(el.id));
+      const noDefaultAddress = this.getAllAddresses.filter(
+        (el) => el.id !== this.getDefaultBillingAddressId,
+      );
+      return noDefaultAddress.filter((el) => this.getBillingAddressesIds.includes(el.id));
     },
     getDefaultBillingAddressId(): string {
       return this.customerData.body.defaultBillingAddressId;
     },
     defaultBillingAddress(): string {
-      const address = (this.getAllAddresses
-        .filter((el) => el.id === this.getDefaultBillingAddressId))[0];
+      const address = this.getAllAddresses.filter(
+        (el) => el.id === this.getDefaultBillingAddressId,
+      )[0];
       return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
     },
   },
@@ -87,6 +89,7 @@ export const useUserStore = defineStore('user', {
     },
     logoutUser() {
       this.authorized = false;
+      this.customerData = {} as ClientResponse;
     },
     changeCountry(country: Country) {
       const filter = useFilterStore();
@@ -102,7 +105,7 @@ export const useUserStore = defineStore('user', {
       this.data.cart.product.push(keyProduct);
     },
     removeProductFromCart(keyProduct: number) {
-      const index = this.data.cart.product.findIndex(((product) => product === keyProduct));
+      const index = this.data.cart.product.findIndex((product) => product === keyProduct);
       this.data.cart.product.splice(index, 1);
     },
     setCustomerData(data: ClientResponse): void {

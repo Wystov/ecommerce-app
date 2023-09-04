@@ -1,12 +1,12 @@
 <template>
   <BaseSelect
-    @selectOption="setSort"
     id="sortBy"
     label="Sort by:"
     :options="sortOptions"
     :defaultSelected="sort"
     :isPlain="true"
-    class="sort-select" />
+    class="sort-select"
+    @selectOption="setSort" />
 </template>
 
 <script lang="ts">

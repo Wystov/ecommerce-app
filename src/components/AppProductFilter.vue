@@ -8,14 +8,14 @@
             <span class="filter-title">{{ searchTitle }}</span>
             <div class="search-container">
               <BaseInput
-                @keyup.enter="setSearch"
                 id="search"
                 ref="searchInput"
-                width="75%" />
+                width="75%"
+                @keyup.enter="setSearch" />
               <BaseButton
                 size="small"
-                @click="setSearch"
-                class="search-btn">
+                class="search-btn"
+                @click="setSearch">
                 <MagnifyingGlassIcon class="icon" />
               </BaseButton>
             </div>
@@ -26,13 +26,13 @@
             </span>
             <BaseCheckbox
               v-for="item in brands"
-              @change="changeCheckFilterOptions('brand', item.term)"
-              :key="item.term"
               :id="item.term"
+              :key="item.term"
               :label="item.term"
               :checked="isBrandChecked(item.term)"
               name="brand"
-              class="variant">
+              class="variant"
+              @change="changeCheckFilterOptions('brand', item.term)">
               <span class="weight-range">&nbsp;({{ item.count }})</span>
             </BaseCheckbox>
           </div>
@@ -50,8 +50,8 @@
               {{ priceRangeReadable }}
             </span>
             <BaseButton
-              @click="changeRangeFilterOptions('price', priceRange, 'build')"
-              size="small">
+              size="small"
+              @click="changeRangeFilterOptions('price', priceRange, 'build')">
               Apply
             </BaseButton>
           </div>
@@ -67,9 +67,9 @@
               class="range-slider" />
             <span class="nums-range">{{ weightRangeReadable }}</span>
             <BaseButton
-              @click="changeRangeFilterOptions('weight', weightRange, 'build')"
               class="button"
-              size="small">
+              size="small"
+              @click="changeRangeFilterOptions('weight', weightRange, 'build')">
               Apply
             </BaseButton>
           </div>
@@ -118,13 +118,22 @@ export default {
     };
   },
   computed: {
-    ...mapState(useFilterStore, ['filterOptions', 'loaded', 'minWeight', 'maxWeight', 'minPrice', 'maxPrice']),
+    ...mapState(useFilterStore, [
+      'filterOptions',
+      'loaded',
+      'minWeight',
+      'maxWeight',
+      'minPrice',
+      'maxPrice',
+    ]),
     ...mapState(useUserStore, ['currencyTag']),
     brands(): FacetTerm[] {
       return this.filterOptions.brand.terms;
     },
     priceRangeReadable(): string {
-      return `${this.currencyTag}${(this.priceRange[0] / 100).toFixed(2)} - ${this.currencyTag}${(this.priceRange[1] / 100).toFixed(2)}`;
+      return `${this.currencyTag}${(this.priceRange[0] / 100).toFixed(2)} - ${this.currencyTag}${(
+        this.priceRange[1] / 100
+      ).toFixed(2)}`;
     },
     weightRangeReadable(): string {
       return `${this.weightRange[0]} oz. - ${this.weightRange[1]} oz.`;

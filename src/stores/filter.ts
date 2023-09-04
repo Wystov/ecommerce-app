@@ -105,9 +105,7 @@ export const useFilterStore = defineStore('filter', {
               ? `range (${selected[0]} to ${selected[1]})`
               : [...selected].map((option) => `"${option}"`).join(', ');
           const queryPath =
-            key === 'price'
-              ? 'scopedPrice.currentValue.centAmount'
-              : `attributes.${key}`;
+            key === 'price' ? 'scopedPrice.currentValue.centAmount' : `attributes.${key}`;
           return `variants.${queryPath}:${filterValue}`;
         });
       const categoryId = categories.currentCategoryId();

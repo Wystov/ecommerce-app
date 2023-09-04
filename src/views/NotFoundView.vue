@@ -1,11 +1,22 @@
 <template>
   <section class="wrapper not-found-container">
-    <img :src="image" class="image" alt="Not Found Page" />
+    <img
+      :src="image"
+      class="image"
+      alt="Not Found Page" />
     <div class="caption">
-      <h2 class="title">{{ title }}</h2>
-      <p class="subtitle">{{ subtitle }}</p>
+      <h2 class="title">
+        {{ title }}
+      </h2>
+      <p class="subtitle">
+        {{ subtitle }}
+      </p>
     </div>
-    <BaseButton :size="buttonSize" @click="$router.go(-1)">Go back</BaseButton>
+    <BaseButton
+      :size="buttonSize"
+      @click="$router.go(-1)">
+      Go back
+    </BaseButton>
   </section>
 </template>
 
@@ -30,13 +41,6 @@ export default {
       buttonSize: 'medium',
     };
   },
-  mounted(): void {
-    this.updateButtonSize();
-    window.addEventListener('resize', this.updateButtonSize);
-  },
-  beforeUnmount(): void {
-    window.removeEventListener('resize', this.updateButtonSize);
-  },
   methods: {
     updateButtonSize(): void {
       if (window.innerWidth < 768) {
@@ -45,6 +49,13 @@ export default {
         this.buttonSize = 'medium';
       }
     },
+  },
+  mounted(): void {
+    this.updateButtonSize();
+    window.addEventListener('resize', this.updateButtonSize);
+  },
+  beforeUnmount(): void {
+    window.removeEventListener('resize', this.updateButtonSize);
   },
 };
 </script>

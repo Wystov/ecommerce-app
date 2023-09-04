@@ -1,30 +1,38 @@
 <template>
-  <div class="edit-form" @keydown.enter="nextStep()">
-    <div class="field-container" v-for="(field, i) in fields" :key="i">
+  <div
+    class="edit-form"
+    @keydown.enter="nextStep()">
+    <div
+      v-for="(field, i) in fields"
+      :key="i"
+      class="field-container">
       <BaseInput
+        :id="field.label.toLowerCase()"
         :label="field.label"
         :name="getPlaceholder(field.placeholder)"
-        @input="handleInput($event, i)"
         :valid="field.valid"
         :value="field.dateValue ? dateOfBirth : field.value"
         :type="field.type"
-        :id="field.label.toLowerCase()"
         max="9999-12-31"
+        @input="handleInput($event, i)"
         @focusin="field.showMessage = true"
-        @focusout="field.showMessage = false"
-      />
+        @focusout="field.showMessage = false" />
       <Transition>
         <BaseMessage
+          v-if="field.showMessage && field.valid === 'invalid'"
           absolute
           arrow="top"
-          v-if="field.showMessage && field.valid === 'invalid'"
-          alert="danger"
-        >{{ field.invalidMessage }}</BaseMessage
-        >
+          alert="danger">
+          {{ field.invalidMessage }}
+        </BaseMessage>
       </Transition>
     </div>
   </div>
-  <BaseButton @click="updateInfo" class="btn-update">Update</BaseButton>
+  <BaseButton
+    class="btn-update"
+    @click="updateInfo">
+    Update
+  </BaseButton>
 </template>
 
 <script lang="ts">
@@ -47,88 +55,12 @@ import type { RegistrationMainData, MainFields } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
-  emits: ['valid-all-main-fields', 'close', 'showSuccessMessage'],
-  computed: {
-    ...mapStores(useUserStore),
-    dateOfBirth(): string {
-      return this.userStore.customerData.body.dateOfBirth;
-    },
-    newEmailData(): MyCustomerChangeEmailAction {
-      const emailIndex = 3;
-      const emailValue = this.fields[emailIndex].value;
-      if (emailValue && emailValue !== '') {
-        return { action: 'changeEmail',
-          email: emailValue,
-        };
-      }
-      return {
-        action: 'changeEmail',
-        email: this.getPlaceholder('email'),
-      };
-    },
-    newFirstNameData(): MyCustomerSetFirstNameAction {
-      const nameIndex = 0;
-      const nameValue = this.fields[nameIndex].value;
-      if (nameValue && nameValue !== '') {
-        return { action: 'setFirstName',
-          firstName: nameValue,
-        };
-      }
-      return {
-        action: 'setFirstName',
-        firstName: this.getPlaceholder('firstName'),
-      };
-    },
-    newLastNameData(): MyCustomerSetLastNameAction {
-      const lastNameIndex = 1;
-      const lastNameValue = this.fields[lastNameIndex].value;
-      if (lastNameValue && lastNameValue !== '') {
-        return { action: 'setLastName',
-          lastName: lastNameValue,
-        };
-      }
-      return {
-        action: 'setLastName',
-        lastName: this.getPlaceholder('lastName'),
-      };
-    },
-    newDateOfBirthData(): MyCustomerSetDateOfBirthAction {
-      const birthDateIndex = 2;
-      const birthDateValue = this.fields[birthDateIndex].value;
-      if (birthDateValue && birthDateValue !== '') {
-        return { action: 'setDateOfBirth',
-          dateOfBirth: birthDateValue,
-        };
-      }
-      return {
-        action: 'setDateOfBirth',
-        dateOfBirth: this.getPlaceholder('dateOfBirth'),
-      };
-    },
-    postData(): MyCustomerUpdate {
-      return {
-        version: this.userStore.customerData.body.version,
-        actions: [
-          this.newEmailData,
-          this.newFirstNameData,
-          this.newLastNameData,
-          this.newDateOfBirthData,
-        ],
-      };
-    },
-    allFieldsValid(): boolean {
-      const checkingFields = this.fields.filter((elem) => elem.value !== '');
-      return checkingFields.every((elem) => elem.valid === 'valid');
-    },
-    fieldFilled(): boolean {
-      return this.fields.some((elem) => elem.value !== '');
-    },
-  },
   components: {
     BaseInput,
     BaseMessage,
     BaseButton,
   },
+  emits: ['valid-all-main-fields', 'close', 'showSuccessMessage'],
   // eslint-disable-next-line max-lines-per-function
   data(): {
     mainFields: MainFields;
@@ -174,13 +106,76 @@ export default {
           value: '',
         },
       ],
-      placeholders: [
-        'name',
-        'last name',
-        'date of birth',
-        'email',
-      ],
+      placeholders: ['name', 'last name', 'date of birth', 'email'],
     };
+  },
+  computed: {
+    ...mapStores(useUserStore),
+    dateOfBirth(): string {
+      return this.userStore.customerData.body.dateOfBirth;
+    },
+    newEmailData(): MyCustomerChangeEmailAction {
+      const emailIndex = 3;
+      const emailValue = this.fields[emailIndex].value;
+      if (emailValue && emailValue !== '') {
+        return { action: 'changeEmail', email: emailValue };
+      }
+      return {
+        action: 'changeEmail',
+        email: this.getPlaceholder('email'),
+      };
+    },
+    newFirstNameData(): MyCustomerSetFirstNameAction {
+      const nameIndex = 0;
+      const nameValue = this.fields[nameIndex].value;
+      if (nameValue && nameValue !== '') {
+        return { action: 'setFirstName', firstName: nameValue };
+      }
+      return {
+        action: 'setFirstName',
+        firstName: this.getPlaceholder('firstName'),
+      };
+    },
+    newLastNameData(): MyCustomerSetLastNameAction {
+      const lastNameIndex = 1;
+      const lastNameValue = this.fields[lastNameIndex].value;
+      if (lastNameValue && lastNameValue !== '') {
+        return { action: 'setLastName', lastName: lastNameValue };
+      }
+      return {
+        action: 'setLastName',
+        lastName: this.getPlaceholder('lastName'),
+      };
+    },
+    newDateOfBirthData(): MyCustomerSetDateOfBirthAction {
+      const birthDateIndex = 2;
+      const birthDateValue = this.fields[birthDateIndex].value;
+      if (birthDateValue && birthDateValue !== '') {
+        return { action: 'setDateOfBirth', dateOfBirth: birthDateValue };
+      }
+      return {
+        action: 'setDateOfBirth',
+        dateOfBirth: this.getPlaceholder('dateOfBirth'),
+      };
+    },
+    postData(): MyCustomerUpdate {
+      return {
+        version: this.userStore.customerData.body.version,
+        actions: [
+          this.newEmailData,
+          this.newFirstNameData,
+          this.newLastNameData,
+          this.newDateOfBirthData,
+        ],
+      };
+    },
+    allFieldsValid(): boolean {
+      const checkingFields = this.fields.filter((elem) => elem.value !== '');
+      return checkingFields.every((elem) => elem.valid === 'valid');
+    },
+    fieldFilled(): boolean {
+      return this.fields.some((elem) => elem.value !== '');
+    },
   },
   methods: {
     handleInput(event: Event, index: number): void {

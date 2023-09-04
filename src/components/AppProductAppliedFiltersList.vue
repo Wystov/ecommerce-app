@@ -6,12 +6,14 @@
     <ul
       v-for="filter in mappedAppliedFilters"
       :key="filter">
-      <li class="filter-list-item">{{ filter }}</li>
+      <li class="filter-list-item">
+        {{ filter }}
+      </li>
     </ul>
     <button
-      @click="reset"
       class="button-reset"
-      type="button">
+      type="button"
+      @click="reset">
       Reset filters
     </button>
   </div>
@@ -24,7 +26,14 @@ import { useUserStore } from '@/stores/user';
 
 export default {
   computed: {
-    ...mapState(useFilterStore, ['loaded', 'appliedFilters', 'minWeight', 'maxWeight', 'minPrice', 'maxPrice']),
+    ...mapState(useFilterStore, [
+      'loaded',
+      'appliedFilters',
+      'minWeight',
+      'maxWeight',
+      'minPrice',
+      'maxPrice',
+    ]),
     ...mapState(useUserStore, ['currencyTag']),
     mappedAppliedFilters(): string[] {
       if (!this.loaded) return [];

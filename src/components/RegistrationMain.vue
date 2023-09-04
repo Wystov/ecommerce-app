@@ -1,32 +1,41 @@
 <template>
-  <div class="registration-main" @keydown.enter="showButton && nextStep()">
-    <div class="field-container" v-for="(field, i) in fields" :key="i">
+  <div
+    class="registration-main"
+    @keydown.enter="showButton && nextStep()">
+    <div
+      v-for="(field, i) in fields"
+      :key="i"
+      class="field-container">
       <BaseInput
+        :id="'field-registration-' + field.label.toLowerCase()"
         :label="field.label"
         :hidePass="field.label === 'Password' ? hidePass : ''"
-        @click="showPassword($event, i)"
         :name="field.placeholder"
-        @input="handleInput($event, i)"
         :valid="field.valid"
         :value="field.value"
         :type="field.type"
-        :id="'field-registration-' + field.label.toLowerCase()"
         max="9999-12-31"
+        @click="showPassword($event, i)"
+        @input="handleInput($event, i)"
         @focusin="field.showMessage = true"
-        @focusout="field.showMessage = false"
-      />
+        @focusout="field.showMessage = false" />
       <Transition>
         <BaseMessage
+          v-if="field.showMessage && field.valid === 'invalid'"
           absolute
           arrow="top"
-          v-if="field.showMessage && field.valid === 'invalid'"
-          alert="danger"
-        >{{ field.invalidMessage }}</BaseMessage
-        >
+          alert="danger">
+          {{ field.invalidMessage }}
+        </BaseMessage>
       </Transition>
     </div>
   </div>
-  <BaseButton v-if="showButton" @click="nextStep" class="btn-continue">Continue</BaseButton>
+  <BaseButton
+    v-if="showButton"
+    class="btn-continue"
+    @click="nextStep">
+    Continue
+  </BaseButton>
 </template>
 
 <script lang="ts">
@@ -41,12 +50,12 @@ import toCamelCase from '@/utils/toCamelCase';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
-  emits: ['valid-all-main-fields'],
   components: {
     BaseInput,
     BaseMessage,
     BaseButton,
   },
+  emits: ['valid-all-main-fields'],
   // eslint-disable-next-line max-lines-per-function
   data(): {
     hidePass: string;

@@ -1,5 +1,7 @@
 <template>
-  <BasePopup :show="showPopUp" @close="closePopUp">
+  <BasePopup
+    :show="showPopUp"
+    @close="closePopUp">
     <swiper
       zoom
       loop
@@ -10,23 +12,23 @@
       :keyboard="{
         enabled: true,
       }"
-      @slide-change-transition-start="(swiper) => (currentIndexSlide = swiper.realIndex)"
       class="mySwiperPopUp"
-    >
+      @slideChangeTransitionStart="(swiper) => (currentIndexSlide = swiper.realIndex)">
       <swiper-slide
-        zoom
         v-for="(url, i) in images"
         :key="i"
-      ><img
-        :src="url"
-        @error="setImgPlaceholder"
-        alt="product image"
-      /></swiper-slide>
+        zoom>
+        <img
+          :src="url"
+          alt="product image"
+          @error="setImgPlaceholder" />
+      </swiper-slide>
     </swiper>
     <p class="popup-describe">
-      <span :style="{ verticalAlign: 'middle' }"
-      ><CursorArrowRaysIcon :style="{ width: '1em' }" /></span
-      >Double click on image to zoom
+      <span :style="{ verticalAlign: 'middle' }">
+        <CursorArrowRaysIcon :style="{ width: '1em' }" />
+      </span>
+      Double click on image to zoom
     </p>
   </BasePopup>
   <swiper
@@ -34,7 +36,6 @@
       '--swiper-navigation-color': 'var(--main-color)',
       '--swiper-pagination-color': 'var(--main-color)',
     }"
-    @swiper="mainSwiper = $event"
     loop
     :spaceBetween="10"
     :modules="modules"
@@ -50,17 +51,17 @@
     }"
     effect="coverflow"
     class="mySwiper"
-  >
+    @swiper="mainSwiper = $event">
     <swiper-slide
       v-for="(url, i) in images"
-      :key="i"
-    ><img
-      :src="url"
-      @keydown="openPopUp(i)"
-      @click="openPopUp(i)"
-      @error="setImgPlaceholder"
-      alt="product image"
-    /></swiper-slide>
+      :key="i">
+      <img
+        :src="url"
+        alt="product image"
+        @keydown="openPopUp(i)"
+        @click="openPopUp(i)"
+        @error="setImgPlaceholder" />
+    </swiper-slide>
   </swiper>
   <div class="slider-thumb-container">
     <div class="swiper-button-prev" />
@@ -70,19 +71,18 @@
       freeMode
       watchSlidesProgress
       :spaceBetween="10"
-      :slides-per-view="3"
+      :slidesPerView="3"
       :modules="modules"
-      @swiper="setThumbsSwiper"
       class="mySwiperThumb"
-    >
+      @swiper="setThumbsSwiper">
       <swiper-slide
         v-for="(url, i) in images"
-        :key="i"
-      ><img
-        :src="url"
-        @error="setImgPlaceholder"
-        alt="product image"
-      /></swiper-slide>
+        :key="i">
+        <img
+          :src="url"
+          alt="product image"
+          @error="setImgPlaceholder" />
+      </swiper-slide>
     </swiper>
   </div>
 </template>
@@ -114,19 +114,19 @@ import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 import BasePopup from './shared/BasePopup.vue';
 
 export default {
-  emits: ['open'],
-  props: {
-    images: {
-      type: Array<string>,
-      default: [imgPlaceholder],
-    },
-  },
   components: {
     Swiper,
     SwiperSlide,
     BasePopup,
     CursorArrowRaysIcon,
   },
+  props: {
+    images: {
+      type: Array<string>,
+      default: [imgPlaceholder],
+    },
+  },
+  emits: ['open'],
   setup(): SwiperSetup {
     const thumbsSwiper = ref<null | SwiperType>(null);
     const mainSwiper = ref<null | SwiperType>(null);

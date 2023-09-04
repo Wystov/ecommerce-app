@@ -1,7 +1,9 @@
 <template>
   <div :class="getBurgerClass">
     <div :class="getBarClass" />
-    <div v-if="!isOpen" class="burger-line" />
+    <div
+      v-if="!isOpen"
+      class="burger-line" />
     <div :class="getBarClass" />
   </div>
 </template>

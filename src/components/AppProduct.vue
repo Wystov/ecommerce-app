@@ -1,13 +1,19 @@
 <template>
   <Transition mode="out-in">
-    <div v-if="fetching" class="spinner-container">
+    <div
+      v-if="fetching"
+      class="spinner-container">
       <div class="spinner" />
     </div>
     <template v-else>
-      <div v-if="productData" class="product-content">
+      <div
+        v-if="productData"
+        class="product-content">
         <h1 class="product-name mobile-name">
           {{ product.name[0] }}
-          <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
+          <span
+            v-if="product.name[1]"
+            class="product-name-light">{{ product.name[1] }}</span>
         </h1>
         <div class="product-slider">
           <AppSliderProductPage :images="product.images" />
@@ -15,51 +21,60 @@
         <div class="product-info">
           <h1 class="product-name">
             {{ product.name[0] }}
-            <span v-if="product.name[1]" class="product-name-light">{{ product.name[1] }}</span>
+            <span
+              v-if="product.name[1]"
+              class="product-name-light">{{ product.name[1] }}</span>
           </h1>
           <div class="product-price-group">
             <div
               class="price-container"
-              :class="priceDiscounted && price ? 'two-price' : 'one-price'"
-            >
+              :class="priceDiscounted && price ? 'two-price' : 'one-price'">
               <BasePrice
                 v-if="priceDiscounted === ''"
                 :size="40"
                 :symbol="currencyTag"
-                :price="price"
-              />
-              <BasePrice v-else :size="26" :symbol="currencyTag" strikethrough :price="price" />
+                :price="price" />
+              <BasePrice
+                v-else
+                :size="26"
+                :symbol="currencyTag"
+                strikethrough
+                :price="price" />
               <BasePrice
                 v-if="priceDiscounted !== ''"
                 :size="52"
                 :symbol="currencyTag"
                 discounted
-                :price="priceDiscounted"
-              />
+                :price="priceDiscounted" />
             </div>
             <BaseButton
               v-if="hasProductInCart(product.keyProduct || -1)"
-              @click="removeProductFromCart(product.keyProduct || -1)"
               outline
               class="button"
-            >Remove from cart</BaseButton
-            >
+              @click="removeProductFromCart(product.keyProduct || -1)">
+              Remove from cart
+            </BaseButton>
             <BaseButton
               v-else
-              @click="addProductToCart(product.keyProduct || -1)"
               class="button"
-            >Add to cart</BaseButton
-            >
+              @click="addProductToCart(product.keyProduct || -1)">
+              Add to cart
+            </BaseButton>
           </div>
           <ul class="specification-list">
-            <li class="specification-item" v-for="(attr, i) in product.attributes" :key="i">
+            <li
+              v-for="(attr, i) in product.attributes"
+              :key="i"
+              class="specification-item">
               <span class="property">{{ attr.name }}</span>
               <span class="value">
                 {{ attr.name === 'weight' ? attr.value + ' oz' : attr.value }}
               </span>
             </li>
           </ul>
-          <p class="description">{{ product.description }}</p>
+          <p class="description">
+            {{ product.description }}
+          </p>
         </div>
       </div>
       <NotFoundView v-else />

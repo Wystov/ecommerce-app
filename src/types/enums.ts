@@ -46,6 +46,4 @@ const enum InvalidMessage {
   WrongPassword = 'Old password is incorrect, please, try again',
 }
 
-export {
-  NamePages, PathPages, LocalStorageKeys, Country, InvalidMessage,
-};
+export { NamePages, PathPages, LocalStorageKeys, Country, InvalidMessage };

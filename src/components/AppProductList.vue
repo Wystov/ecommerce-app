@@ -18,7 +18,9 @@
           :currency="currency"
           :currencyTag="currencyTag" />
       </TransitionGroup>
-      <div v-else class="no-products">
+      <div
+        v-else
+        class="no-products">
         <h3>No products found, try to reset filters</h3>
         <AppProductAppliedFiltersList />
       </div>
@@ -48,7 +50,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUserStore, { userData: 'data', currency: 'currency', currencyTag: 'currencyTag' }),
+    ...mapState(useUserStore, {
+      userData: 'data',
+      currency: 'currency',
+      currencyTag: 'currencyTag',
+    }),
     ...mapState(useFilterStore, ['queryArgs', 'loaded', 'refresh']),
     ...mapState(useCategoriesStore, ['categories', 'categoriesLoaded']),
   },

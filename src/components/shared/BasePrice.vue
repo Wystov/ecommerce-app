@@ -1,5 +1,8 @@
 <template>
-  <div :style="{ fontSize: size + 'px' }" class="price" :class="classes">
+  <div
+    :style="{ fontSize: size + 'px' }"
+    class="price"
+    :class="classes">
     <span class="currency-symbol">{{ symbol }}</span>
     <span class="price-value">{{ price }}</span>
   </div>

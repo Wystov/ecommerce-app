@@ -1,15 +1,22 @@
 <template>
   <Transition name="modal">
-    <div v-if="show" class="modal-mask">
-      <div class="modal-wrapper" @click.self="$emit('close')" @keydown.delete="closeOnDelete && $emit('close')">
-        <div class="modal-container" :class="className">
+    <div
+      v-if="show"
+      class="modal-mask">
+      <div
+        class="modal-wrapper"
+        @click.self="$emit('close')"
+        @keydown.delete="closeOnDelete && $emit('close')">
+        <div
+          class="modal-container"
+          :class="className">
           <BaseButton
             size="large"
             circle
             :class="closeIn ? 'close-btn-in' : 'close-btn'"
-            @click="$emit('close')"
-          ><XMarkIcon class="close-icon"
-          /></BaseButton>
+            @click="$emit('close')">
+            <XMarkIcon class="close-icon" />
+          </BaseButton>
           <slot />
         </div>
       </div>
@@ -32,6 +39,7 @@ export default {
     closeIn: { type: Boolean, default: false },
     closeOnDelete: { type: Boolean, default: true },
   },
+  emits: ['close'],
   watch: {
     show(): void {
       if (this.show) {

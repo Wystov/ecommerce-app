@@ -155,15 +155,15 @@ interface AccountInfoData {
   showPopup: boolean;
   updateInfo: boolean;
   showMessageEditSuccess: boolean;
-  createCustomerMessage: { text: string; alert: string; title: string }
+  createCustomerMessage: { text: string; alert: string; title: string };
 }
 interface AccountAddressData {
   loaded: boolean;
   showPopup: boolean;
   addressSection: string;
-  addressId: string,
-  showMessageEditSuccess: boolean,
-  createCustomerMessage: { text: string; alert: string; title: string }
+  addressId: string;
+  showMessageEditSuccess: boolean;
+  createCustomerMessage: { text: string; alert: string; title: string };
 }
 interface Address {
   city: string;
@@ -178,12 +178,12 @@ interface StateUser {
   authorized: boolean;
   fetching: boolean;
   data: {
-      country: string;
-      cart: {
-          product: number[];
-      };
+    country: string;
+    cart: {
+      product: number[];
+    };
   };
-  customerData: ClientResponse,
+  customerData: ClientResponse;
 }
 type Attribute = { name: string; value: string };
 interface AppProduct {
@@ -202,7 +202,10 @@ interface FacetTerm {
   term: string;
   count: number;
 }
-type FilterKey = 'variants.attributes.brand' | 'variants.attributes.weight' | 'variants.scopedPrice.currentValue.centAmount';
+type FilterKey =
+  | 'variants.attributes.brand'
+  | 'variants.attributes.weight'
+  | 'variants.scopedPrice.currentValue.centAmount';
 interface FacetResult {
   terms: FacetTerm[];
   total: number;
@@ -226,7 +229,7 @@ interface CategoryMap {
   params: {
     categorySlug: string;
     subcategorySlug?: string;
-  }
+  };
   children: CategoryMap[];
 }
 interface Breadcrumb {
@@ -241,7 +244,7 @@ interface ProductFilterType {
 }
 interface ProductListType {
   productList: ProductProjection[];
-  init: boolean
+  init: boolean;
 }
 interface SwiperSetup {
   showPopUp: Ref<boolean>;
@@ -255,8 +258,8 @@ interface SwiperSetup {
   modules: SwiperModule[];
 }
 interface CatalogViewType {
-  showSidebar: boolean,
-  screenWidth: number,
+  showSidebar: boolean;
+  screenWidth: number;
 }
 
 interface MainFields {
@@ -270,7 +273,7 @@ interface PasswordEditBlock {
   notMatchText: string;
   wrongOldPass: boolean;
   wrongOldPassText: string;
-  }
+}
 export type {
   ButtonClasses,
   SelectClasses,

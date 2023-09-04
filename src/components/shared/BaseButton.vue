@@ -1,5 +1,10 @@
 <template>
-  <component :is="as" type="button" class="button" :class="classes" :disabled="disabled">
+  <component
+    :is="as"
+    type="button"
+    class="button"
+    :class="classes"
+    :disabled="disabled">
     <slot /> {{ label }}
   </component>
 </template>

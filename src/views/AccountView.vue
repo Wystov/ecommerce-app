@@ -1,18 +1,39 @@
 <template>
-  <div class="wrapper main-block">
-    <h1 class="title">Account</h1>
-    <div class="sections-nav">
-      <template v-for="(section, i) in sections" :key="i">
-        <li class="section-nav-item" :class="{ active: activeIndex === i }" @click="setActiveSection(i)" @keydown="setActiveSection(i)">
-          {{ section }}
-        </li>
-        <div class="divider" v-if="i < sections.length - 1" />
-      </template>
+  <Transition mode="out-in">
+    <div
+      v-if="userStore.fetching || !userStore.authorized"
+      class="spinner-container">
+      <div class="spinner" />
     </div>
-    <AppAccountInfo v-if="activeIndex === 0" />
-    <AppAccountAddresses v-if="activeIndex === 1" />
-    <BaseButton @click="logOut" label="Log out" />
-  </div>
+    <div
+      v-else
+      class="wrapper main-block">
+      <h1 class="title">
+        Account
+      </h1>
+      <div class="sections-nav">
+        <template
+          v-for="(section, i) in sections"
+          :key="i">
+          <li
+            class="section-nav-item"
+            :class="{ active: activeIndex === i }"
+            @click="setActiveSection(i)"
+            @keydown="setActiveSection(i)">
+            {{ section }}
+          </li>
+          <div
+            v-if="i < sections.length - 1"
+            class="divider" />
+        </template>
+      </div>
+      <AppAccountInfo v-if="activeIndex === 0" />
+      <AppAccountAddresses v-if="activeIndex === 1" />
+      <BaseButton
+        label="Log out"
+        @click="logOut" />
+    </div>
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -26,14 +47,14 @@ import api from '@/utils/api/client';
 
 export default {
   components: { AppAccountInfo, AppAccountAddresses, BaseButton },
-  computed: {
-    ...mapStores(useUserStore),
-  },
-  data(): { sections: string[], activeIndex: number } {
+  data(): { sections: string[]; activeIndex: number } {
     return {
       sections: ['INFO', 'ADDRESSES'],
       activeIndex: 0,
     };
+  },
+  computed: {
+    ...mapStores(useUserStore),
   },
   methods: {
     logOut(): void {
@@ -45,16 +66,18 @@ export default {
     setActiveSection(index: number): void {
       this.activeIndex = index;
     },
+    checkRedirect(): void {
+      if (!this.userStore.fetching && !this.userStore.authorized) {
+        this.$router.push({ name: 'Log in' });
+      }
+    },
   },
   created(): void {
-    if (this.userStore.fetching) {
-      this.$watch(
-        () => this.userStore.fetching,
-        () => {
-          if (this.userStore.authorized) this.$router.push({ name: 'Home' });
-        },
-      );
-    }
+    this.checkRedirect();
+    this.$watch(
+      () => this.userStore.fetching,
+      () => this.checkRedirect(),
+    );
   },
 };
 </script>

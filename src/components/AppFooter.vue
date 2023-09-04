@@ -1,5 +1,7 @@
 <template>
-  <p class="footer-text">© Promise Team 2023</p>
+  <p class="footer-text">
+    © Promise Team 2023
+  </p>
 </template>
 
 <style scoped>

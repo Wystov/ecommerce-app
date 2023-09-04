@@ -9,8 +9,12 @@
       <span class="content">{{ date }}</span>
     </div>
     <div class="buttons-block">
-      <BaseButton label="Update info" @click="openInfoPopup" />
-      <BaseButton label="Change password" @click="openPasswordPopup" />
+      <BaseButton
+        label="Update info"
+        @click="openInfoPopup" />
+      <BaseButton
+        label="Change password"
+        @click="openPasswordPopup" />
       <div class="divider-final" />
     </div>
   </div>
@@ -20,24 +24,34 @@
       :closeOnDelete="false"
       @close="closePopup">
       <div v-if="updateInfo === true">
-        <h3 class="info-edit-header">Please fill only the fields you want to change and press "Update" button:</h3>
-        <EditInfoBlock @close="closePopup" @showSuccessMessage="showSuccessMessage" />
+        <h3 class="info-edit-header">
+          Please fill only the fields you want to change and press "Update" button:
+        </h3>
+        <EditInfoBlock
+          @close="closePopup"
+          @showSuccessMessage="showSuccessMessage" />
       </div>
       <div v-if="updateInfo === false">
-        <EditPassBlock @close="closePopup" @showSuccessMessage="showSuccessMessage" />
+        <EditPassBlock
+          @close="closePopup"
+          @showSuccessMessage="showSuccessMessage" />
       </div>
     </BasePopup>
   </div>
   <Transition>
-    <div v-if="showMessageEditSuccess" class="success-message-container">
-      <Transition
-      ><BaseMessage
-        rounded
-        class="success-base-message"
-        :title="createCustomerMessage.title"
-        :alert="createCustomerMessage.alert"
-      ><p class="success-message">{{ createCustomerMessage.text }}</p>
-      </BaseMessage>
+    <div
+      v-if="showMessageEditSuccess"
+      class="success-message-container">
+      <Transition>
+        <BaseMessage
+          rounded
+          class="success-base-message"
+          :title="createCustomerMessage.title"
+          :alert="createCustomerMessage.alert">
+          <p class="success-message">
+            {{ createCustomerMessage.text }}
+          </p>
+        </BaseMessage>
       </Transition>
     </div>
   </Transition>
@@ -99,7 +113,9 @@ export default {
     },
     showSuccessMessage(): void {
       this.showMessageEditSuccess = true;
-      setTimeout(() => { this.showMessageEditSuccess = false; }, 1500);
+      setTimeout(() => {
+        this.showMessageEditSuccess = false;
+      }, 1500);
     },
   },
   created(): void {
@@ -127,7 +143,7 @@ export default {
 }
 .buttons-block {
   display: grid;
-  grid-template-areas: "button button" "divider divider";
+  grid-template-areas: 'button button' 'divider divider';
   gap: 2rem;
 }
 .buttons-block :deep(.button) {
@@ -183,7 +199,7 @@ export default {
 .success-message {
   font-size: 22px;
 }
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   .popup-container :deep(.circle) {
     width: 50px;
     height: 50px;
@@ -194,7 +210,7 @@ export default {
     width: 90%;
   }
 }
-@media(max-width: 550px) {
+@media (max-width: 550px) {
   .popup-container :deep(.popup-default) {
     width: min(90vh, 90vw);
   }

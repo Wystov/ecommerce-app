@@ -2,32 +2,32 @@
   <h3>{{ title }}</h3>
   <div class="registration-address">
     <BaseSelect
-      @selectOption="selectCountry"
-      :defaultSelected="countryField.defaultSelectedCountry"
       :id="id + '-select-country'"
+      :defaultSelected="countryField.defaultSelectedCountry"
       :label="countryField.label"
       valid="valid"
       :options="countryField.options"
-    />
-    <div class="field-container" v-for="(field, i) in fields" :key="i">
+      @selectOption="selectCountry" />
+    <div
+      v-for="(field, i) in fields"
+      :key="i"
+      class="field-container">
       <BaseInput
+        :id="id + '-field-registration-' + field.label.toLowerCase()"
         :label="field.label.replace('Name', '')"
         :name="field.placeholder"
-        @input="handleInput($event, i)"
         :valid="field.valid"
-        :id="id + '-field-registration-' + field.label.toLowerCase()"
+        @input="handleInput($event, i)"
         @focusin="field.showMessage = true"
-        @focusout="field.showMessage = false"
-      />
+        @focusout="field.showMessage = false" />
       <Transition>
         <BaseMessage
+          v-if="field.showMessage && field.valid === 'invalid'"
           absolute
           arrow="top"
-          v-if="field.showMessage && field.valid === 'invalid'"
-          alert="danger"
-        >
-          {{ field.invalidMessage }}</BaseMessage
-        >
+          alert="danger">
+          {{ field.invalidMessage }}
+        </BaseMessage>
       </Transition>
     </div>
   </div>
@@ -43,7 +43,6 @@ import { type RegistrationAddressData } from '@/types/types';
 import toCamelCase from '../utils/toCamelCase';
 
 export default {
-  emits: ['valid-all-address-fields'],
   components: {
     BaseInput,
     BaseMessage,
@@ -53,6 +52,7 @@ export default {
     title: { type: String, required: true },
     id: { type: String, required: true },
   },
+  emits: ['valid-all-address-fields'],
   data(): RegistrationAddressData {
     return {
       countryField: {

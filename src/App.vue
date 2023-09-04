@@ -1,3 +1,9 @@
+<template>
+  <AppHeader />
+  <RouterView />
+  <AppFooter />
+</template>
+
 <script lang="ts">
 import './assets/styles/style.css';
 import { mapActions } from 'pinia';
@@ -18,9 +24,3 @@ export default {
   },
 };
 </script>
-
-<template>
-  <AppHeader />
-  <RouterView />
-  <AppFooter />
-</template>

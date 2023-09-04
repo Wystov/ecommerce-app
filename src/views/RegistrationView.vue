@@ -1,9 +1,15 @@
 <template>
-  <div v-if="userStore.fetching" class="spinner-container">
+  <div
+    v-if="userStore.fetching"
+    class="spinner-container">
     <div class="spinner" />
   </div>
-  <section v-else class="wrapper registration">
-    <h1 class="title">Sign up to Crunch</h1>
+  <section
+    v-else
+    class="wrapper registration">
+    <h1 class="title">
+      Sign up to Crunch
+    </h1>
     <AppRegistration />
   </section>
 </template>
