@@ -12,9 +12,6 @@ export const useUserStore = defineStore('user', {
     fetching: true,
     data: {
       country: localStorage.getItem(LocalStorageKeys.Country) ?? 'US',
-      cart: {
-        product: [],
-      },
     },
     customerData: {} as ClientResponse,
   }),
@@ -97,16 +94,6 @@ export const useUserStore = defineStore('user', {
       filter.refreshFilter();
       this.data.country = country;
       localStorage.setItem(LocalStorageKeys.Country, this.data.country);
-    },
-    hasProductInCart(keyProduct: number): Boolean {
-      return this.data.cart.product.includes(keyProduct);
-    },
-    addProductToCart(keyProduct: number) {
-      this.data.cart.product.push(keyProduct);
-    },
-    removeProductFromCart(keyProduct: number) {
-      const index = this.data.cart.product.findIndex((product) => product === keyProduct);
-      this.data.cart.product.splice(index, 1);
     },
     setCustomerData(data: ClientResponse): void {
       this.customerData = data;

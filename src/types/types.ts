@@ -179,9 +179,6 @@ interface StateUser {
   fetching: boolean;
   data: {
     country: string;
-    cart: {
-      product: number[];
-    };
   };
   customerData: ClientResponse;
 }
@@ -274,6 +271,9 @@ interface PasswordEditBlock {
   wrongOldPass: boolean;
   wrongOldPassText: string;
 }
+interface StateCart {
+  products: { keyProduct: number, count: number }[]
+}
 export type {
   ButtonClasses,
   SelectClasses,
@@ -315,4 +315,5 @@ export type {
   MainFields,
   PasswordEditBlock,
   AccountAddressData,
+  StateCart,
 };
