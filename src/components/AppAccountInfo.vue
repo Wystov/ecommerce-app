@@ -129,13 +129,13 @@ export default {
 .info-container {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 1.5rem;
 }
 .info-block {
   display: grid;
   grid-template-columns: 0.5fr 1fr;
   align-items: end;
-  gap: 3rem;
+  gap: 1rem;
 }
 .content-name {
   width: fit-content;
@@ -150,14 +150,17 @@ export default {
   background-color: transparent;
   color: var(--main-font-color);
   border: 1.5px solid var(--main-font-color);
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
 }
 .buttons-block :deep(.button:hover) {
   border-color: var(--main-color);
 }
 .divider-final {
   width: 100%;
-  border: 0.75px solid var(--main-font-color);
+  border: 1px solid var(--main-font-color);
   grid-area: divider;
+  margin-bottom: 2rem;
 }
 
 .popup-container :deep(.modal-container) {

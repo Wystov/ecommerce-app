@@ -333,7 +333,7 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 .info-container {
   display: flex;
@@ -344,13 +344,16 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 1rem 0 0 0;
+  margin-bottom: 1rem;
 }
 .address-line {
   display: flex;
   align-items: center;
   font-size: 1rem;
   gap: 2rem;
+}
+.address-item:last-child {
+margin-bottom: 0;
 }
 .icon {
   height: 1.5rem;
@@ -375,7 +378,7 @@ export default {
   cursor: pointer;
   border: 1px solid var(--main-font-color);
   font-size: 1rem;
-  padding: 3px 21px;
+  padding: 0.15px 1rem;
   border-radius: 10px;
 }
 .buttons-block {
@@ -388,14 +391,17 @@ export default {
   color: var(--main-font-color);
   border: 1.5px solid var(--main-font-color);
   width: fit-content;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
 }
 .container :deep(.button:hover) {
   border-color: var(--main-color);
 }
 .divider-final {
   width: 100%;
-  border: 0.75px solid var(--main-font-color);
+  border: 1px solid var(--main-font-color);
   grid-area: divider;
+  margin: 0.5rem 0 2rem 0;
 }
 .popup-container :deep(.modal-container) {
   padding: 20px;
