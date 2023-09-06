@@ -47,19 +47,38 @@
                 discounted
                 :price="priceDiscounted" />
             </div>
-            <BaseButton
-              v-if="hasProductInCart(product.keyProduct || -1)"
-              outline
-              class="button"
-              @click="removeProductFromCart(product.keyProduct || -1)">
-              Remove from cart
-            </BaseButton>
-            <BaseButton
-              v-else
-              class="button"
-              @click="addProductToCart(product.keyProduct || -1)">
-              Add to cart
-            </BaseButton>
+            <div class="control-product-btns">
+              <div
+                v-if="hasProductInCart(product.keyProduct || -1)"
+                class="count-product">
+                <BaseButton
+                  circle
+                  class="count-btn"
+                  @click="removeProductFromCart(product.keyProduct || -1)">
+                  &lt;
+                </BaseButton>
+                <span class="count">{{ getCountProduct(product.keyProduct || -1) }}</span>
+                <BaseButton
+                  circle
+                  class="count-btn"
+                  @click="addProductToCart(product.keyProduct || -1)">
+                  &gt;
+                </BaseButton>
+              </div>
+              <BaseButton
+                v-if="hasProductInCart(product.keyProduct || -1)"
+                outline
+                class="button"
+                @click="removeProductFromCart(product.keyProduct || -1, true)">
+                Remove from cart
+              </BaseButton>
+              <BaseButton
+                v-else
+                class="button"
+                @click="addProductToCart(product.keyProduct || -1)">
+                Add to cart
+              </BaseButton>
+            </div>
           </div>
           <ul class="specification-list">
             <li
@@ -87,6 +106,7 @@ import type { Price } from '@commercetools/platform-sdk';
 import { mapState, mapActions } from 'pinia';
 import type { AppProduct } from '@/types/types';
 import { useUserStore } from '@/stores/user';
+import { useCartStore } from '@/stores/cart';
 import api from '@/utils/api/client';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 import NotFoundView from '@/views/NotFoundView.vue';
@@ -137,7 +157,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useUserStore, ['addProductToCart', 'removeProductFromCart', 'hasProductInCart']),
+    ...mapActions(useCartStore, [
+      'addProductToCart',
+      'removeProductFromCart',
+      'hasProductInCart',
+      'getCountProduct',
+    ]),
     async getProduct(): Promise<void> {
       const { slug } = this.$route.params;
       const queryArgs = { where: `slug(en="${slug}")` };
@@ -261,6 +286,28 @@ export default {
       justify-self: flex-end;
     }
   }
+}
+.control-product-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2em;
+}
+.count-product {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.count-btn {
+  min-width: 2em;
+  min-height: 2em;
+  width: 2em;
+  height: 2em;
+}
+.count {
+  font-family: sans-serif;
+  width: 3em;
+  text-align: center;
 }
 .specification-list {
   display: flex;
