@@ -1,63 +1,97 @@
 <template>
-  <div class="wrapper">
-    <h1>Cart ({{ data?.totalLineItemQuantity }})</h1>
+  <Transition mode="out-in">
     <div
-      v-if="data"
-      class="cart">
-      <ul class="cart-item-list">
-        <li
-          v-for="item in data.lineItems"
-          :key="item.id"
-          class="cart-item">
-          <RouterLink
-            class="item-image"
-            :to="{ name: 'Product', params: { slug: item.productSlug?.en } }">
-            <img
-              :src="item.variant.images?.[0].url ?? imgPlaceholder"
-              alt="item image"
-              class="item-image" />
-          </RouterLink>
-          <div class="item-content">
-            <div class="item-info">
-              <div class="item-name">
-                {{ item.name.en }}
-              </div>
-              <div>
-                Price:
-                <template v-if="item.price.discounted">
-                  <span class="old-price">
-                    {{ formattedPrice(item.price.value.centAmount) }}
-                  </span>
-                  <span class="new-price">
-                    {{ formattedPrice(item.price.discounted.value.centAmount) }}
-                  </span>
-                </template>
-                <template v-else>
-                  <span class="price">
-                    {{ formattedPrice(item.price.value.centAmount) }}
-                  </span>
-                </template>
-              </div>
-            </div>
-            <div class="item-values">
-              <BaseNumberInput
-                :value="item.quantity"
-                @valueChange="changeQuantity(item, $event)" />
-              <div class="item-total">
-                {{ formattedPrice(item.totalPrice.centAmount) }}
-              </div>
-            </div>
-          </div>
-          <TrashIcon
-            class="remove-icon"
-            @click="changeQuantity(item, 0)" />
-        </li>
-      </ul>
-      <div class="cart-info">
-        <span>Total: {{ formattedPrice(data.totalPrice.centAmount) }}</span>
-      </div>
+      v-if="fetching"
+      class="spinner-container">
+      <div class="spinner" />
     </div>
-  </div>
+    <template v-else>
+      <div
+        v-if="data && data.lineItems.length"
+        class="wrapper">
+        <h1>Cart ({{ data?.totalLineItemQuantity }})</h1>
+        <div class="cart">
+          <ul class="cart-item-list">
+            <li
+              v-for="item in data.lineItems"
+              :key="item.id"
+              class="cart-item">
+              <RouterLink
+                class="item-image"
+                :to="{ name: 'Product', params: { slug: item.productSlug?.en } }">
+                <img
+                  :src="item.variant.images?.[0].url ?? imgPlaceholder"
+                  alt="item image"
+                  class="item-image" />
+              </RouterLink>
+              <div class="item-content">
+                <div class="item-info">
+                  <div class="item-name">
+                    {{ item.name.en }}
+                  </div>
+                  <div>
+                    Price:
+                    <template v-if="item.price.discounted">
+                      <span class="old-price">
+                        {{ formattedPrice(item.price.value.centAmount) }}
+                      </span>
+                      <span class="new-price">
+                        {{ formattedPrice(item.price.discounted.value.centAmount) }}
+                      </span>
+                    </template>
+                    <template v-else>
+                      <span class="price">
+                        {{ formattedPrice(item.price.value.centAmount) }}
+                      </span>
+                    </template>
+                  </div>
+                </div>
+                <div class="item-values">
+                  <BaseNumberInput
+                    :value="item.quantity"
+                    @valueChange="changeQuantity(item, $event)" />
+                  <div class="item-total">
+                    {{ formattedPrice(item.totalPrice.centAmount) }}
+                  </div>
+                </div>
+              </div>
+              <TrashIcon
+                class="remove-icon"
+                @click="changeQuantity(item, 0)" />
+            </li>
+          </ul>
+          <div class="cart-info">
+            <span class="info-total">Total: {{ formattedPrice(data.totalPrice.centAmount) }}</span>
+            <BaseButton
+              class="clear-cart-button"
+              size="small"
+              @click="showModal = true">
+              Clear Shopping Cart
+            </BaseButton>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="empty-cart-info">
+          <h3>Cart is empty</h3>
+          <RouterLink :to="{ name: 'Catalog' }">Continue shopping</RouterLink>
+        </div>
+      </div>
+    </template>
+  </Transition>
+  <BasePopup
+    :show="showModal"
+    @close="showModal = false">
+    <div class="popup-container">
+      <h3>Are you sure?</h3>
+      <p>This will clear all items from your cart.</p>
+      <BaseButton
+        class="medium"
+        @click="removeCart">
+        Clear cart
+      </BaseButton>
+    </div>
+  </BasePopup>
 </template>
 
 <script lang="ts">
@@ -68,16 +102,22 @@ import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 import BaseNumberInput from '@/components/shared/BaseNumberInput.vue';
+import BaseButton from '@/components/shared/BaseButton.vue';
+import BasePopup from '@/components/shared/BasePopup.vue';
 
 export default {
   components: {
     BaseNumberInput,
     TrashIcon,
+    BaseButton,
+    BasePopup,
   },
-  data(): { imgPlaceholder: string; data: Cart | null } {
+  data(): { imgPlaceholder: string; data: Cart | null; fetching: boolean; showModal: boolean } {
     return {
+      fetching: true,
       imgPlaceholder,
       data: null,
+      showModal: false,
     };
   },
   computed: {
@@ -88,6 +128,7 @@ export default {
       const response = await api.call().me().activeCart().get().execute();
       this.data = response.body;
       console.log(response);
+      this.fetching = false;
     },
     async changeQuantity(item: LineItem, count: number): Promise<void> {
       const body: MyCartUpdate = {
@@ -108,6 +149,17 @@ export default {
         .post({ body })
         .execute();
       this.data = response.body;
+    },
+    async removeCart(): Promise<void> {
+      this.showModal = false;
+      await api
+        .call()
+        .me()
+        .carts()
+        .withId({ ID: this.data?.id ?? '' })
+        .delete({ queryArgs: { version: this.data?.version ?? 0 } })
+        .execute();
+      this.data = null;
     },
     formattedPrice(price: number): string {
       return `${this.currencyTag}${(price / 100).toFixed(2)}`;
@@ -188,5 +240,20 @@ export default {
   position: absolute;
   right: 2rem;
   height: 1.5rem;
+}
+.info-total {
+  display: block;
+  margin-bottom: 1rem;
+}
+.empty-cart-info {
+  display: grid;
+  place-items: center;
+  row-gap: 2rem;
+}
+.popup-container {
+  display: grid;
+  place-items: center;
+  row-gap: 2rem;
+  padding: 2rem;
 }
 </style>
