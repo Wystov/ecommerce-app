@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper">
-    <h1>Cart</h1>
-    <div v-if="data">
+    <h1>Cart ({{ data?.totalLineItemQuantity }})</h1>
+    <div
+      v-if="data"
+      class="cart">
       <ul class="cart-item-list">
         <li
           v-for="item in data.lineItems"
@@ -38,7 +40,9 @@
               </div>
             </div>
             <div class="item-values">
-              <div>-{{ item.quantity }}+</div>
+              <BaseNumberInput
+                :value="item.quantity"
+                @valueChange="changeQuantity(item, $event)" />
               <div class="item-total">
                 {{ formattedPrice(item.totalPrice.centAmount) }}
               </div>
@@ -46,18 +50,25 @@
           </div>
         </li>
       </ul>
+      <div class="cart-info">
+        <span>Total: {{ formattedPrice(data.totalPrice.centAmount) }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import type { Cart } from '@commercetools/platform-sdk';
+import type { Cart, LineItem, MyCartUpdate } from '@commercetools/platform-sdk';
 import { mapState } from 'pinia';
 import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
+import BaseNumberInput from '@/components/shared/BaseNumberInput.vue';
 
 export default {
+  components: {
+    BaseNumberInput,
+  },
   data(): { imgPlaceholder: string; data: Cart | null } {
     return {
       imgPlaceholder,
@@ -70,7 +81,27 @@ export default {
   methods: {
     async getCart(): Promise<void> {
       const response = await api.call().me().activeCart().get().execute();
+      this.data = response.body;
       console.log(response);
+    },
+    async changeQuantity(item: LineItem, count: number): Promise<void> {
+      const body: MyCartUpdate = {
+        version: this.data?.version ?? 0,
+        actions: [
+          {
+            action: 'changeLineItemQuantity',
+            lineItemId: item.id,
+            quantity: count,
+          },
+        ],
+      };
+      const response = await api
+        .call()
+        .me()
+        .carts()
+        .withId({ ID: this.data?.id ?? '' })
+        .post({ body })
+        .execute();
       this.data = response.body;
     },
     formattedPrice(price: number): string {
@@ -87,6 +118,11 @@ export default {
 .wrapper {
   width: 100%;
 }
+.cart {
+  display: flex;
+  gap: 1rem;
+}
+
 .cart-item {
   display: flex;
   align-items: center;
@@ -132,5 +168,11 @@ export default {
   font-size: 1.25rem;
   text-align: right;
   min-width: 8rem;
+}
+.cart-info {
+  width: 300px;
+  padding: 1rem;
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
 }
 </style>
