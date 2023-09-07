@@ -48,6 +48,9 @@
               </div>
             </div>
           </div>
+          <TrashIcon
+            class="remove-icon"
+            @click="changeQuantity(item, 0)" />
         </li>
       </ul>
       <div class="cart-info">
@@ -60,6 +63,7 @@
 <script lang="ts">
 import type { Cart, LineItem, MyCartUpdate } from '@commercetools/platform-sdk';
 import { mapState } from 'pinia';
+import { TrashIcon } from '@heroicons/vue/24/outline';
 import { useUserStore } from '@/stores/user';
 import api from '@/utils/api/client';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
@@ -68,6 +72,7 @@ import BaseNumberInput from '@/components/shared/BaseNumberInput.vue';
 export default {
   components: {
     BaseNumberInput,
+    TrashIcon,
   },
   data(): { imgPlaceholder: string; data: Cart | null } {
     return {
@@ -122,8 +127,11 @@ export default {
   display: flex;
   gap: 1rem;
 }
-
+.cart-item-list {
+  flex-grow: 1;
+}
 .cart-item {
+  position: relative;
   display: flex;
   align-items: center;
   padding: 1rem;
@@ -174,5 +182,11 @@ export default {
   padding: 1rem;
   border: 1px solid #e9e9e9;
   border-radius: 10px;
+}
+.remove-icon {
+  cursor: pointer;
+  position: absolute;
+  right: 2rem;
+  height: 1.5rem;
 }
 </style>
