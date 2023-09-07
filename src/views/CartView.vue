@@ -9,7 +9,7 @@
       <div
         v-if="data && data.lineItems.length"
         class="wrapper">
-        <h1>Cart ({{ data?.totalLineItemQuantity }})</h1>
+        <h1>Cart{{ ` (${data?.totalLineItemQuantity ?? 0}` }})</h1>
         <div class="cart">
           <ul class="cart-item-list">
             <li
@@ -125,10 +125,15 @@ export default {
   },
   methods: {
     async getCart(): Promise<void> {
-      const response = await api.call().me().activeCart().get().execute();
-      this.data = response.body;
-      console.log(response);
-      this.fetching = false;
+      try {
+        const response = await api.call().me().activeCart().get().execute();
+        this.data = response.body;
+        console.log(response);
+      } catch {
+        this.data = null;
+      } finally {
+        this.fetching = false;
+      }
     },
     async changeQuantity(item: LineItem, count: number): Promise<void> {
       const body: MyCartUpdate = {
@@ -192,6 +197,9 @@ export default {
   margin-bottom: 1.25rem;
   border: 1px solid #e9e9e9;
   border-radius: 10px;
+}
+.cart-item:last-child {
+  margin-bottom: 0;
 }
 .item-image {
   display: block;
