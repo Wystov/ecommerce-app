@@ -60,7 +60,7 @@
                     :max="item.variant.availability?.availableQuantity ?? 1"
                     @valueChange="changeQuantity(item, $event)" />
                   <div class="item-total">
-                    {{ formattedPrice(item.totalPrice.centAmount) }}
+                    {{ formattedPrice(getItemTotal(item)) }}
                   </div>
                 </div>
               </div>
@@ -93,6 +93,8 @@
                 {{ promoAlertMessage }}
               </BaseMessage>
             </Transition>
+            <span class="info-total">Subtotal: {{ formattedPrice(cartSubtotal) }}</span>
+            <span class="info-total">Promocode: {{ promocodeValue }}</span>
             <span class="info-total">Total: {{ formattedPrice(data.totalPrice.centAmount) }}</span>
           </div>
         </div>
@@ -163,6 +165,13 @@ export default {
         actions: [],
       };
       return body;
+    },
+    cartSubtotal(): number {
+      return this.data?.lineItems.reduce((acc, item) => this.getItemTotal(item) + acc, 0) ?? 0;
+    },
+    promocodeValue(): string {
+      const value = (this.data?.totalPrice.centAmount ?? 0) - this.cartSubtotal;
+      return this.formattedPrice(value);
     },
   },
   methods: {
@@ -237,6 +246,11 @@ export default {
     },
     formattedPrice(price: number): string {
       return `${this.currencyTag}${(price / 100).toFixed(2)}`;
+    },
+    getItemTotal(item: LineItem): number {
+      const discounted = item.price.discounted?.value.centAmount;
+      const normal = item.price.value.centAmount;
+      return (discounted ?? normal) * item.quantity;
     },
   },
   created(): void {
