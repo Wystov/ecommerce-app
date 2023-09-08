@@ -57,6 +57,7 @@
                 <div class="item-values">
                   <BaseNumberInput
                     :value="item.quantity"
+                    :max="item.variant.availability?.availableQuantity ?? 1"
                     @valueChange="changeQuantity(item, $event)" />
                   <div class="item-total">
                     {{ formattedPrice(item.totalPrice.centAmount) }}

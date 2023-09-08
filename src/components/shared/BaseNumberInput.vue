@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    :disabled="value === 1"
+    :disabled="value === min"
     class="button-decr"
     @click="manualChange('decr')">
     -
@@ -16,7 +16,7 @@
     @keyup.enter="userInput" />
   <button
     type="button"
-    :disabled="value === 599"
+    :disabled="value === max"
     class="button-incr"
     @click="manualChange('incr')">
     +
@@ -30,12 +30,20 @@ export default {
       type: Number,
       required: true,
     },
+    min: {
+      type: Number,
+      default: 1,
+    },
+    max: {
+      type: Number,
+      required: true,
+    },
   },
   emits: ['valueChange'],
   methods: {
     manualChange(action: 'incr' | 'decr'): void {
       const value = action === 'incr' ? this.value + 1 : this.value - 1;
-      if (value < 1 || value > 599) return;
+      if (value < this.min || value > this.max) return;
       this.$emit('valueChange', value);
     },
     userInput(): void {
@@ -46,13 +54,13 @@ export default {
         case Number.isNaN(value):
           input.value = this.value.toString();
           return;
-        case value < 1:
+        case value < this.min:
           input.value = '1';
-          this.$emit('valueChange', 1);
+          this.$emit('valueChange', this.min);
           break;
-        case value > 599:
-          input.value = '599';
-          this.$emit('valueChange', 599);
+        case value > this.max:
+          input.value = this.max.toString();
+          this.$emit('valueChange', this.max);
           break;
         default:
           this.$emit('valueChange', value);
