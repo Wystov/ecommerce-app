@@ -1,4 +1,4 @@
-import type { ProductProjection, ClientResponse } from '@commercetools/platform-sdk';
+import type { ProductProjection, ClientResponse, Cart } from '@commercetools/platform-sdk';
 import type { Ref } from 'vue';
 import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
@@ -274,6 +274,16 @@ interface PasswordEditBlock {
   wrongOldPass: boolean;
   wrongOldPassText: string;
 }
+interface CartType {
+  imgPlaceholder: string;
+  data: Cart | null;
+  fetching: boolean;
+  showModal: boolean;
+  showPromoAlert: boolean;
+  promoAlertMessage: string;
+  promoApplied: boolean;
+}
+
 export type {
   ButtonClasses,
   SelectClasses,
@@ -315,4 +325,5 @@ export type {
   MainFields,
   PasswordEditBlock,
   AccountAddressData,
+  CartType,
 };

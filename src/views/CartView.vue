@@ -9,7 +9,15 @@
       <div
         v-if="data && data.lineItems.length"
         class="wrapper">
-        <h1>Cart{{ ` (${data?.totalLineItemQuantity ?? 0}` }})</h1>
+        <div class="top-container">
+          <h1>Cart{{ ` (${data?.totalLineItemQuantity ?? 0}` }})</h1>
+          <BaseButton
+            class="clear-cart-button"
+            size="small"
+            @click="showModal = true">
+            Clear Shopping Cart
+          </BaseButton>
+        </div>
         <div class="cart">
           <ul class="cart-item-list">
             <li
@@ -61,13 +69,30 @@
             </li>
           </ul>
           <div class="cart-info">
+            <span class="info-title">Promocode</span>
+            <div class="promo-container">
+              <BaseInput
+                id="promocode"
+                ref="promoInput"
+                width="75%"
+                @keyup.enter="applyPromo" />
+              <BaseButton
+                size="small"
+                class="promocode-btn"
+                @click="applyPromo">
+                Apply
+              </BaseButton>
+            </div>
+            <Transition>
+              <BaseMessage
+                v-if="showPromoAlert"
+                absolute
+                arrow="top"
+                alert="danger">
+                {{ promoAlertMessage }}
+              </BaseMessage>
+            </Transition>
             <span class="info-total">Total: {{ formattedPrice(data.totalPrice.centAmount) }}</span>
-            <BaseButton
-              class="clear-cart-button"
-              size="small"
-              @click="showModal = true">
-              Clear Shopping Cart
-            </BaseButton>
           </div>
         </div>
       </div>
@@ -95,7 +120,7 @@
 </template>
 
 <script lang="ts">
-import type { Cart, LineItem, MyCartUpdate } from '@commercetools/platform-sdk';
+import type { LineItem, MyCartUpdate } from '@commercetools/platform-sdk';
 import { mapState } from 'pinia';
 import { TrashIcon } from '@heroicons/vue/24/outline';
 import { useUserStore } from '@/stores/user';
@@ -104,6 +129,9 @@ import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 import BaseNumberInput from '@/components/shared/BaseNumberInput.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BasePopup from '@/components/shared/BasePopup.vue';
+import BaseInput from '@/components/shared/BaseInput.vue';
+import type { BaseInputType, CartType } from '@/types/types';
+import BaseMessage from '@/components/shared/BaseMessage.vue';
 
 export default {
   components: {
@@ -111,17 +139,29 @@ export default {
     TrashIcon,
     BaseButton,
     BasePopup,
+    BaseInput,
+    BaseMessage,
   },
-  data(): { imgPlaceholder: string; data: Cart | null; fetching: boolean; showModal: boolean } {
+  data(): CartType {
     return {
       fetching: true,
       imgPlaceholder,
       data: null,
       showModal: false,
+      showPromoAlert: false,
+      promoAlertMessage: '',
+      promoApplied: false,
     };
   },
   computed: {
     ...mapState(useUserStore, ['currencyTag']),
+    requestBody(): MyCartUpdate {
+      const body: MyCartUpdate = {
+        version: this.data?.version ?? 0,
+        actions: [],
+      };
+      return body;
+    },
   },
   methods: {
     async getCart(): Promise<void> {
@@ -136,16 +176,12 @@ export default {
       }
     },
     async changeQuantity(item: LineItem, count: number): Promise<void> {
-      const body: MyCartUpdate = {
-        version: this.data?.version ?? 0,
-        actions: [
-          {
-            action: 'changeLineItemQuantity',
-            lineItemId: item.id,
-            quantity: count,
-          },
-        ],
-      };
+      const body = { ...this.requestBody };
+      body.actions.push({
+        action: 'changeLineItemQuantity',
+        lineItemId: item.id,
+        quantity: count,
+      });
       const response = await api
         .call()
         .me()
@@ -166,6 +202,32 @@ export default {
         .execute();
       this.data = null;
     },
+    async applyPromo(): Promise<void> {
+      const code = (this.$refs.promoInput as BaseInputType).inputValue.trim();
+      if (!code.length) return;
+      const body = { ...this.requestBody };
+      body.actions.push({
+        action: 'addDiscountCode',
+        code,
+      });
+      try {
+        const response = await api
+          .call()
+          .me()
+          .carts()
+          .withId({ ID: this.data?.id ?? '' })
+          .post({ body })
+          .execute();
+        this.data = response.body;
+        this.promoApplied = true;
+      } catch (error) {
+        this.promoAlertMessage = (error as Error).message;
+        this.showPromoAlert = true;
+        setTimeout(() => {
+          this.showPromoAlert = false;
+        }, 5000);
+      }
+    },
     formattedPrice(price: number): string {
       return `${this.currencyTag}${(price / 100).toFixed(2)}`;
     },
@@ -179,6 +241,11 @@ export default {
 <style>
 .wrapper {
   width: 100%;
+}
+.top-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .cart {
   display: flex;
@@ -263,5 +330,22 @@ export default {
   place-items: center;
   row-gap: 2rem;
   padding: 2rem;
+}
+.promo-container {
+  display: flex;
+  gap: 0.5rem;
+}
+.info-title {
+  font-weight: 600;
+}
+.top-container .clear-cart-button {
+  background: white;
+  color: var(--main-font-color);
+  font-size: 0.9rem;
+  border: 1.5px solid var(--main-font-color);
+
+  &:hover {
+    border: 1.5px solid transparent;
+  }
 }
 </style>
