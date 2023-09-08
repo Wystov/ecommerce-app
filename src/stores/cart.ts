@@ -43,11 +43,13 @@ export const useCartStore = defineStore('cart', {
         console.log('product send');
       }
     },
-    removeProductFromCart(keyProduct: number, all = false) {
+    async removeProductFromCart(keyProduct: number, all = false) {
       const index = this.products.findIndex((product) => product.keyProduct === keyProduct);
       if (this.hasProductInCart(keyProduct) && this.products[index].count > 1 && !all) {
         this.decreaseCount(index);
+        await this.updateQuantity(index);
       } else {
+        await this.deleteProduct(index);
         this.products.splice(index, 1);
       }
     },
@@ -92,7 +94,21 @@ export const useCartStore = defineStore('cart', {
           },
         ],
       } }).execute();
+      this.cartVersion = cart.body.version;
       console.log('update prod', cart);
+    },
+    async deleteProduct(indexProduct: number) {
+      const cart = await api.call().me().carts().withId({ ID: this.cartId }).post({ body: {
+        version: this.cartVersion || 1,
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId: this.products[indexProduct].lineItemId,
+          },
+        ],
+      } }).execute();
+      this.cartVersion = cart.body.version;
+      console.log('delete prod', cart);
     },
     async deleteCart() {
       await api.call().me().carts().withId({ ID: this.cartId })
