@@ -61,7 +61,7 @@
                 <BaseButton
                   circle
                   class="count-btn"
-                  @click="addProductToCart(product.keyProduct || -1)">
+                  @click="addProductToCart(product.keyProduct || -1, product.skuProduct || '')">
                   &gt;
                 </BaseButton>
               </div>
@@ -75,7 +75,7 @@
               <BaseButton
                 v-else
                 class="button"
-                @click="addProductToCart(product.keyProduct || -1)">
+                @click="cartHandler(product.keyProduct, product.skuProduct)">
                 Add to cart
               </BaseButton>
             </div>
@@ -131,11 +131,13 @@ export default {
         description: '',
         images: [],
         keyProduct: undefined,
+        skuProduct: undefined,
       },
     };
   },
   computed: {
     ...mapState(useUserStore, { userData: 'data', currencyTag: 'currencyTag' }),
+    ...mapState(useCartStore, { getCartId: 'getCartId' }),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
     },
@@ -162,6 +164,7 @@ export default {
       'removeProductFromCart',
       'hasProductInCart',
       'getCountProduct',
+      'createCart',
     ]),
     async getProduct(): Promise<void> {
       const { slug } = this.$route.params;
@@ -174,6 +177,7 @@ export default {
         const { masterVariant } = this.productData;
 
         this.splittedTitle(this.productData?.name.en);
+        this.product.skuProduct = masterVariant?.sku;
         this.product.attributes = masterVariant?.attributes;
         this.product.description = this.productData?.description?.en || '';
         this.product.images = masterVariant.images?.map((img) => img.url ?? imgPlaceholder) || [];
@@ -200,6 +204,10 @@ export default {
       } else {
         this.product.name[0] = title;
       }
+    },
+    async cartHandler(keyProduct?: number, skuProduct?: string): Promise<void> {
+      if (this.getCartId === '') await this.createCart();
+      this.addProductToCart(keyProduct || -1, skuProduct || '');
     },
   },
   created(): void {

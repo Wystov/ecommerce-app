@@ -192,6 +192,7 @@ interface AppProduct {
     description: string;
     images: string[];
     keyProduct?: number;
+    skuProduct?: string;
   };
 }
 type SortBy = 'price desc' | 'price asc' | 'name en';
@@ -271,9 +272,18 @@ interface PasswordEditBlock {
   wrongOldPass: boolean;
   wrongOldPassText: string;
 }
-interface StateCart {
-  products: { keyProduct: number, count: number }[]
+interface ProductCart {
+  keyProduct: number,
+  count: number,
+  sku: string,
+  lineItemId?: string,
 }
+interface StateCart {
+  products: ProductCart[],
+  cartId: string,
+  cartVersion?: number,
+}
+
 export type {
   ButtonClasses,
   SelectClasses,
@@ -316,4 +326,5 @@ export type {
   PasswordEditBlock,
   AccountAddressData,
   StateCart,
+  ProductCart,
 };
