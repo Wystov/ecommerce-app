@@ -151,6 +151,7 @@ export default {
       showPromoAlert: false,
       promoAlertMessage: '',
       promoApplied: false,
+      promoAlertTimeout: null,
     };
   },
   computed: {
@@ -168,7 +169,6 @@ export default {
       try {
         const response = await api.call().me().activeCart().get().execute();
         this.data = response.body;
-        console.log(response);
       } catch {
         this.data = null;
       } finally {
@@ -177,6 +177,7 @@ export default {
     },
     async changeQuantity(item: LineItem, count: number): Promise<void> {
       const body = { ...this.requestBody };
+      body.actions.length = 0;
       body.actions.push({
         action: 'changeLineItemQuantity',
         lineItemId: item.id,
@@ -203,13 +204,16 @@ export default {
       this.data = null;
     },
     async applyPromo(): Promise<void> {
-      const code = (this.$refs.promoInput as BaseInputType).inputValue.trim();
+      const input = this.$refs.promoInput as BaseInputType;
+      const code = input.inputValue.trim();
       if (!code.length) return;
       const body = { ...this.requestBody };
+      body.actions.length = 0;
       body.actions.push({
         action: 'addDiscountCode',
         code,
       });
+      if (this.promoAlertTimeout) clearTimeout(this.promoAlertTimeout);
       try {
         const response = await api
           .call()
@@ -223,9 +227,11 @@ export default {
       } catch (error) {
         this.promoAlertMessage = (error as Error).message;
         this.showPromoAlert = true;
-        setTimeout(() => {
+        this.promoAlertTimeout = window.setTimeout(() => {
           this.showPromoAlert = false;
         }, 5000);
+      } finally {
+        input.inputValue = '';
       }
     },
     formattedPrice(price: number): string {

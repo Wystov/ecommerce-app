@@ -282,6 +282,7 @@ interface CartType {
   showPromoAlert: boolean;
   promoAlertMessage: string;
   promoApplied: boolean;
+  promoAlertTimeout: number | null;
 }
 
 export type {
