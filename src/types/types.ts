@@ -159,7 +159,6 @@ interface AccountInfoData {
   createCustomerMessage: { text: string; alert: string; title: string };
 }
 interface AccountAddressData {
-  loaded: boolean;
   showPopup: boolean;
   addressSection: string;
   addressId: string;

@@ -3,7 +3,7 @@
     <div class="info-container">
       <h3>Shipping addresses</h3>
       <div class="address-block">
-        <template v-if="loaded">
+        <template v-if="!userStore.fetching">
           <div
             v-if="userStore.getDefaultShippingAddressId"
             :id="userStore.getDefaultShippingAddressId"
@@ -57,7 +57,7 @@
     <div class="info-container">
       <h3>Billing addresses</h3>
       <div class="address-block">
-        <template v-if="loaded">
+        <template v-if="!userStore.fetching">
           <div
             v-if="userStore.getDefaultBillingAddressId"
             :id="userStore.getDefaultBillingAddressId"
@@ -176,7 +176,6 @@ export default {
   },
   data(): AccountAddressData {
     return {
-      loaded: false,
       showPopup: false,
       addressSection: 'shipping',
       addressId: '',
@@ -306,9 +305,6 @@ export default {
         this.showMessageEditSuccess = false;
       }, 1500);
     },
-  },
-  created(): void {
-    this.loaded = true;
   },
 };
 </script>
