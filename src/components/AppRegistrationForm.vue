@@ -233,8 +233,8 @@ export default {
 
     async signInUser(): Promise<void> {
       const { email, password } = this.bodyRequest;
-      await api.signInCustomer({ username: email, password });
-      this.userStore.loginUser();
+      const resp = await api.signInCustomer({ username: email, password });
+      if (resp.data) this.userStore.loginUser(resp.data);
     },
   },
 };

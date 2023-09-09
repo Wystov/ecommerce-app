@@ -198,13 +198,8 @@ export default {
     addressName(address: Address): string {
       return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
     },
-    async closePopup(): Promise<void> {
+    closePopup(): void {
       this.showPopup = false;
-      try {
-        await this.userStore.getData();
-      } catch (error) {
-        console.error('Error:', error);
-      }
     },
     openPopupForCreate(addressSection: string): void {
       this.addressId = '';
@@ -268,48 +263,42 @@ export default {
       if (deletedAddressId !== null) {
         const billingId =
           this.userStore.customerData.body.billingAddressIds.indexOf(deletedAddressId) !== -1;
-        if (billingId) {
+        const data = billingId ?
           await api
             .call()
             .me()
             .post({ body: this.postDeletedData(deletedAddressId, 'removeBillingAddressId') })
-            .execute();
-          await this.userStore.getData();
-        } else {
+            .execute() :
           await api
             .call()
             .me()
             .post({ body: this.postDeletedData(deletedAddressId, 'removeShippingAddressId') })
             .execute();
-          await this.userStore.getData();
-        }
-        await api
+        this.userStore.setCustomerData(data);
+        const newData = await api
           .call()
           .me()
           .post({ body: this.postDeletedData(deletedAddressId, 'removeAddress') })
           .execute();
-        await this.userStore.getData();
+        this.userStore.setCustomerData(newData);
       }
     },
     async setDefaultAddress(event: MouseEvent | KeyboardEvent): Promise<void> {
       const newDefaultId = this.getId(event);
       const billingId =
         this.userStore.customerData.body.billingAddressIds.indexOf(newDefaultId) !== -1;
-      if (billingId) {
+      const data = billingId ?
         await api
           .call()
           .me()
           .post({ body: this.postDefaultData(newDefaultId, 'setDefaultBillingAddress') })
-          .execute();
-        await this.userStore.getData();
-      } else {
+          .execute() :
         await api
           .call()
           .me()
           .post({ body: this.postDefaultData(newDefaultId, 'setDefaultShippingAddress') })
           .execute();
-        await this.userStore.getData();
-      }
+      this.userStore.setCustomerData(data);
     },
     showSuccessMessage(): void {
       this.showMessageEditSuccess = true;
@@ -318,13 +307,8 @@ export default {
       }, 1500);
     },
   },
-  async created(): Promise<void> {
-    try {
-      await this.userStore.getData();
-      this.loaded = true;
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  created(): void {
+    this.loaded = true;
   },
 };
 </script>

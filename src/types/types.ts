@@ -89,6 +89,7 @@ interface DefaultAddressProps {
 interface ApiResponse {
   ok: boolean;
   message?: string;
+  data?: ClientResponse;
 }
 interface DataLogin {
   emailValue: string;
@@ -261,10 +262,14 @@ interface CatalogViewType {
   showSidebar: boolean;
   screenWidth: number;
 }
-
 interface MainFields {
   valid: boolean;
   response: {};
+}
+interface AccountEditInfoBlockData {
+  mainFields: MainFields;
+  fields: RegistrationMainData[];
+  placeholders: string[];
 }
 interface PasswordEditBlock {
   mainFields: MainFields;
@@ -274,6 +279,7 @@ interface PasswordEditBlock {
   wrongOldPass: boolean;
   wrongOldPassText: string;
 }
+
 export type {
   ButtonClasses,
   SelectClasses,
@@ -313,6 +319,7 @@ export type {
   Address,
   CatalogViewType,
   MainFields,
+  AccountEditInfoBlockData,
   PasswordEditBlock,
   AccountAddressData,
 };

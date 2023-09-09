@@ -20,10 +20,10 @@
   </div>
   <div class="popup-container">
     <BasePopup
-      :show="showPopup === true"
+      :show="showPopup"
       :closeOnDelete="false"
       @close="closePopup">
-      <div v-if="updateInfo === true">
+      <div v-if="updateInfo">
         <h3 class="info-edit-header">
           Please fill only the fields you want to change and press "Update" button:
         </h3>
@@ -31,7 +31,7 @@
           @close="closePopup"
           @showSuccessMessage="showSuccessMessage" />
       </div>
-      <div v-if="updateInfo === false">
+      <div v-else>
         <EditPassBlock
           @close="closePopup"
           @showSuccessMessage="showSuccessMessage" />
@@ -95,9 +95,9 @@ export default {
   },
   methods: {
     updateNames(): void {
-      this.name = this.userStore.customerData.body.firstName;
-      this.surname = this.userStore.customerData.body.lastName;
-      this.date = this.userStore.customerData.body.dateOfBirth;
+      this.name = this.userStore.customerData.body.firstName ?? '';
+      this.surname = this.userStore.customerData.body.lastName ?? '';
+      this.date = this.userStore.customerData.body.dateOfBirth ?? '';
     },
     openInfoPopup(): void {
       this.showPopup = true;
@@ -119,7 +119,6 @@ export default {
     },
   },
   created(): void {
-    this.userStore.getData();
     this.updateNames();
   },
 };

@@ -148,10 +148,9 @@ export default {
       this.setValue(event, index);
       this.checkValid(index);
     },
-    setValue(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-
+    setValue(event: Event, index: number): void {
+      const input = event.target as HTMLInputElement;
+      const field = this.fields[index];
       field.value = input.value.trim();
     },
     checkValid(i: number): void {
@@ -163,9 +162,9 @@ export default {
         field.valid = field.pattern.test(field.value) ? 'valid' : 'invalid';
       }
     },
-    showPassword(e: InputEvent, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
+    showPassword(event: InputEvent, index: number): void {
+      const input = event.target as HTMLInputElement;
+      const field = this.fields[index];
       if (!(input instanceof SVGElement)) {
         return;
       }
@@ -190,11 +189,11 @@ export default {
         try {
           const { email } = this.userStore.customerData.body;
           await api.call().me().password().post({ body: this.postNewData }).execute();
-          await api.signInCustomer({
+          const resp = await api.signInCustomer({
             username: email,
             password: this.newPass,
           });
-          this.userStore.loginUser();
+          if (resp.data) this.userStore.loginUser(resp.data);
           this.$emit('close');
           this.$emit('showSuccessMessage');
         } catch (error) {
