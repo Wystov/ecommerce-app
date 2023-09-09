@@ -67,7 +67,7 @@ export const useUserStore = defineStore('user', {
     async init() {
       try {
         const response = await api.call().me().get().execute();
-        if (response.statusCode === 200) this.loginUserWithRequest();
+        if (response.statusCode === 200) this.loginUser(response);
       } catch (error) {
         this.logoutUser();
         initErrorHandler(error);
