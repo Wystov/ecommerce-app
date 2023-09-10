@@ -35,12 +35,13 @@ class ApiClient {
     }
   }
 
-  public async signInCustomer(user: UserAuthOptions): Promise<ApiResponse> {
+  public async signInCustomer(user: UserAuthOptions):
+  Promise<ApiResponse> {
     const passwordFlowApi = this.newFlow(user);
     try {
-      await passwordFlowApi.me().get().execute();
+      const resp = await passwordFlowApi.me().get().execute();
       this.api = passwordFlowApi;
-      return { ok: true };
+      return { ok: true, data: resp };
     } catch (error) {
       return authErrorHandler(error);
     }
