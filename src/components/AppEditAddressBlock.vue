@@ -231,14 +231,13 @@ export default {
       }
       this.readyData();
     },
-    setValue(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-
+    setValue(event: Event, index: number): void {
+      const input = event.target as HTMLInputElement;
+      const field = this.fields[index];
       field.value = input.value.trim();
     },
-    checkValid(i: number): void {
-      const field = this.fields[i];
+    checkValid(index: number): void {
+      const field = this.fields[index];
 
       if (field.value === '') field.valid = '';
 
@@ -302,14 +301,14 @@ export default {
     async updateInfo(): Promise<void> {
       if (this.allFieldsReady) {
         try {
-          await api
+          const data = await api
             .call()
             .me()
             .post({ body: this.postData(this.postAddressData) })
             .execute();
-          await this.userStore.getData();
+          this.userStore.setCustomerData(data);
           const newAddressId = this.newAddress;
-          this.section === 'billing'
+          const newData = this.section === 'billing'
             ? await api.call().me()
               .post({
                 body: this.postData(this.addressIdData('addBillingAddressId', newAddressId)),
@@ -320,27 +319,27 @@ export default {
                 body: this.postData(this.addressIdData('addShippingAddressId', newAddressId)),
               })
               .execute();
-          await this.userStore.getData();
+          this.userStore.setCustomerData(newData);
           this.$emit('close');
           this.$emit('showSuccessMessage');
         } catch (error) {
-          console.error('Error:', error);
+          if (error instanceof Error) console.log('Error occurred:', error.message);
         }
       }
     },
     async editInfo(): Promise<void> {
       if (this.readyToEdit) {
         try {
-          await api
+          const data = await api
             .call()
             .me()
             .post({ body: this.postData(this.postEditData()) })
             .execute();
-          await this.userStore.getData();
+          this.userStore.setCustomerData(data);
           this.$emit('close');
           this.$emit('showSuccessMessage');
         } catch (error) {
-          console.error('Error:', error);
+          if (error instanceof Error) console.log('Error occurred:', error.message);
         }
       }
     },

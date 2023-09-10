@@ -3,7 +3,7 @@
     <div class="info-container">
       <h3>Shipping addresses</h3>
       <div class="address-block">
-        <template v-if="loaded">
+        <template v-if="!userStore.fetching">
           <div
             v-if="userStore.getDefaultShippingAddressId"
             :id="userStore.getDefaultShippingAddressId"
@@ -57,7 +57,7 @@
     <div class="info-container">
       <h3>Billing addresses</h3>
       <div class="address-block">
-        <template v-if="loaded">
+        <template v-if="!userStore.fetching">
           <div
             v-if="userStore.getDefaultBillingAddressId"
             :id="userStore.getDefaultBillingAddressId"
@@ -176,7 +176,6 @@ export default {
   },
   data(): AccountAddressData {
     return {
-      loaded: false,
       showPopup: false,
       addressSection: 'shipping',
       addressId: '',
@@ -198,13 +197,8 @@ export default {
     addressName(address: Address): string {
       return `${address.streetName}, ${address.city}, ${address.country}, ${address.postalCode}`;
     },
-    async closePopup(): Promise<void> {
+    closePopup(): void {
       this.showPopup = false;
-      try {
-        await this.userStore.getData();
-      } catch (error) {
-        console.error('Error:', error);
-      }
     },
     openPopupForCreate(addressSection: string): void {
       this.addressId = '';
@@ -268,48 +262,42 @@ export default {
       if (deletedAddressId !== null) {
         const billingId =
           this.userStore.customerData.body.billingAddressIds.indexOf(deletedAddressId) !== -1;
-        if (billingId) {
+        const data = billingId ?
           await api
             .call()
             .me()
             .post({ body: this.postDeletedData(deletedAddressId, 'removeBillingAddressId') })
-            .execute();
-          await this.userStore.getData();
-        } else {
+            .execute() :
           await api
             .call()
             .me()
             .post({ body: this.postDeletedData(deletedAddressId, 'removeShippingAddressId') })
             .execute();
-          await this.userStore.getData();
-        }
-        await api
+        this.userStore.setCustomerData(data);
+        const newData = await api
           .call()
           .me()
           .post({ body: this.postDeletedData(deletedAddressId, 'removeAddress') })
           .execute();
-        await this.userStore.getData();
+        this.userStore.setCustomerData(newData);
       }
     },
     async setDefaultAddress(event: MouseEvent | KeyboardEvent): Promise<void> {
       const newDefaultId = this.getId(event);
       const billingId =
         this.userStore.customerData.body.billingAddressIds.indexOf(newDefaultId) !== -1;
-      if (billingId) {
+      const data = billingId ?
         await api
           .call()
           .me()
           .post({ body: this.postDefaultData(newDefaultId, 'setDefaultBillingAddress') })
-          .execute();
-        await this.userStore.getData();
-      } else {
+          .execute() :
         await api
           .call()
           .me()
           .post({ body: this.postDefaultData(newDefaultId, 'setDefaultShippingAddress') })
           .execute();
-        await this.userStore.getData();
-      }
+      this.userStore.setCustomerData(data);
     },
     showSuccessMessage(): void {
       this.showMessageEditSuccess = true;
@@ -318,14 +306,6 @@ export default {
       }, 1500);
     },
   },
-  async created(): Promise<void> {
-    try {
-      await this.userStore.getData();
-      this.loaded = true;
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  },
 };
 </script>
 
@@ -333,7 +313,7 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 .info-container {
   display: flex;
@@ -344,13 +324,16 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 1rem 0 0 0;
+  margin-bottom: 1rem;
 }
 .address-line {
   display: flex;
   align-items: center;
   font-size: 1rem;
   gap: 2rem;
+}
+.address-item:last-child {
+margin-bottom: 0;
 }
 .icon {
   height: 1.5rem;
@@ -375,7 +358,7 @@ export default {
   cursor: pointer;
   border: 1px solid var(--main-font-color);
   font-size: 1rem;
-  padding: 3px 21px;
+  padding: 0.15px 1rem;
   border-radius: 10px;
 }
 .buttons-block {
@@ -388,14 +371,17 @@ export default {
   color: var(--main-font-color);
   border: 1.5px solid var(--main-font-color);
   width: fit-content;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
 }
 .container :deep(.button:hover) {
   border-color: var(--main-color);
 }
 .divider-final {
   width: 100%;
-  border: 0.75px solid var(--main-font-color);
+  border: 1px solid var(--main-font-color);
   grid-area: divider;
+  margin: 0.5rem 0 2rem 0;
 }
 .popup-container :deep(.modal-container) {
   padding: 20px;

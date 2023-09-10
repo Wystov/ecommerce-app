@@ -88,14 +88,18 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2rem;
+}
+.main-block > * {
+ margin-bottom: 2rem;
+}
+.title {
+  margin-top: 0;
 }
 .sections-nav {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 25px;
-  margin-bottom: 1rem;
 }
 .section-nav-item {
   color: var(--main-font-color);
@@ -117,5 +121,9 @@ export default {
 .divider {
   height: 2rem;
   border: 1px solid var(--main-font-color);
+}
+.button {
+  font-size: 1rem;
+  margin-bottom: 0;
 }
 </style>

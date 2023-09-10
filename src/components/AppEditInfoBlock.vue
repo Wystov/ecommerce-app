@@ -51,7 +51,7 @@ import isOlder from '@/utils/isOlder';
 import api from '@/utils/api/client';
 import { useUserStore } from '@/stores/user';
 import { InvalidMessage } from '@/types/enums';
-import type { RegistrationMainData, MainFields } from '@/types/types';
+import type { RegistrationMainData, MainFields, AccountEditInfoBlockData } from '@/types/types';
 import BaseButton from './shared/BaseButton.vue';
 
 export default {
@@ -62,11 +62,7 @@ export default {
   },
   emits: ['valid-all-main-fields', 'close', 'showSuccessMessage'],
   // eslint-disable-next-line max-lines-per-function
-  data(): {
-    mainFields: MainFields;
-    fields: RegistrationMainData[];
-    placeholders: string[];
-    } {
+  data(): AccountEditInfoBlockData {
     return {
       mainFields: {} as MainFields,
       fields: [
@@ -183,10 +179,9 @@ export default {
       this.checkValid(index);
     },
 
-    setValue(e: Event, i: number): void {
-      const input = e.target as HTMLInputElement;
-      const field = this.fields[i];
-
+    setValue(event: Event, index: number): void {
+      const input = event.target as HTMLInputElement;
+      const field = this.fields[index];
       field.value = input.value.trim();
     },
 
@@ -236,12 +231,12 @@ export default {
       if (!this.allFieldsValid) return;
       if (this.fieldFilled) {
         try {
-          await api.call().me().post({ body: this.postData }).execute();
-          await this.userStore.getData();
+          const data = await api.call().me().post({ body: this.postData }).execute();
+          this.userStore.setCustomerData(data);
           this.$emit('close');
           this.$emit('showSuccessMessage');
         } catch (error) {
-          console.error('Error:', error);
+          if (error instanceof Error) console.log('Error occurred:', error.message);
         }
       }
     },
