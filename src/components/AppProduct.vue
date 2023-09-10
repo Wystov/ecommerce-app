@@ -49,27 +49,27 @@
             </div>
             <div class="control-product-btns">
               <div
-                v-if="hasProductInCart(product.keyProduct || -1)"
+                v-if="hasProductInCart(product.keyProduct ?? -1)"
                 class="count-product">
                 <BaseButton
                   circle
                   class="count-btn"
-                  @click="removeProductFromCart(product.keyProduct || -1)">
+                  @click="removeProductFromCart(product.keyProduct ?? -1)">
                   &lt;
                 </BaseButton>
-                <span class="count">{{ getCountProduct(product.keyProduct || -1) }}</span>
+                <span class="count">{{ getCountProduct(product.keyProduct ?? -1) }}</span>
                 <BaseButton
                   circle
                   class="count-btn"
-                  @click="addProductToCart(product.keyProduct || -1, product.skuProduct || '')">
+                  @click="addProductToCart(product.keyProduct || -1, product.skuProduct ?? '')">
                   &gt;
                 </BaseButton>
               </div>
               <BaseButton
-                v-if="hasProductInCart(product.keyProduct || -1)"
+                v-if="hasProductInCart(product.keyProduct ?? -1)"
                 outline
                 class="button"
-                @click="removeProductFromCart(product.keyProduct || -1, true)">
+                @click="removeProductFromCart(product.keyProduct ?? -1, true)">
                 Remove from cart
               </BaseButton>
               <BaseButton
@@ -207,7 +207,7 @@ export default {
     },
     async cartHandler(keyProduct?: number, skuProduct?: string): Promise<void> {
       if (this.getCartId === '') await this.createCart();
-      this.addProductToCart(keyProduct || -1, skuProduct || '');
+      this.addProductToCart(keyProduct ?? -1, skuProduct ?? '');
     },
   },
   created(): void {
