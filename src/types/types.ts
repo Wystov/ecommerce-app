@@ -1,4 +1,4 @@
-import type { ProductProjection, ClientResponse } from '@commercetools/platform-sdk';
+import type { ProductProjection, ClientResponse, Cart } from '@commercetools/platform-sdk';
 import type { Ref } from 'vue';
 import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
@@ -191,7 +191,7 @@ interface AppProduct {
     attributes?: Attribute[];
     description: string;
     images: string[];
-    keyProduct?: number;
+    keyProduct?: string;
     skuProduct?: string;
   };
 }
@@ -272,16 +272,9 @@ interface PasswordEditBlock {
   wrongOldPass: boolean;
   wrongOldPassText: string;
 }
-interface ProductCart {
-  keyProduct: number,
-  count: number,
-  sku: string,
-  lineItemId?: string,
-}
 interface StateCart {
-  products: ProductCart[],
-  cartId: string,
-  cartVersion?: number,
+  cart?: Cart;
+  fetching: boolean;
 }
 
 export type {
@@ -326,5 +319,4 @@ export type {
   PasswordEditBlock,
   AccountAddressData,
   StateCart,
-  ProductCart,
 };

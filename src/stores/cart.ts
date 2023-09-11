@@ -1,129 +1,119 @@
 import { defineStore } from 'pinia';
 import type { LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import api from '@/utils/api/client';
-import type { ProductCart, StateCart } from '@/types/types';
+import type { StateCart } from '@/types/types';
 
 export const useCartStore = defineStore('cart', {
   state: (): StateCart => ({
-    products: [],
-    cartId: '',
-    cartVersion: undefined,
+    cart: undefined,
+    fetching: false,
   }),
   getters: {
     getCartId(): string {
-      return this.cartId;
+      return this.cart?.id ?? '';
     },
     getCartVersion(): number | undefined {
-      return this.cartVersion;
+      return this.cart?.version;
+    },
+    getProducts(): LineItem[] | [] {
+      return this.cart?.lineItems ?? [];
+    },
+    fetchingCart(): boolean {
+      return this.fetching;
     },
   },
   actions: {
-
     async createCart() {
       const queryArgs = { body: { country: 'US', currency: 'USD' } };
+      this.fetching = true;
       const data = await api.call().me().carts().post(queryArgs).execute();
-      this.cartId = data.body.id;
-      this.cartVersion = data.body.version;
+      this.fetching = false;
+      this.cart = data.body;
     },
 
-    hasProductInCart(keyProduct: number): Boolean {
-      return this.products.some((product) => product.keyProduct === keyProduct);
+    hasProductInCart(productKey: string): Boolean {
+      return this.getProducts.some((product) => product.productKey === productKey);
     },
 
-    async addProductToCart(keyProduct: number, skuProduct: string) {
-      if (this.hasProductInCart(keyProduct)) {
-        const index = this.products.findIndex((product) => product.keyProduct === keyProduct);
-        this.increaseCount(index);
-        await this.updateQuantity(index);
+    async addProductToCart(productKey: string, skuProduct: string) {
+      if (this.hasProductInCart(productKey)) {
+        const index = this.getProducts.findIndex((product) => product.productKey === productKey);
+        await this.increaseCount(index);
       } else {
-        const product: ProductCart = { keyProduct, count: 1, sku: skuProduct };
-        this.products.push(product);
-        await this.sendProduct(product);
+        await this.sendProduct(skuProduct);
       }
     },
 
-    async removeProductFromCart(keyProduct: number, all = false) {
-      const index = this.products.findIndex((product) => product.keyProduct === keyProduct);
-      if (this.hasProductInCart(keyProduct) && this.products[index].count > 1 && !all) {
+    async removeProductFromCart(productKey: string, all = false) {
+      const index = this.getProducts.findIndex((product) => product.productKey === productKey);
+      const product = this.getProducts[index];
+      if (this.hasProductInCart(productKey) && product.quantity > 1 && !all) {
         this.decreaseCount(index);
-        await this.updateQuantity(index);
       } else {
-        await this.deleteProduct(index);
-        this.products.splice(index, 1);
+        await this.updateQuantity(index, 0);
       }
     },
 
-    increaseCount(index: number) {
-      this.products[index].count += 1;
+    async increaseCount(index: number) {
+      const product = this.getProducts[index];
+      if (product) {
+        const count = product.quantity;
+        await this.updateQuantity(index, count + 1);
+      }
     },
 
-    decreaseCount(index: number) {
-      this.products[index].count -= 1;
+    async decreaseCount(index: number) {
+      const product = this.getProducts[index];
+      if (product) {
+        const count = product.quantity;
+        await this.updateQuantity(index, count - 1);
+      }
     },
 
-    getCountProduct(keyProduct: number) {
-      const product = this.products.find((productData) => productData.keyProduct === keyProduct);
-      return product ? product.count : 0;
+    getCountProduct(keyProduct: string) {
+      const product = this.getProducts.find((productData) => productData.productKey === keyProduct);
+      return product ? product.quantity : 0;
     },
 
-    async sendProduct(productCart: ProductCart) {
-      const findProduct = (p: ProductCart): boolean => p.keyProduct === productCart.keyProduct;
-      const index = this.products.findIndex(findProduct);
+    async sendProduct(sku: string) {
       const action: MyCartUpdateAction = {
         action: 'addLineItem',
-        sku: this.products[index].sku,
+        sku,
       };
-      const queryArgs = {
-        body: {
-          version: this.cartVersion || 1,
-          actions: [action],
-        },
-      };
-      const cart = await api.call().me().carts().withId({ ID: this.cartId })
-        .post(queryArgs).execute();
-      const keyProduct = this.products[index].keyProduct.toString();
-      const findLineItem = (item: LineItem): boolean => item.productKey === keyProduct;
-      const lineItem = cart.body.lineItems.find(findLineItem);
-      this.products[index].lineItemId = lineItem?.id;
-      this.cartVersion = cart.body.version;
+      if (this.cart && typeof this.getCartVersion === 'number') {
+        const queryArgs = {
+          body: {
+            version: this.getCartVersion,
+            actions: [action],
+          },
+        };
+        this.fetching = true;
+        const cart = await api.call().me().carts().withId({ ID: this.getCartId })
+          .post(queryArgs).execute();
+        this.cart = cart.body;
+        this.fetching = false;
+      }
     },
 
-    async updateQuantity(indexProduct: number) {
+    async updateQuantity(indexProduct: number, count: number) {
       const action: MyCartUpdateAction = {
         action: 'changeLineItemQuantity',
-        lineItemId: this.products[indexProduct].lineItemId,
-        quantity: this.products[indexProduct].count,
+        lineItemId: this.getProducts[indexProduct].id,
+        quantity: count,
       };
-      const queryArgs = {
-        body: {
-          version: this.cartVersion || 1,
-          actions: [action],
-        },
-      };
-      const cart = await api.call().me().carts()
-        .withId({ ID: this.cartId }).post(queryArgs).execute();
-      this.cartVersion = cart.body.version;
-    },
-
-    async deleteProduct(indexProduct: number) {
-      const action: MyCartUpdateAction = {
-        action: 'removeLineItem',
-        lineItemId: this.products[indexProduct].lineItemId,
-      };
-      const queryArgs = {
-        body: {
-          version: this.cartVersion || 1,
-          actions: [action],
-        },
-      };
-      const cart = await api.call().me().carts()
-        .withId({ ID: this.cartId }).post(queryArgs).execute();
-      this.cartVersion = cart.body.version;
-    },
-
-    async deleteCart() {
-      await api.call().me().carts().withId({ ID: this.cartId })
-        .delete({ queryArgs: { version: 1 } }).execute();
+      if (this.cart && typeof this.getCartVersion === 'number') {
+        const queryArgs = {
+          body: {
+            version: this.getCartVersion,
+            actions: [action],
+          },
+        };
+        this.fetching = true;
+        const cart = await api.call().me().carts()
+          .withId({ ID: this.getCartId }).post(queryArgs).execute();
+        this.fetching = false;
+        this.cart = cart.body;
+      }
     },
   },
 });

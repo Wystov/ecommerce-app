@@ -49,31 +49,35 @@
             </div>
             <div class="control-product-btns">
               <div
-                v-if="hasProductInCart(product.keyProduct ?? -1)"
+                v-if="hasProductInCart(product.keyProduct ?? '')"
                 class="count-product">
                 <BaseButton
+                  :disabled="fetchingCart"
                   circle
                   class="count-btn"
-                  @click="removeProductFromCart(product.keyProduct ?? -1)">
+                  @click="removeProductFromCart(product.keyProduct ?? '')">
                   &lt;
                 </BaseButton>
-                <span class="count">{{ getCountProduct(product.keyProduct ?? -1) }}</span>
+                <span class="count">{{ getCountProduct(product.keyProduct ?? '') }}</span>
                 <BaseButton
+                  :disabled="fetchingCart"
                   circle
                   class="count-btn"
-                  @click="addProductToCart(product.keyProduct || -1, product.skuProduct ?? '')">
+                  @click="addProductToCart(product.keyProduct || '', product.skuProduct ?? '')">
                   &gt;
                 </BaseButton>
               </div>
               <BaseButton
-                v-if="hasProductInCart(product.keyProduct ?? -1)"
+                v-if="hasProductInCart(product.keyProduct ?? '')"
+                :disabled="fetchingCart"
                 outline
                 class="button"
-                @click="removeProductFromCart(product.keyProduct ?? -1, true)">
+                @click="removeProductFromCart(product.keyProduct ?? '', true)">
                 Remove from cart
               </BaseButton>
               <BaseButton
                 v-else
+                :disabled="fetchingCart"
                 class="button"
                 @click="cartHandler(product.keyProduct, product.skuProduct)">
                 Add to cart
@@ -137,7 +141,7 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, { userData: 'data', currencyTag: 'currencyTag' }),
-    ...mapState(useCartStore, { getCartId: 'getCartId' }),
+    ...mapState(useCartStore, { getCartId: 'getCartId', fetchingCart: 'fetchingCart' }),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
     },
@@ -181,9 +185,7 @@ export default {
         this.product.attributes = masterVariant?.attributes;
         this.product.description = this.productData?.description?.en || '';
         this.product.images = masterVariant.images?.map((img) => img.url ?? imgPlaceholder) || [];
-        if (this.productData.key) {
-          this.product.keyProduct = parseInt(this.productData.key, 10);
-        }
+        this.product.keyProduct = this.productData.key;
       } catch (error) {
         this.productData = null;
       } finally {
@@ -205,9 +207,9 @@ export default {
         this.product.name[0] = title;
       }
     },
-    async cartHandler(keyProduct?: number, skuProduct?: string): Promise<void> {
+    async cartHandler(keyProduct?: string, skuProduct?: string): Promise<void> {
       if (this.getCartId === '') await this.createCart();
-      this.addProductToCart(keyProduct ?? -1, skuProduct ?? '');
+      this.addProductToCart(keyProduct ?? '', skuProduct ?? '');
     },
   },
   created(): void {
