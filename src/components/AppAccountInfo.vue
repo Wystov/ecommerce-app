@@ -20,10 +20,10 @@
   </div>
   <div class="popup-container">
     <BasePopup
-      :show="showPopup === true"
+      :show="showPopup"
       :closeOnDelete="false"
       @close="closePopup">
-      <div v-if="updateInfo === true">
+      <div v-if="updateInfo">
         <h3 class="info-edit-header">
           Please fill only the fields you want to change and press "Update" button:
         </h3>
@@ -31,7 +31,7 @@
           @close="closePopup"
           @showSuccessMessage="showSuccessMessage" />
       </div>
-      <div v-if="updateInfo === false">
+      <div v-else>
         <EditPassBlock
           @close="closePopup"
           @showSuccessMessage="showSuccessMessage" />
@@ -95,9 +95,9 @@ export default {
   },
   methods: {
     updateNames(): void {
-      this.name = this.userStore.customerData.body.firstName;
-      this.surname = this.userStore.customerData.body.lastName;
-      this.date = this.userStore.customerData.body.dateOfBirth;
+      this.name = this.userStore.customerData.body.firstName ?? '';
+      this.surname = this.userStore.customerData.body.lastName ?? '';
+      this.date = this.userStore.customerData.body.dateOfBirth ?? '';
     },
     openInfoPopup(): void {
       this.showPopup = true;
@@ -119,7 +119,6 @@ export default {
     },
   },
   created(): void {
-    this.userStore.getData();
     this.updateNames();
   },
 };
@@ -129,13 +128,13 @@ export default {
 .info-container {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 1.5rem;
 }
 .info-block {
   display: grid;
   grid-template-columns: 0.5fr 1fr;
   align-items: end;
-  gap: 3rem;
+  gap: 1rem;
 }
 .content-name {
   width: fit-content;
@@ -150,14 +149,17 @@ export default {
   background-color: transparent;
   color: var(--main-font-color);
   border: 1.5px solid var(--main-font-color);
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
 }
 .buttons-block :deep(.button:hover) {
   border-color: var(--main-color);
 }
 .divider-final {
   width: 100%;
-  border: 0.75px solid var(--main-font-color);
+  border: 1px solid var(--main-font-color);
   grid-area: divider;
+  margin-bottom: 2rem;
 }
 
 .popup-container :deep(.modal-container) {

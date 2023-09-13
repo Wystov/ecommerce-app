@@ -3,7 +3,7 @@ import type { Ref } from 'vue';
 import type { SwiperModule, Swiper } from 'swiper/types';
 import { NamePages } from './enums';
 
-interface ButtonClasses {
+export interface ButtonClasses {
   'theme-dark': boolean;
   'theme-light': boolean;
   'size-small': boolean;
@@ -16,13 +16,13 @@ interface ButtonClasses {
   disabled: boolean;
   outline: boolean;
 }
-interface SelectClasses {
+export interface SelectClasses {
   'dark-theme-input': boolean;
   'valid-focus-decorator': boolean;
   'invalid-focus-decorator': boolean;
   'plain-input': boolean;
 }
-interface BaseMessageClasses {
+export interface BaseMessageClasses {
   primary: boolean;
   danger: boolean;
   warning: boolean;
@@ -31,32 +31,32 @@ interface BaseMessageClasses {
   absolute: boolean;
   arrowTop: boolean;
 }
-interface TokenResponse {
+export interface TokenResponse {
   refresh_token?: string;
 }
-interface SelectOptions {
+export interface SelectOptions {
   text: string;
   value: string;
 }
-interface AuthorizationList {
+export interface AuthorizationList {
   name: NamePages;
   authorization?: boolean;
   class?: string;
   icon?: {};
 }
-interface DataAuthorization {
+export interface DataAuthorization {
   authorizationList: AuthorizationList[];
 }
-interface BaseDataAuthorization extends DataAuthorization {
+export interface BaseDataAuthorization extends DataAuthorization {
   country: SelectOptions[];
 }
-interface UserAddress {
+export interface UserAddress {
   country: 'US' | 'GB';
   city: string;
   streetName: string;
   postalCode: string;
 }
-interface UserSignUp {
+export interface UserSignUp {
   email: string;
   password: string;
   firstName: string;
@@ -69,28 +69,29 @@ interface UserSignUp {
   billingAddresses?: number[];
   defaultBillingAddress?: number;
 }
-interface UserSignUpMain {
+export interface UserSignUpMain {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
 }
-interface UserUpdate {
+export interface UserUpdate {
   email: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
 }
-interface DefaultAddressProps {
+export interface DefaultAddressProps {
   defaultShipping: boolean;
   defaultBilling: boolean;
 }
-interface ApiResponse {
+export interface ApiResponse {
   ok: boolean;
   message?: string;
+  data?: ClientResponse;
 }
-interface DataLogin {
+export interface DataLogin {
   emailValue: string;
   passValue: string;
   passInputType: string;
@@ -101,10 +102,10 @@ interface DataLogin {
   wrongDataText: string;
   registration: string;
 }
-interface BaseInputType {
+export interface BaseInputType {
   inputValue: string;
 }
-interface BaseInputProps {
+export interface BaseInputProps {
   label: string;
   type: string;
   id: string;
@@ -116,7 +117,7 @@ interface BaseInputProps {
   hidePass: string;
   inputValue: string;
 }
-interface RegistrationMainData {
+export interface RegistrationMainData {
   label: string;
   type?: string;
   value?: string;
@@ -128,7 +129,7 @@ interface RegistrationMainData {
   showMessage: boolean;
   hidePass?: string;
 }
-interface RegistrationAddressData {
+export interface RegistrationAddressData {
   fields: {
     label: string;
     fieldName?: string;
@@ -148,7 +149,7 @@ interface RegistrationAddressData {
     value: string;
   };
 }
-interface AccountInfoData {
+export interface AccountInfoData {
   name: string | undefined;
   surname: string | undefined;
   date: string | undefined;
@@ -157,24 +158,23 @@ interface AccountInfoData {
   showMessageEditSuccess: boolean;
   createCustomerMessage: { text: string; alert: string; title: string };
 }
-interface AccountAddressData {
-  loaded: boolean;
+export interface AccountAddressData {
   showPopup: boolean;
   addressSection: string;
   addressId: string;
   showMessageEditSuccess: boolean;
   createCustomerMessage: { text: string; alert: string; title: string };
 }
-interface Address {
+export interface Address {
   city: string;
   country: string;
   id: string;
   postalCode: string;
   streetName: string;
 }
-type Country = 'US' | 'GB';
+export type Country = 'US' | 'GB';
 
-interface StateUser {
+export interface StateUser {
   authorized: boolean;
   fetching: boolean;
   data: {
@@ -182,8 +182,8 @@ interface StateUser {
   };
   customerData: ClientResponse;
 }
-type Attribute = { name: string; value: string };
-interface AppProduct {
+export type Attribute = { name: string; value: string };
+export interface AppProduct {
   fetching: boolean;
   productData: null | ProductProjection;
   product: {
@@ -195,31 +195,31 @@ interface AppProduct {
     skuProduct?: string;
   };
 }
-type SortBy = 'price desc' | 'price asc' | 'name en';
-interface FacetTerm {
+export type SortBy = 'price desc' | 'price asc' | 'name en';
+export interface FacetTerm {
   term: string;
   count: number;
 }
-type FilterKey =
+export type FilterKey =
   | 'variants.attributes.brand'
   | 'variants.attributes.weight'
   | 'variants.scopedPrice.currentValue.centAmount';
-interface FacetResult {
+export interface FacetResult {
   terms: FacetTerm[];
   total: number;
   key: FilterKey;
   selected: Set<string> | [number, number];
 }
-interface FilterOptions {
+export interface FilterOptions {
   brand: FacetResult;
   weight: FacetResult;
   price: FacetResult;
 }
-interface FacetResults {
+export interface FacetResults {
   [key: string]: FacetResult;
 }
-type Filter = 'brand' | 'weight' | 'price';
-interface CategoryMap {
+export type Filter = 'brand' | 'weight' | 'price';
+export interface CategoryMap {
   id: string;
   parentId: string | null;
   name: string;
@@ -230,21 +230,21 @@ interface CategoryMap {
   };
   children: CategoryMap[];
 }
-interface Breadcrumb {
+export interface Breadcrumb {
   route: string;
   name: string;
 }
-interface ProductFilterType {
+export interface ProductFilterType {
   weightRange: [number, number];
   priceRange: [number, number];
   searchValue: string;
   searchTitle: string;
 }
-interface ProductListType {
+export interface ProductListType {
   productList: ProductProjection[];
   init: boolean;
 }
-interface SwiperSetup {
+export interface SwiperSetup {
   showPopUp: Ref<boolean>;
   currentIndexSlide: Ref<number>;
   openPopUp: (index: number) => void;
@@ -255,16 +255,20 @@ interface SwiperSetup {
   setThumbsSwiper: (swiper: Swiper) => void;
   modules: SwiperModule[];
 }
-interface CatalogViewType {
+export interface CatalogViewType {
   showSidebar: boolean;
   screenWidth: number;
 }
-
-interface MainFields {
+export interface MainFields {
   valid: boolean;
   response: {};
 }
-interface PasswordEditBlock {
+export interface AccountEditInfoBlockData {
+  mainFields: MainFields;
+  fields: RegistrationMainData[];
+  placeholders: string[];
+}
+export interface PasswordEditBlock {
   mainFields: MainFields;
   fields: RegistrationMainData[];
   notMatch: boolean;
@@ -272,51 +276,7 @@ interface PasswordEditBlock {
   wrongOldPass: boolean;
   wrongOldPassText: string;
 }
-interface StateCart {
+export interface StateCart {
   cart?: Cart;
   fetching: boolean;
 }
-
-export type {
-  ButtonClasses,
-  SelectClasses,
-  BaseMessageClasses,
-  AuthorizationList,
-  DataAuthorization,
-  TokenResponse,
-  UserSignUp,
-  UserUpdate,
-  UserAddress,
-  DefaultAddressProps,
-  ApiResponse,
-  DataLogin,
-  BaseInputType,
-  BaseInputProps,
-  SelectOptions,
-  RegistrationMainData,
-  RegistrationAddressData,
-  UserSignUpMain,
-  BaseDataAuthorization,
-  Country,
-  StateUser,
-  AppProduct,
-  SortBy,
-  FilterOptions,
-  FacetTerm,
-  FacetResult,
-  FacetResults,
-  Filter,
-  FilterKey,
-  CategoryMap,
-  Breadcrumb,
-  ProductFilterType,
-  ProductListType,
-  SwiperSetup,
-  AccountInfoData,
-  Address,
-  CatalogViewType,
-  MainFields,
-  PasswordEditBlock,
-  AccountAddressData,
-  StateCart,
-};
