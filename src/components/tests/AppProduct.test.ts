@@ -38,6 +38,7 @@ const mockData = {
 };
 
 it('renders loading spinner when fetching is true', async () => {
+  setActivePinia(createPinia());
   const wrapper = shallowMount(AppProduct, {
     global: {
       plugins: [router],

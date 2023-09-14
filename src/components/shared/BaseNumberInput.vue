@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    :disabled="value === min"
+    :disabled="value === min || disabled"
     class="button-decr"
     @click="manualChange('decr')">
     -
@@ -16,7 +16,7 @@
     @keyup.enter="userInput" />
   <button
     type="button"
-    :disabled="value === max"
+    :disabled="value === max || disabled"
     class="button-incr"
     @click="manualChange('incr')">
     +
@@ -37,6 +37,10 @@ export default {
     max: {
       type: Number,
       required: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['valueChange'],

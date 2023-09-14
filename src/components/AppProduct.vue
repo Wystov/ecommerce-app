@@ -51,35 +51,25 @@
               <div
                 v-if="hasProductInCart(product.keyProduct ?? '')"
                 class="count-product">
-                <BaseButton
+                <BaseNumberInput
                   :disabled="fetchingCart"
-                  circle
-                  class="count-btn"
-                  @click="removeProductFromCart(product.keyProduct ?? '')">
-                  &lt;
-                </BaseButton>
-                <span class="count">{{ getCountProduct(product.keyProduct ?? '') }}</span>
-                <BaseButton
-                  :disabled="fetchingCart"
-                  circle
-                  class="count-btn"
-                  @click="addProductToCart(product.keyProduct || '', product.skuProduct ?? '')">
-                  &gt;
-                </BaseButton>
+                  :value="getCountProduct(product.keyProduct ?? '')"
+                  :max="productData.masterVariant.availability?.availableQuantity ?? 1"
+                  @valueChange="updateQuantity(product.keyProduct ?? '', $event)" />
               </div>
               <BaseButton
                 v-if="hasProductInCart(product.keyProduct ?? '')"
                 :disabled="fetchingCart"
                 outline
                 class="button"
-                @click="removeProductFromCart(product.keyProduct ?? '', true)">
+                @click="updateQuantity(product.keyProduct ?? '', 0)">
                 Remove from cart
               </BaseButton>
               <BaseButton
                 v-else
                 :disabled="fetchingCart"
                 class="button"
-                @click="cartHandler(product.keyProduct, product.skuProduct)">
+                @click="cartHandler(product.skuProduct)">
                 Add to cart
               </BaseButton>
             </div>
@@ -117,6 +107,7 @@ import NotFoundView from '@/views/NotFoundView.vue';
 import BaseButton from './shared/BaseButton.vue';
 import AppSliderProductPage from './AppSliderProductPage.vue';
 import BasePrice from './shared/BasePrice.vue';
+import BaseNumberInput from './shared/BaseNumberInput.vue';
 
 export default {
   components: {
@@ -124,6 +115,7 @@ export default {
     AppSliderProductPage,
     BasePrice,
     NotFoundView,
+    BaseNumberInput,
   },
   data(): AppProduct {
     return {
@@ -141,7 +133,7 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, { userData: 'data', currencyTag: 'currencyTag' }),
-    ...mapState(useCartStore, { getCartId: 'getCartId', fetchingCart: 'fetchingCart' }),
+    ...mapState(useCartStore, { cartId: 'cartId', fetchingCart: 'fetching' }),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
     },
@@ -165,10 +157,11 @@ export default {
   methods: {
     ...mapActions(useCartStore, [
       'addProductToCart',
-      'removeProductFromCart',
       'hasProductInCart',
       'getCountProduct',
       'createCart',
+      'updateQuantity',
+      'initializationCart',
     ]),
     async getProduct(): Promise<void> {
       const { slug } = this.$route.params;
@@ -207,13 +200,14 @@ export default {
         this.product.name[0] = title;
       }
     },
-    async cartHandler(keyProduct?: string, skuProduct?: string): Promise<void> {
-      if (this.getCartId === '') await this.createCart();
-      this.addProductToCart(keyProduct ?? '', skuProduct ?? '');
+    async cartHandler(skuProduct?: string): Promise<void> {
+      if (this.cartId === '') await this.createCart();
+      this.addProductToCart(skuProduct ?? '');
     },
   },
   created(): void {
     this.getProduct();
+    this.initializationCart();
   },
 };
 </script>
@@ -307,17 +301,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.count-btn {
-  min-width: 2em;
-  min-height: 2em;
-  width: 2em;
-  height: 2em;
-}
-.count {
-  font-family: sans-serif;
-  width: 3em;
-  text-align: center;
 }
 .specification-list {
   display: flex;
