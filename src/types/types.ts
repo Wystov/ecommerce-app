@@ -245,6 +245,10 @@ interface ProductFilterType {
 interface ProductListType {
   productList: ProductProjection[];
   init: boolean;
+  catalogWidth: number;
+  cardWidth: number;
+  cardsToShow: number;
+  cardsTotal: number;
 }
 interface SwiperSetup {
   showPopUp: Ref<boolean>;

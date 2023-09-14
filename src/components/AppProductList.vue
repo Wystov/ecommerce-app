@@ -8,11 +8,13 @@
     <template v-else>
       <TransitionGroup
         v-if="productList.length"
+        ref="catalog"
         tag="div"
         class="catalog"
         name="card">
         <AppProductCard
           v-for="product in productList"
+          ref="card"
           :key="product.id"
           :productData="product"
           :currency="currency"
@@ -29,7 +31,9 @@
 </template>
 
 <script lang="ts">
+// import { ref } from 'vue';
 import { mapActions, mapState } from 'pinia';
+import type { ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import { useUserStore } from '@/stores/user';
 import { useFilterStore } from '@/stores/filter';
 import { useCategoriesStore } from '@/stores/categories';
@@ -37,6 +41,8 @@ import api from '@/utils/api/client';
 import type { FacetResults, ProductListType } from '@/types/types';
 import AppProductCard from './AppProductCard.vue';
 import AppProductAppliedFiltersList from './AppProductAppliedFiltersList.vue';
+
+// const catalog = ref(null);
 
 export default {
   components: {
@@ -47,6 +53,10 @@ export default {
     return {
       productList: [],
       init: true,
+      catalogWidth: 0,
+      cardWidth: 0,
+      cardsToShow: 10,
+      cardsTotal: 0,
     };
   },
   computed: {
@@ -68,28 +78,53 @@ export default {
       const { current } = this.categories;
       if (selectedSlug !== current) this.changeCategory(selectedSlug as string);
     },
-    async getProducts(): Promise<void | undefined> {
-      await this.checkCategory();
+    async fetchProducts(): Promise<ProductProjectionPagedSearchResponse> {
       const { queryArgs } = this;
+      queryArgs.limit = this.cardsToShow;
+      queryArgs.offset = this.cardsTotal;
       const { body } = await api.call().productProjections().search().get({ queryArgs }).execute();
-      this.setFilterOptions(body.facets as unknown as FacetResults);
+      this.cardsTotal += body.results.length;
+      return body;
+    },
+    async loadProducts(): Promise<void | undefined> {
+      await this.checkCategory();
+      const data = await this.fetchProducts();
+      this.setFilterOptions(data.facets as unknown as FacetResults);
       if (!this.loaded) this.buildFilterOptions();
-      this.productList = body.results;
+      this.productList = data.results;
       this.init = false;
+    },
+    async loadMoreProducts(): Promise<void | undefined> {
+      const data = await this.fetchProducts();
+      this.productList = this.productList.concat(data.results);
+    },
+    moveScroll(): void {
+      const { scrollY } = window;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      if (scrollY + windowHeight >= documentHeight) {
+        this.loadMoreProducts();
+      }
     },
   },
   created(): void {
-    this.getProducts();
+    this.loadProducts();
     this.$watch(
       () => this.queryArgs,
       () => {
-        if (this.loaded || this.refresh) this.getProducts();
+        if (this.loaded || this.refresh) this.loadProducts();
       },
     );
     this.$watch(
       () => this.$route.params,
-      () => this.getProducts(),
+      () => this.loadProducts(),
     );
+  },
+  mounted(): void {
+    window.addEventListener('scroll', this.moveScroll);
+  },
+  beforeUnmount(): void {
+    window.removeEventListener('scroll', this.moveScroll);
   },
 };
 </script>
