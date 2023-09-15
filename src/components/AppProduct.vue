@@ -47,19 +47,32 @@
                 discounted
                 :price="priceDiscounted" />
             </div>
-            <BaseButton
-              v-if="hasProductInCart(product.keyProduct || -1)"
-              outline
-              class="button"
-              @click="removeProductFromCart(product.keyProduct || -1)">
-              Remove from cart
-            </BaseButton>
-            <BaseButton
-              v-else
-              class="button"
-              @click="addProductToCart(product.keyProduct || -1)">
-              Add to cart
-            </BaseButton>
+            <div class="control-product-btns">
+              <div
+                v-if="hasProductInCart(product.keyProduct ?? '')"
+                class="count-product">
+                <BaseNumberInput
+                  :disabled="fetchingCart"
+                  :value="getCountProduct(product.keyProduct ?? '')"
+                  :max="productData.masterVariant.availability?.availableQuantity ?? 1"
+                  @valueChange="updateQuantity(product.keyProduct ?? '', $event)" />
+              </div>
+              <BaseButton
+                v-if="hasProductInCart(product.keyProduct ?? '')"
+                :disabled="fetchingCart"
+                outline
+                class="button"
+                @click="updateQuantity(product.keyProduct ?? '', 0)">
+                Remove from cart
+              </BaseButton>
+              <BaseButton
+                v-else
+                :disabled="fetchingCart"
+                class="button"
+                @click="cartHandler(product.skuProduct)">
+                Add to cart
+              </BaseButton>
+            </div>
           </div>
           <ul class="specification-list">
             <li
@@ -87,12 +100,14 @@ import type { Price } from '@commercetools/platform-sdk';
 import { mapState, mapActions } from 'pinia';
 import type { AppProduct } from '@/types/types';
 import { useUserStore } from '@/stores/user';
+import { useCartStore } from '@/stores/cart';
 import api from '@/utils/api/client';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
 import NotFoundView from '@/views/NotFoundView.vue';
 import BaseButton from './shared/BaseButton.vue';
 import AppSliderProductPage from './AppSliderProductPage.vue';
 import BasePrice from './shared/BasePrice.vue';
+import BaseNumberInput from './shared/BaseNumberInput.vue';
 
 export default {
   components: {
@@ -100,6 +115,7 @@ export default {
     AppSliderProductPage,
     BasePrice,
     NotFoundView,
+    BaseNumberInput,
   },
   data(): AppProduct {
     return {
@@ -111,11 +127,13 @@ export default {
         description: '',
         images: [],
         keyProduct: undefined,
+        skuProduct: undefined,
       },
     };
   },
   computed: {
     ...mapState(useUserStore, { userData: 'data', currencyTag: 'currencyTag' }),
+    ...mapState(useCartStore, { cartId: 'cartId', fetchingCart: 'fetching' }),
     currency(): string {
       return this.userData.country === 'US' ? 'USD' : 'GBP';
     },
@@ -137,7 +155,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useUserStore, ['addProductToCart', 'removeProductFromCart', 'hasProductInCart']),
+    ...mapActions(useCartStore, [
+      'addProductToCart',
+      'hasProductInCart',
+      'getCountProduct',
+      'createCart',
+      'updateQuantity',
+      'initializationCart',
+    ]),
     async getProduct(): Promise<void> {
       const { slug } = this.$route.params;
       const queryArgs = { where: `slug(en="${slug}")` };
@@ -149,12 +174,11 @@ export default {
         const { masterVariant } = this.productData;
 
         this.splittedTitle(this.productData?.name.en);
+        this.product.skuProduct = masterVariant?.sku;
         this.product.attributes = masterVariant?.attributes;
         this.product.description = this.productData?.description?.en || '';
         this.product.images = masterVariant.images?.map((img) => img.url ?? imgPlaceholder) || [];
-        if (this.productData.key) {
-          this.product.keyProduct = parseInt(this.productData.key, 10);
-        }
+        this.product.keyProduct = this.productData.key;
       } catch (error) {
         this.productData = null;
       } finally {
@@ -176,9 +200,14 @@ export default {
         this.product.name[0] = title;
       }
     },
+    async cartHandler(skuProduct?: string): Promise<void> {
+      if (!this.cartId) await this.createCart();
+      this.addProductToCart([skuProduct ?? '']);
+    },
   },
   created(): void {
     this.getProduct();
+    this.initializationCart();
   },
 };
 </script>
@@ -261,6 +290,17 @@ export default {
       justify-self: flex-end;
     }
   }
+}
+.control-product-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2em;
+}
+.count-product {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .specification-list {
   display: flex;

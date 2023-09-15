@@ -7,7 +7,7 @@
       :isPlain="true"
       :options="country"
       :defaultSelected="userStore.data.country"
-      @selectOption="userStore.changeCountry" />
+      @selectOption="changeCountry" />
     <RouterLink
       v-for="(link, i) in updateAuthorizationList"
       :key="i"
@@ -22,9 +22,10 @@
 </template>
 
 <script lang="ts">
-import { mapStores } from 'pinia';
-import type { BaseDataAuthorization, AuthorizationList } from '@/types/types';
+import { mapStores, mapActions } from 'pinia';
+import type { BaseDataAuthorization, AuthorizationList, Country } from '@/types/types';
 import { useUserStore } from '@/stores/user';
+import { useCartStore } from '@/stores/cart';
 import { NamePages } from '@/types/enums';
 import BaseSelect from './shared/BaseSelect.vue';
 
@@ -70,6 +71,13 @@ export default {
       return this.authorizationList.filter(
         (link) => this.userStore.authorized === link.authorization,
       );
+    },
+  },
+  methods: {
+    ...mapActions(useCartStore, ['updateCountryCart']),
+    changeCountry(country: Country): void {
+      this.userStore.changeCountry(country);
+      this.updateCountryCart();
     },
   },
 };

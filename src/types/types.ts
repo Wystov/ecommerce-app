@@ -179,9 +179,6 @@ export interface StateUser {
   fetching: boolean;
   data: {
     country: string;
-    cart: {
-      product: number[];
-    };
   };
   customerData: ClientResponse;
 }
@@ -194,7 +191,8 @@ export interface AppProduct {
     attributes?: Attribute[];
     description: string;
     images: string[];
-    keyProduct?: number;
+    keyProduct?: string;
+    skuProduct?: string;
   };
 }
 export type SortBy = 'price desc' | 'price asc' | 'name en';
@@ -278,13 +276,7 @@ export interface PasswordEditBlock {
   wrongOldPass: boolean;
   wrongOldPassText: string;
 }
-export interface CartType {
-  imgPlaceholder: string;
-  data: Cart | null;
+export interface StateCart {
+  cart?: Cart;
   fetching: boolean;
-  showModal: boolean;
-  showPromoAlert: boolean;
-  promoAlertMessage: string;
-  promoApplied: boolean;
-  promoAlertTimeout: number | null;
 }
