@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import type { LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import api from '@/utils/api/client';
 import type { StateCart } from '@/types/types';
+import { useUserStore } from '@/stores/user';
 
 export const useCartStore = defineStore('cart', {
   state: (): StateCart => ({
@@ -22,12 +23,18 @@ export const useCartStore = defineStore('cart', {
   actions: {
     async initializationCart() {
       this.fetching = true;
-      const cart = await api.call().me().activeCart().get().execute();
-      if (cart.statusCode === 200) this.cart = cart.body;
-      this.fetching = false;
+      try {
+        const response = await api.call().me().activeCart().get().execute();
+        this.cart = response.body;
+      } catch {
+        this.cart = undefined;
+      } finally {
+        this.fetching = false;
+      }
     },
     async createCart() {
-      const queryArgs = { body: { country: 'US', currency: 'USD' } };
+      const { country } = useUserStore().data;
+      const queryArgs = { body: { country, currency: country === 'US' ? 'USD' : 'GBP' } };
       this.fetching = true;
       const data = await api.call().me().carts().post(queryArgs).execute();
       this.fetching = false;
@@ -38,16 +45,19 @@ export const useCartStore = defineStore('cart', {
       return this.products.some((product) => product.productKey === productKey);
     },
 
-    async addProductToCart(sku: string) {
-      const action: MyCartUpdateAction = {
-        action: 'addLineItem',
-        sku,
-      };
+    async addProductToCart(sku: string[]) {
+      const actions = sku.map((productSku) => {
+        const action: MyCartUpdateAction = {
+          action: 'addLineItem',
+          sku: productSku,
+        };
+        return action;
+      });
       if (this.cart && typeof this.cartVersion === 'number') {
         const queryArgs = {
           body: {
             version: this.cartVersion,
-            actions: [action],
+            actions,
           },
         };
         this.fetching = true;
@@ -80,9 +90,15 @@ export const useCartStore = defineStore('cart', {
         this.fetching = true;
         const cart = await api.call().me().carts()
           .withId({ ID: this.cartId }).post(queryArgs).execute();
-        this.fetching = false;
         this.cart = cart.body;
+        this.fetching = false;
       }
+    },
+
+    async updateCountryCart() {
+      const lineItemsSku = this.cart?.lineItems.map((item) => item.variant.sku ?? '');
+      await this.createCart();
+      if (lineItemsSku) await this.addProductToCart(lineItemsSku);
     },
   },
 });
