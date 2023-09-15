@@ -46,4 +46,22 @@ const enum InvalidMessage {
   WrongPassword = 'Old password is incorrect, please, try again',
 }
 
-export { NamePages, PathPages, LocalStorageKeys, Country, InvalidMessage };
+const enum Roles {
+  Wystov = 'Team lead',
+  Duxcoder = 'Second pilot',
+  Coracao = 'The girl',
+}
+
+const enum Names {
+  Wystov = 'Kostya',
+  Duxcoder = 'Zhenya',
+  Coracao = 'Anya',
+}
+
+const enum GHNicks {
+  Wystov = '@wystov',
+  Duxcoder = '@duxcoder',
+  Coracao = '@coracaodomundo',
+}
+
+export { NamePages, PathPages, LocalStorageKeys, Country, InvalidMessage, Roles, Names, GHNicks };
