@@ -201,7 +201,7 @@ export default {
       }
     },
     async cartHandler(skuProduct?: string): Promise<void> {
-      if (this.cartId === '') await this.createCart();
+      if (!this.cartId) await this.createCart();
       this.addProductToCart([skuProduct ?? '']);
     },
   },
