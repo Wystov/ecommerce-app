@@ -110,6 +110,7 @@ export const useCartStore = defineStore('cart', {
 
     async updateCountryCart() {
       const lineItemsSku = this.cart?.lineItems.map((item) => item.variant.sku ?? '');
+      await this.removeCart();
       await this.createCart();
       if (lineItemsSku) await this.addProductToCart(lineItemsSku);
     },
