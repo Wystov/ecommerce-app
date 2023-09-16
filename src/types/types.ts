@@ -280,3 +280,17 @@ export interface StateCart {
   cart?: Cart;
   fetching: boolean;
 }
+
+export interface CartInfo {
+  showPromoAlert: boolean;
+  promoAlertMessage: string;
+  promoApplied: boolean;
+  promoAlertTimeout: number | null;
+}
+
+export interface CartItemPrices {
+  price: string;
+  itemTotal: string;
+  oldPrice?: string;
+  newPrice?: string;
+}

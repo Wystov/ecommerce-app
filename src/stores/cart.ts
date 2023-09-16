@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
+import type { LineItem, MyCartUpdate, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import api from '@/utils/api/client';
 import type { StateCart } from '@/types/types';
 import { useUserStore } from '@/stores/user';
@@ -18,6 +18,9 @@ export const useCartStore = defineStore('cart', {
     },
     products(): LineItem[] | [] {
       return this.cart?.lineItems ?? [];
+    },
+    totalPrice(): number {
+      return this.cart?.totalPrice.centAmount ?? 0;
     },
   },
   actions: {
@@ -61,8 +64,13 @@ export const useCartStore = defineStore('cart', {
           },
         };
         this.fetching = true;
-        const cart = await api.call().me().carts().withId({ ID: this.cartId })
-          .post(queryArgs).execute();
+        const cart = await api
+          .call()
+          .me()
+          .carts()
+          .withId({ ID: this.cartId })
+          .post(queryArgs)
+          .execute();
         this.cart = cart.body;
         this.fetching = false;
       }
@@ -88,8 +96,13 @@ export const useCartStore = defineStore('cart', {
           },
         };
         this.fetching = true;
-        const cart = await api.call().me().carts()
-          .withId({ ID: this.cartId }).post(queryArgs).execute();
+        const cart = await api
+          .call()
+          .me()
+          .carts()
+          .withId({ ID: this.cartId })
+          .post(queryArgs)
+          .execute();
         this.cart = cart.body;
         this.fetching = false;
       }
@@ -99,6 +112,37 @@ export const useCartStore = defineStore('cart', {
       const lineItemsSku = this.cart?.lineItems.map((item) => item.variant.sku ?? '');
       await this.createCart();
       if (lineItemsSku) await this.addProductToCart(lineItemsSku);
+    },
+
+    async removeCart(): Promise<void> {
+      await api
+        .call()
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .delete({ queryArgs: { version: this.cartVersion ?? 0 } })
+        .execute();
+      this.cart = undefined;
+    },
+
+    async applyPromo(code: string): Promise<void> {
+      const body: MyCartUpdate = {
+        version: this.cartVersion ?? 0,
+        actions: [
+          {
+            action: 'addDiscountCode',
+            code,
+          },
+        ],
+      };
+      const response = await api
+        .call()
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({ body })
+        .execute();
+      this.cart = response.body;
     },
   },
 });
