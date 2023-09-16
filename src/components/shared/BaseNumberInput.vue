@@ -12,8 +12,7 @@
     type="text"
     name="count"
     :value="value"
-    @blur="userInput"
-    @keyup.enter="userInput" />
+    @input="userInput" />
   <button
     type="button"
     :disabled="value === max || disabled"
@@ -24,6 +23,8 @@
 </template>
 
 <script lang="ts">
+import { debounce } from 'lodash';
+
 export default {
   props: {
     value: {
@@ -46,30 +47,44 @@ export default {
   emits: ['valueChange'],
   methods: {
     manualChange(action: 'incr' | 'decr'): void {
-      const value = action === 'incr' ? this.value + 1 : this.value - 1;
+      const input = this.$refs.input as HTMLInputElement;
+      if (!input) return;
+      const value = action === 'incr' ? +input.value + 1 : +input.value - 1;
       if (value < this.min || value > this.max) return;
       this.$emit('valueChange', value);
     },
     userInput(): void {
       const input = this.$refs.input as HTMLInputElement;
-      const value = parseInt(input.value, 10);
-      // eslint-disable-next-line default-case
-      switch (true) {
-        case Number.isNaN(value):
-          input.value = this.value.toString();
-          return;
-        case value < this.min:
-          input.value = '1';
-          this.$emit('valueChange', this.min);
-          break;
-        case value > this.max:
-          input.value = this.max.toString();
-          this.$emit('valueChange', this.max);
-          break;
-        default:
-          this.$emit('valueChange', value);
-      }
+      if (!input) return;
+      input.value = input.value.replace(/[^0-9]/g, '');
+      this.debounceUserInput(input, this.min, this.max, this.value, this.$emit);
     },
+    debounceUserInput: debounce(
+      (inputElement: HTMLInputElement, min, max, initValue, emit) => {
+        const input = inputElement;
+        const value = parseInt(input.value, 10);
+
+        switch (true) {
+          case Number.isNaN(value):
+            input.value = initValue.toString();
+            return;
+          case value < min:
+            input.value = '1';
+            emit('valueChange', min);
+            break;
+          case value > max:
+            input.value = max.toString();
+            emit('valueChange', max);
+            break;
+          default:
+            emit('valueChange', value);
+        }
+      },
+      1000,
+      {
+        trailing: true,
+      },
+    ),
   },
 };
 </script>
