@@ -248,7 +248,10 @@ interface ProductListType {
   catalogWidth: number;
   cardWidth: number;
   cardsToShow: number;
-  cardsTotal: number;
+  cardsLoaded: number;
+  total: number | undefined;
+  loading: boolean;
+  finish: boolean;
 }
 interface SwiperSetup {
   showPopUp: Ref<boolean>;
