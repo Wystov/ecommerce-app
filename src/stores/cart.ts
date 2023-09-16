@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { LineItem, MyCartUpdate, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import api from '@/utils/api/client';
-import type { StateCart } from '@/types/types';
+import type { CartAddItem, StateCart } from '@/types/types';
 import { useUserStore } from '@/stores/user';
 
 export const useCartStore = defineStore('cart', {
@@ -48,11 +48,11 @@ export const useCartStore = defineStore('cart', {
       return this.products.some((product) => product.productKey === productKey);
     },
 
-    async addProductToCart(sku: string[]) {
-      const actions = sku.map((productSku) => {
+    async addProductToCart(products: CartAddItem[]) {
+      const actions = products.map((item) => {
         const action: MyCartUpdateAction = {
           action: 'addLineItem',
-          sku: productSku,
+          ...item,
         };
         return action;
       });
@@ -109,10 +109,13 @@ export const useCartStore = defineStore('cart', {
     },
 
     async updateCountryCart() {
-      const lineItemsSku = this.cart?.lineItems.map((item) => item.variant.sku ?? '');
+      const oldCart = this.cart?.lineItems.map((item) => ({
+        sku: item.variant.sku ?? '',
+        quantity: item.quantity,
+      }));
       await this.removeCart();
       await this.createCart();
-      if (lineItemsSku) await this.addProductToCart(lineItemsSku);
+      if (oldCart && oldCart.length) await this.addProductToCart(oldCart);
     },
 
     async removeCart(): Promise<void> {

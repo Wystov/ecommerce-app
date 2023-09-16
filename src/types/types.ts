@@ -294,3 +294,8 @@ export interface CartItemPrices {
   oldPrice?: string;
   newPrice?: string;
 }
+
+export interface CartAddItem {
+  sku: string;
+  quantity: number;
+}
