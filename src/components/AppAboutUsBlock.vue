@@ -6,13 +6,13 @@
       class="member-block">
       <div class="member-photo">
         <img
-          :src="members[0].image"
+          :src="members[i].image"
           class="image"
           alt="Coracao photo" />
       </div>
       <h4 class="member-name">{{ member.name }}</h4>
       <p class="member-role">{{ member.role }}</p>
-      <p class="member-gh">{{ member.ghNick }}</p>
+      <a class="member-gh" :href="member.ghLink">{{ member.ghNick }}</a>
       <p class="about-member">{{ member.bio }}</p>
     </div>
   </div>
@@ -20,7 +20,8 @@
 
 <script lang="ts">
 import coracao from '@/assets/images/coracao.png';
-import { Roles, Names, GHNicks } from '@/types/enums';
+import photo from '@/assets/images/member-photo.png';
+import { Roles, Names, GHNicks, GHLinks, Bios } from '@/types/enums';
 import { type AboutUsBlock } from '@/types/types';
 
 export default {
@@ -28,25 +29,28 @@ export default {
     return {
       members: [
         {
-          image: coracao,
+          image: photo,
           name: Names.Wystov,
           role: Roles.Wystov,
           ghNick: GHNicks.Wystov,
-          bio: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia saepe accusamus iusto! Laudantium numquam, minima dolore fugit doloremque labore fuga enim veniam saepe possimus animi praesentium delectus iste quae culpa?',
+          ghLink: GHLinks.Wystov,
+          bio: Bios.Wystov,
         },
         {
-          image: coracao,
+          image: photo,
           name: Names.Duxcoder,
           role: Roles.Duxcoder,
           ghNick: GHNicks.Duxcoder,
-          bio: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia saepe accusamus iusto! Laudantium numquam, minima dolore fugit doloremque labore fuga enim veniam saepe possimus animi praesentium delectus iste quae culpa?',
+          ghLink: GHLinks.Duxcoder,
+          bio: Bios.Duxcoder,
         },
         {
           image: coracao,
           name: Names.Coracao,
           role: Roles.Coracao,
           ghNick: GHNicks.Coracao,
-          bio: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia saepe accusamus iusto! Laudantium numquam, minima dolore fugit doloremque labore fuga enim veniam saepe possimus animi praesentium delectus iste quae culpa?',
+          ghLink: GHLinks.Coracao,
+          bio: Bios.Coracao,
         },
       ],
     };
@@ -62,15 +66,27 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 3%;
-  gap: 1rem;
+  padding: 0 2%;
+  gap: 0.7rem;
+  width: 30%;
 }
 .member-photo {
-  width: 60%;
+  width: 40%;
   border-radius: 50%;
   overflow: hidden;
 }
 .image {
   width: 100%;
+  height: 100%;
+}
+.member-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.member-role {
+  font-size: 1.2rem;
+}
+.member-gh {
+  text-decoration: none;
 }
 </style>

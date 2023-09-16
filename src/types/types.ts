@@ -288,6 +288,7 @@ export interface AboutUsBlock {
       name: string,
       role: string,
       ghNick: string,
+      ghLink: string,
       bio: string,
     }[]
 }
