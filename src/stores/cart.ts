@@ -22,6 +22,9 @@ export const useCartStore = defineStore('cart', {
     totalPrice(): number {
       return this.cart?.totalPrice.centAmount ?? 0;
     },
+    promocodeId(): string {
+      return this.cart?.discountCodes[0]?.discountCode.id ?? '';
+    },
   },
   actions: {
     async initializationCart() {
@@ -113,9 +116,11 @@ export const useCartStore = defineStore('cart', {
         sku: item.variant.sku ?? '',
         quantity: item.quantity,
       }));
+      const promocode = (await this.getPromocode(this.promocodeId)) ?? '';
       await this.removeCart();
       await this.createCart();
       if (oldCart && oldCart.length) await this.addProductToCart(oldCart);
+      if (promocode) await this.applyPromo(promocode);
     },
 
     async removeCart(): Promise<void> {
@@ -147,6 +152,16 @@ export const useCartStore = defineStore('cart', {
         .post({ body })
         .execute();
       this.cart = response.body;
+    },
+
+    async getPromocode(id: string) {
+      if (!id.length) return null;
+      try {
+        const response = await api.call().discountCodes().withId({ ID: id }).get().execute();
+        return response.body.code;
+      } catch {
+        return null;
+      }
     },
   },
 });
