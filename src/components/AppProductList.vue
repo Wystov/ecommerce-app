@@ -94,8 +94,8 @@ export default {
       if (selectedSlug !== current) this.changeCategory(selectedSlug as string);
     },
     async fetchProducts(): Promise<ProductProjectionPagedSearchResponse> {
-      const { queryArgs } = this;
-      this.cardsToShow = this.cardsLimit;
+      const data = this.queryArgs;
+      const queryArgs = Object.fromEntries(Object.entries(data));
       queryArgs.limit = this.cardsToShow;
       queryArgs.offset = this.cardsLoaded;
       const { body } = await api.call().productProjections().search().get({ queryArgs }).execute();
@@ -129,7 +129,7 @@ export default {
     },
     stopScroll(data: ProductProjectionPagedSearchResponse): void {
       if (data.total === this.cardsLoaded) {
-        this.endOfLoading = true;
+        this.endOfLoading = this.productList.length !== 0;
         window.removeEventListener('scroll', this.moveScroll);
       }
     },
