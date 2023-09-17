@@ -94,14 +94,16 @@ export default {
   width: 50px;
   text-align: center;
   border: none;
+  outline: none;
   border-top: 1px solid #e9e9e9;
   border-bottom: 1px solid #e9e9e9;
-  border-radius: none;
+  border-radius: 0;
   padding: 0.5rem 0;
 }
 .button-incr,
 .button-decr {
   cursor: pointer;
+  color: var(--main-font-color);
   border: 1px solid #e9e9e9;
   background-color: #e9e9e9;
   padding: 0.5rem 0.6rem;
