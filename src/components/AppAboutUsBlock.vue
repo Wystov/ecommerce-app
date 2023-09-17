@@ -89,4 +89,34 @@ export default {
 .member-gh {
   text-decoration: none;
 }
+.about-member {
+  text-align: justify;
+}
+@media (max-width: 1100px) {
+  .member-photo {
+    width: 60%;
+  }
+}
+@media (max-width: 900px) {
+  .members {
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .member-block {
+    width: 90%;
+  }
+  .member-photo {
+    width: 30%;
+  }
+}
+@media (max-width: 600px) {
+  .member-block {
+    width: 100%;
+    padding: 0;
+  }
+  .member-photo {
+    width: 40%;
+  }
+}
 </style>

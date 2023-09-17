@@ -71,9 +71,9 @@ const enum GHLinks {
 }
 
 const enum Bios {
-  Wystov = 'The team lead really pushed and drove the development of the project, created an excellent design of the site, was each time putting together a puzzle of tasks completed by all team members and scrupulously checked and complement on each PR with very detailed and usuful remarks. It is safe to say that if not Kostya this project would never be possible.',
-  Duxcoder = 'Zhenya invested in the development of the project to the maximum. Thanks to his focused and hard work, the project acquired Husky and Jest for tests, cool routing and registration form, error page, product page and much, much, much more. Zhenya delivered tasks quickly and efficiently, which helped keep all implementations on timeline.',
-  Coracao = 'Came to frontend development after 13 years in car dealership marketing. Has the least knowlege level on the team, but comparable desire to make a great product and grow as a professional in her future profession. Thanks to Anya’s efforts, the project received a storybook and a user login page, several basic components, a task board and a user page, lazy loading and some other features.',
+  Wystov = 'The team lead really pushed and drove the development of the project, created an excellent design of the site, each time he was combining together a puzzle of tasks completed by all team members and scrupulously checked and complement on each PR with very detailed and useful remarks. It is safe to say that if not Kostya this project would never be possible.',
+  Duxcoder = 'Zhenya invested in the development of the project to the maximum. Thanks to his focused and hard work, the project acquired Husky and Jest for tests, cool routing and registration form, error page, product page and much, much, much more. Zhenya delivered tasks quickly and efficiently, that helped a lot to keep all implementations on timeline.',
+  Coracao = 'Came to frontend development after 13 years in car dealership marketing. Anya has the least knowlege level on the team, but comparable desire to make a great product and grow as a professional in the tech industry. Thanks to Anya’s efforts, the project received a storybook and a user login page, several basic components, a task board and a user page, lazy loading and some other features.',
 }
 
 export {
