@@ -53,7 +53,8 @@ export default {
     ...mapState(useUserStore, ['currencyTag']),
     ...mapState(useCartStore, ['fetching', 'products', 'totalPrice', 'cartVersion']),
     cartSubtotal(): number {
-      return this.products.reduce((acc, item) => this.getItemTotal(item) + acc, 0) ?? 0;
+      const items = [...this.products];
+      return items.reduce((acc: number, item: LineItem) => this.getItemTotal(item) + acc, 0) ?? 0;
     },
     promocodeValue(): string {
       const value = this.totalPrice - this.cartSubtotal;
