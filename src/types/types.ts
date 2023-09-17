@@ -285,6 +285,7 @@ export interface CartInfo {
   showPromoAlert: boolean;
   promoAlertMessage: string;
   promoAlertTimeout: number | null;
+  promoBtnDisabled: boolean;
 }
 
 export interface CartItemPrices {

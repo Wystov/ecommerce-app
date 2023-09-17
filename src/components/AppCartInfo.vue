@@ -11,6 +11,7 @@
         <BaseButton
           size="small"
           class="promocode-btn"
+          :disabled="promoBtnDisabled"
           @click="submitPromo">
           Apply
         </BaseButton>
@@ -76,6 +77,7 @@ export default {
   },
   data(): CartInfo {
     return {
+      promoBtnDisabled: false,
       showPromoAlert: false,
       promoAlertMessage: '',
       promoAlertTimeout: null,
@@ -90,6 +92,7 @@ export default {
       const input = this.$refs.promoInput as BaseInputType;
       const code = input.inputValue.trim();
       if (!code.length) return;
+      this.promoBtnDisabled = true;
       if (this.promoAlertTimeout) clearTimeout(this.promoAlertTimeout);
       try {
         await this.applyPromo(code);
@@ -101,6 +104,7 @@ export default {
         }, 5000);
       } finally {
         input.inputValue = '';
+        this.promoBtnDisabled = false;
       }
     },
   },
