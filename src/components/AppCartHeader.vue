@@ -4,6 +4,7 @@
     <BaseButton
       class="clear-cart-button"
       size="small"
+      outline
       @click="showModal = true">
       Clear Shopping Cart
     </BaseButton>
@@ -59,14 +60,7 @@ export default {
   align-items: center;
 }
 .top-container .clear-cart-button {
-  background: white;
-  color: var(--main-font-color);
-  font-size: 0.9rem;
-  border: 1.5px solid var(--main-font-color);
-
-  &:hover {
-    border: 1.5px solid transparent;
-  }
+  font-size: 1rem;
 }
 .popup-container {
   display: grid;
