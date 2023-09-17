@@ -11,6 +11,8 @@
     class="input"
     type="text"
     name="count"
+    autocomplete="off"
+    maxlength="3"
     :value="value"
     @input="userInput" />
   <button

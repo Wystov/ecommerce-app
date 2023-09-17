@@ -1,19 +1,21 @@
 <template>
   <div class="cart-info">
-    <span class="info-title">Promocode</span>
-    <div class="promo-container">
-      <BaseInput
-        id="promocode"
-        ref="promoInput"
-        width="75%"
-        @keyup.enter="submitPromo" />
-      <BaseButton
-        size="small"
-        class="promocode-btn"
-        @click="submitPromo">
-        Apply
-      </BaseButton>
-    </div>
+    <template v-if="!promocodeId.length">
+      <span class="info-title">Promocode</span>
+      <div class="promo-container">
+        <BaseInput
+          id="promocode"
+          ref="promoInput"
+          width="75%"
+          @keyup.enter="submitPromo" />
+        <BaseButton
+          size="small"
+          class="promocode-btn"
+          @click="submitPromo">
+          Apply
+        </BaseButton>
+      </div>
+    </template>
     <Transition>
       <BaseMessage
         v-if="showPromoAlert"
@@ -24,13 +26,23 @@
       </BaseMessage>
     </Transition>
     <span class="info-total">Subtotal: {{ cartSubtotal }}</span>
-    <span class="info-total">Promocode: {{ promocodeValue }}</span>
-    <span class="info-total">Total: {{ totalPrice }}</span>
+    <span class="info-total">Delivery: free</span>
+    <div
+      v-if="promocodeId.length"
+      class="promo-info-container">
+      <span class="info-total"> Promocode: {{ promocodeValue }} </span>
+      <TrashIcon
+        class="remove-promocode-btn"
+        @click="removePromocode" />
+    </div>
+    <span class="info-total bold">Total: {{ totalPrice }}</span>
+    <BaseButton size="medium">Check out</BaseButton>
   </div>
 </template>
 
 <script lang="ts">
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
+import { TrashIcon } from '@heroicons/vue/24/outline';
 import { useCartStore } from '@/stores/cart';
 import type { BaseInputType, CartInfo } from '@/types/types';
 import BaseInput from './shared/BaseInput.vue';
@@ -42,6 +54,7 @@ export default {
     BaseInput,
     BaseMessage,
     BaseButton,
+    TrashIcon,
   },
   props: {
     cartSubtotal: {
@@ -61,12 +74,14 @@ export default {
     return {
       showPromoAlert: false,
       promoAlertMessage: '',
-      promoApplied: false,
       promoAlertTimeout: null,
     };
   },
+  computed: {
+    ...mapState(useCartStore, ['promocodeId']),
+  },
   methods: {
-    ...mapActions(useCartStore, ['applyPromo']),
+    ...mapActions(useCartStore, ['applyPromo', 'removePromocode']),
     async submitPromo(): Promise<void> {
       const input = this.$refs.promoInput as BaseInputType;
       const code = input.inputValue.trim();
@@ -74,7 +89,6 @@ export default {
       if (this.promoAlertTimeout) clearTimeout(this.promoAlertTimeout);
       try {
         await this.applyPromo(code);
-        this.promoApplied = true;
       } catch (error) {
         this.promoAlertMessage = (error as Error).message;
         this.showPromoAlert = true;
@@ -103,8 +117,28 @@ export default {
   display: block;
   margin-bottom: 1rem;
 }
+.bold {
+  font-weight: 600;
+}
 .promo-container {
   display: flex;
   gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+.remove-promocode-btn {
+  opacity: 0;
+  cursor: pointer;
+  color: #3a3e3f;
+  height: 1.2rem;
+  transition: 0.3s;
+}
+.promo-info-container {
+  display: flex;
+  gap: 2rem;
+
+  &:hover .remove-promocode-btn {
+    opacity: 1;
+  }
 }
 </style>

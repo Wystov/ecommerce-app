@@ -284,7 +284,6 @@ export interface StateCart {
 export interface CartInfo {
   showPromoAlert: boolean;
   promoAlertMessage: string;
-  promoApplied: boolean;
   promoAlertTimeout: number | null;
 }
 

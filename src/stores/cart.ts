@@ -163,5 +163,28 @@ export const useCartStore = defineStore('cart', {
         return null;
       }
     },
+
+    async removePromocode() {
+      const body: MyCartUpdate = {
+        version: this.cartVersion ?? 0,
+        actions: [
+          {
+            action: 'removeDiscountCode',
+            discountCode: {
+              typeId: 'discount-code',
+              id: this.promocodeId,
+            },
+          },
+        ],
+      };
+      const response = await api
+        .call()
+        .me()
+        .carts()
+        .withId({ ID: this.cartId })
+        .post({ body })
+        .execute();
+      this.cart = response.body;
+    },
   },
 });
