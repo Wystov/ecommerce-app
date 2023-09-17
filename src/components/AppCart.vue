@@ -23,8 +23,12 @@
   </div>
   <div v-else>
     <div class="empty-cart-info">
-      <h3>Cart is empty</h3>
-      <RouterLink :to="{ name: 'Catalog' }">Continue shopping</RouterLink>
+      <h3>Cart is empty. Let's fill it with crunches!</h3>
+      <RouterLink
+        :to="{ name: 'Catalog' }"
+        class="continue-btn">
+        Continue shopping
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -93,9 +97,14 @@ export default {
   }
 }
 .empty-cart-info {
-  display: grid;
-  place-items: center;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   row-gap: 2rem;
+  text-align: center;
+  height: 100%;
 }
 .cart-item-list {
   flex-grow: 1;
@@ -113,5 +122,18 @@ export default {
 }
 .cart-item:last-child {
   margin-bottom: 0;
+}
+.continue-btn {
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
+  color: white;
+  background-color: var(--main-color);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: 0.3s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 }
 </style>
