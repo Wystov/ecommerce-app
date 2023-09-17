@@ -10,6 +10,7 @@ export const useFilterStore = defineStore('filter', {
     sort: 'name.en asc' as SortBy,
     search: undefined as string | undefined,
     limitNum: 10,
+    offset: 0,
     facet: [
       'variants.attributes.weight',
       'variants.attributes.brand',
@@ -45,7 +46,7 @@ export const useFilterStore = defineStore('filter', {
         priceCountry: country,
         priceCurrency: currency,
         limit: state.limitNum,
-        offset: 0,
+        offset: state.offset,
         'text.en': state.search,
         fuzzy: true,
         fuzzyLevel: state.search && state.search.length > 2 ? 1 : 0,

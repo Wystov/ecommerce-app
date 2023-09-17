@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="cards-container">
     <Transition mode="out-in">
       <div
         v-if="init"
@@ -8,14 +8,12 @@
       </div>
       <template v-else>
         <TransitionGroup
-          v-if="productList.length"
-          ref="catalog"
+          v-if="productList.length || loading"
           tag="div"
           class="catalog"
           name="card">
           <AppProductCard
             v-for="product in productList"
-            ref="card"
             :key="product.id"
             :productData="product"
             :currency="currency"
@@ -30,9 +28,9 @@
       </template>
     </Transition>
     <h3 v-if="loading" class="notification">
-      Loaded {{ cardsLoaded }} out of {{ total }} products. We are loading more, please, wait...
+      Loaded {{ cardsLoaded }}/{{ total }} products. We are loading more, please, wait...
     </h3>
-    <h3 v-if="finish" class="notification">
+    <h3 v-if="endOfLoading" class="notification">
       That's all.
       Choose other category or set filters and restart the search if you'd like to see more.
     </h3>
@@ -41,7 +39,6 @@
 
 <script lang="ts">
 import { mapActions, mapState } from 'pinia';
-import { debounce } from 'lodash';
 import type { ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import { useUserStore } from '@/stores/user';
 import { useFilterStore } from '@/stores/filter';
@@ -60,13 +57,11 @@ export default {
     return {
       productList: [],
       init: true,
-      catalogWidth: 0,
-      cardWidth: 0,
       cardsToShow: 10,
       cardsLoaded: 0,
       total: 0,
       loading: false,
-      finish: false,
+      endOfLoading: false,
     };
   },
   computed: {
@@ -78,14 +73,14 @@ export default {
     ...mapState(useFilterStore, ['queryArgs', 'loaded', 'refresh']),
     ...mapState(useCategoriesStore, ['categories', 'categoriesLoaded']),
     cardsLimit(): number {
+      let res = 6;
       const windowWidth = window.innerWidth;
       if (windowWidth >= 1000) {
-        return 10;
+        res = 10;
+      } else if (windowWidth < 1000 && windowWidth > 700) {
+        res = 9;
       }
-      if (windowWidth < 1000 && windowWidth > 700) {
-        return 9;
-      }
-      return 6;
+      return res;
     },
   },
   methods: {
@@ -126,21 +121,22 @@ export default {
       const { scrollY } = window;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-      if (scrollY + windowHeight >= documentHeight) {
+      const pageHeightCoefficient = 1.1;
+      if (scrollY + windowHeight * pageHeightCoefficient >= documentHeight) {
         this.loading = this.cardsLoaded > 0;
         this.loadProducts();
       }
     },
     stopScroll(data: ProductProjectionPagedSearchResponse): void {
       if (data.total === this.cardsLoaded) {
-        this.finish = true;
+        this.endOfLoading = true;
         window.removeEventListener('scroll', this.moveScroll);
       }
     },
     restartLoadingProducts(): void {
       window.addEventListener('scroll', this.moveScroll);
       this.loading = false;
-      this.finish = false;
+      this.endOfLoading = false;
       this.cardsLoaded = 0;
       this.productList = [];
       this.loadProducts();
@@ -158,9 +154,7 @@ export default {
     );
     this.$watch(
       () => this.$route.params,
-      () => {
-        this.restartLoadingProducts();
-      },
+      () => this.restartLoadingProducts(),
     );
   },
   mounted(): void {
@@ -173,10 +167,18 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.cards-container {
   display: flex;
   flex-direction: column;
   gap: 3rem;
+  width: 100%;
+}
+.spinner-container {
+  height: 50vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .catalog {
   display: flex;
@@ -186,9 +188,6 @@ export default {
 }
 .card-move {
   transition: all 500ms ease-in-out;
-}
-.spinner-container {
-  height: 50vh;
 }
 .no-products {
   margin-left: 50px;
