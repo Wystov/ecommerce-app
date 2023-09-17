@@ -33,6 +33,7 @@
       <BaseNumberInput
         :value="item.quantity"
         :max="item.variant.availability?.availableQuantity ?? 1"
+        :disabled="disableButtons"
         @valueChange="updateQuantity(item?.productKey ?? '', $event)" />
       <div class="item-total">
         {{ prices.itemTotal }}
@@ -67,6 +68,10 @@ export default defineComponent({
     prices: {
       type: Object as PropType<CartItemPrices>,
       required: true,
+    },
+    disableButtons: {
+      type: Boolean,
+      default: false,
     },
   },
   data(): { imgPlaceholder: string } {

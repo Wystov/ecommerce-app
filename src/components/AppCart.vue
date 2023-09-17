@@ -11,7 +11,8 @@
           class="cart-item">
           <AppCartItem
             :item="item"
-            :prices="buildPrices(item)" />
+            :prices="buildPrices(item)"
+            :disableButtons="disableButtons" />
         </li>
       </ul>
       <AppCartInfo
@@ -46,13 +47,16 @@ export default {
   },
   computed: {
     ...mapState(useUserStore, ['currencyTag']),
-    ...mapState(useCartStore, ['fetching', 'products', 'totalPrice']),
+    ...mapState(useCartStore, ['fetching', 'products', 'totalPrice', 'cartVersion']),
     cartSubtotal(): number {
       return this.products.reduce((acc, item) => this.getItemTotal(item) + acc, 0) ?? 0;
     },
     promocodeValue(): string {
       const value = this.totalPrice - this.cartSubtotal;
       return this.formattedPrice(value);
+    },
+    disableButtons(): boolean {
+      return this.fetching && this.cartVersion !== undefined;
     },
   },
   methods: {

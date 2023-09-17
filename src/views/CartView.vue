@@ -1,7 +1,7 @@
 <template>
   <Transition mode="out-in">
     <div
-      v-if="fetching"
+      v-if="fetching && !cartVersion"
       class="spinner-container">
       <div class="spinner" />
     </div>
