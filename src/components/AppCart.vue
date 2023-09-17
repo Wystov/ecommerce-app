@@ -119,6 +119,10 @@ export default {
   margin-bottom: 1.25rem;
   border: 1px solid #e9e9e9;
   border-radius: 10px;
+
+  @media (max-width: 600px) {
+    padding-right: 4rem;
+  }
 }
 .cart-item:last-child {
   margin-bottom: 0;
