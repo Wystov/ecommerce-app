@@ -8,19 +8,20 @@
         <img
           :src="members[i].image"
           class="image"
-          alt="Coracao photo" />
+          alt="Team member photo" />
       </div>
       <h4 class="member-name">{{ member.name }}</h4>
       <p class="member-role">{{ member.role }}</p>
-      <a class="member-gh" :href="member.ghLink">{{ member.ghNick }}</a>
+      <a class="member-gh" target="_blank" rel="noopener noreferrer" :href="member.ghLink">{{ member.ghNick }}</a>
       <p class="about-member">{{ member.bio }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import coracao from '@/assets/images/coracao.png';
-import photo from '@/assets/images/member-photo.png';
+import coracao from '@/assets/images/coracao.jpg';
+import wystov from '@/assets/images/wystov.jpg';
+import duxcoder from '@/assets/images/duxcoder.jpg';
 import { Roles, Names, GHNicks, GHLinks, Bios } from '@/types/enums';
 import { type AboutUsBlock } from '@/types/types';
 
@@ -29,7 +30,7 @@ export default {
     return {
       members: [
         {
-          image: photo,
+          image: wystov,
           name: Names.Wystov,
           role: Roles.Wystov,
           ghNick: GHNicks.Wystov,
@@ -37,7 +38,7 @@ export default {
           bio: Bios.Wystov,
         },
         {
-          image: photo,
+          image: duxcoder,
           name: Names.Duxcoder,
           role: Roles.Duxcoder,
           ghNick: GHNicks.Duxcoder,
@@ -88,9 +89,14 @@ export default {
 }
 .member-gh {
   text-decoration: none;
+  color: var(--main-color);
+}
+.member-gh:hover {
+font-weight: 600;
 }
 .about-member {
   text-align: justify;
+  font-size: 0.9rem;
 }
 @media (max-width: 1100px) {
   .member-photo {
