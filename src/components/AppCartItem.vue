@@ -12,7 +12,7 @@
       <div class="item-name">
         {{ item.name.en }}
       </div>
-      <div>
+      <div class="price-container">
         Price:
         <template v-if="item.price.discounted">
           <span class="old-price">
@@ -101,6 +101,7 @@ export default defineComponent({
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
+  max-width: 250px;
 }
 .old-price {
   text-decoration: line-through;
@@ -116,16 +117,28 @@ export default defineComponent({
 .item-values {
   display: flex;
   align-items: center;
+
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+  }
 }
 .item-total {
   font-size: 1.25rem;
   text-align: right;
   min-width: 8rem;
+
+  @media (max-width: 600px) {
+    margin-top: 1rem;
+    text-align: left;
+  }
 }
 .remove-icon {
   cursor: pointer;
   position: absolute;
   right: 2rem;
   height: 1.5rem;
+}
+.price-container {
+  margin-bottom: 1rem;
 }
 </style>

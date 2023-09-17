@@ -36,7 +36,11 @@
         @click="removePromocode" />
     </div>
     <span class="info-total bold">Total: {{ totalPrice }}</span>
-    <BaseButton size="medium">Check out</BaseButton>
+    <BaseButton
+      size="medium"
+      class="checkout-btn">
+      Check out
+    </BaseButton>
   </div>
 </template>
 
@@ -105,10 +109,15 @@ export default {
 
 <style scoped>
 .cart-info {
+  box-sizing: border-box;
   width: 300px;
   padding: 1rem;
   border: 1px solid #e9e9e9;
   border-radius: 10px;
+
+  @media (max-width: 1000px) {
+    width: 100%;
+  }
 }
 .info-title {
   font-weight: 600;
@@ -127,18 +136,26 @@ export default {
   margin-bottom: 1rem;
 }
 .remove-promocode-btn {
-  opacity: 0;
   cursor: pointer;
   color: #3a3e3f;
   height: 1.2rem;
   transition: 0.3s;
+
+  @media (hover: hover) {
+    opacity: 0;
+  }
 }
 .promo-info-container {
   display: flex;
   gap: 2rem;
 
-  &:hover .remove-promocode-btn {
-    opacity: 1;
+  @media (hover: hover) {
+    &:hover .remove-promocode-btn {
+      opacity: 1;
+    }
   }
+}
+.checkout-btn {
+  padding: 10px 20px;
 }
 </style>

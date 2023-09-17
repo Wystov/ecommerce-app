@@ -87,6 +87,10 @@ export default {
 .cart {
   display: flex;
   gap: 1rem;
+
+  @media (max-width: 1000px) {
+    flex-direction: column;
+  }
 }
 .empty-cart-info {
   display: grid;
