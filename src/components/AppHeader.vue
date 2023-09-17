@@ -26,6 +26,9 @@
             class="cart-link"
             :src="cartIcon"
             alt="cart" />
+          <div v-if="false" class="goods-quantity-container">
+            <p class="goods-quantity">9</p>
+          </div>
         </RouterLink>
       </div>
       <BaseBurger
@@ -90,6 +93,7 @@ export default {
 }
 .flex {
   grid-area: user;
+  position: relative;
 }
 .cart-link {
   display: block;
@@ -103,6 +107,20 @@ export default {
 }
 .menu-block {
   transition: transform 0.5s;
+}
+.goods-quantity-container {
+  position: absolute;
+  top: -26%;
+  left: 91%;
+  background-color: var(--main-color);
+  width: fit-content;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+}
+.goods-quantity {
+  color: var(--dark-theme-font-color);
+  text-decoration: none;
 }
 
 .slide-enter-active,
@@ -124,6 +142,11 @@ export default {
   }
 }
 
+@media (max-width: 1280px) {
+  .logo {
+    width: 140px;
+  }
+}
 @media (max-width: 900px) {
   .container-header {
     grid-template-columns: auto 1fr auto;
@@ -138,11 +161,11 @@ export default {
   .header :deep(.burger) {
     display: flex;
   }
-}
-
-@media (max-width: 1280px) {
-  .logo {
-    width: 140px;
+  .goods-quantity-container {
+    top: -25%;
+    left: 98.5%;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
   }
 }
 @media (max-width: 700px) {
@@ -152,6 +175,21 @@ export default {
   }
   .logo {
     width: 120px;
+  }
+  .goods-quantity-container {
+    left: 98%;
+  }
+}
+@media (max-width: 550px) {
+  .goods-quantity-container {
+    top: -35%;
+    left: 96%;
+  }
+}
+@media (max-width: 390px) {
+  .goods-quantity-container {
+    top: -30%;
+    left: 94%;
   }
 }
 </style>
