@@ -243,6 +243,11 @@ export interface ProductFilterType {
 export interface ProductListType {
   productList: ProductProjection[];
   init: boolean;
+  cardsToShow: number;
+  cardsLoaded: number;
+  total?: number;
+  loading: boolean;
+  endOfLoading: boolean;
 }
 export interface SwiperSetup {
   showPopUp: Ref<boolean>;
