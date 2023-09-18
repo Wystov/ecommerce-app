@@ -280,3 +280,15 @@ export interface StateCart {
   cart?: Cart;
   fetching: boolean;
 }
+
+export interface AboutUsBlock {
+  members:
+    {
+      image: string,
+      name: string,
+      role: string,
+      ghNick: string,
+      ghLink: string,
+      bio: string,
+    }[]
+}
