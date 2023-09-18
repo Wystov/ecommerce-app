@@ -101,7 +101,7 @@ export default {
       const { body } = await api.call().productProjections().search().get({ queryArgs }).execute();
       return body;
     },
-    async loadProducts(): Promise<void | undefined> {
+    async loadProducts(restart?: 'restart'): Promise<void | undefined> {
       await this.checkCategory();
       const data = await this.fetchProducts();
       const res = this.cardsLoaded + data.results.length;
@@ -110,7 +110,7 @@ export default {
         this.total = data.total;
         this.setFilterOptions(data.facets as unknown as FacetResults);
         if (!this.loaded) this.buildFilterOptions();
-        this.productList = this.productList.concat(data.results);
+        this.productList = restart ? data.results : this.productList.concat(data.results);
         this.init = false;
         this.loading = false;
       }
@@ -122,7 +122,7 @@ export default {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const pageHeightCoefficient = 1.1;
-      if (scrollY + windowHeight * pageHeightCoefficient >= documentHeight) {
+      if (scrollY + windowHeight * pageHeightCoefficient >= documentHeight && !this.loading) {
         this.loading = this.cardsLoaded > 0;
         this.loadProducts();
       }
@@ -138,8 +138,7 @@ export default {
       this.loading = false;
       this.endOfLoading = false;
       this.cardsLoaded = 0;
-      this.productList = [];
-      this.loadProducts();
+      this.loadProducts('restart');
     },
   },
   created(): void {
