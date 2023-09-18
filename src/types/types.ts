@@ -281,6 +281,17 @@ export interface StateCart {
   fetching: boolean;
 }
 
+export interface AboutUsBlock {
+  members: {
+    image: string;
+    name: string;
+    role: string;
+    ghNick: string;
+    ghLink: string;
+    bio: string;
+  }[];
+}
+
 export interface CartInfo {
   showPromoAlert: boolean;
   promoAlertMessage: string;
