@@ -26,6 +26,9 @@
             class="cart-link"
             :src="cartIcon"
             alt="cart" />
+          <div v-if="productsQuantity" class="goods-quantity-container">
+            <p class="goods-quantity">{{ productsQuantity }}</p>
+          </div>
         </RouterLink>
       </div>
       <BaseBurger
@@ -36,6 +39,7 @@
 </template>
 
 <script lang="ts">
+import { useCartStore } from '@/stores/cart';
 import logoIcon from '@/assets/icons/logo.svg';
 import dividerIcon from '@/assets/icons/divider.svg';
 import cartIcon from '@/assets/icons/cart.svg';
@@ -59,10 +63,20 @@ export default {
       isBurgerOpen: false,
     };
   },
+  computed: {
+    productsQuantity(): string {
+      const cart = useCartStore();
+      if (!cart.products) return '';
+      const quantity = cart.products.reduce((acc, el) => acc + el.quantity, 0);
+      if (quantity === 0) return '';
+      return quantity >= 100 ? '99+' : quantity.toString();
+    },
+  },
   methods: {
     toggleMenu(): void {
       this.isBurgerOpen = !this.isBurgerOpen;
     },
+
   },
 };
 </script>
@@ -90,6 +104,7 @@ export default {
 }
 .flex {
   grid-area: user;
+  position: relative;
 }
 .cart-link {
   display: block;
@@ -103,6 +118,20 @@ export default {
 }
 .menu-block {
   transition: transform 0.5s;
+}
+.goods-quantity-container {
+  position: absolute;
+  top: -26%;
+  left: 91%;
+  background-color: var(--main-color);
+  width: fit-content;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+}
+.goods-quantity {
+  color: var(--dark-theme-font-color);
+  text-decoration: none;
 }
 
 .slide-enter-active,
@@ -124,6 +153,11 @@ export default {
   }
 }
 
+@media (max-width: 1280px) {
+  .logo {
+    width: 140px;
+  }
+}
 @media (max-width: 900px) {
   .container-header {
     grid-template-columns: auto 1fr auto;
@@ -138,11 +172,11 @@ export default {
   .header :deep(.burger) {
     display: flex;
   }
-}
-
-@media (max-width: 1280px) {
-  .logo {
-    width: 140px;
+  .goods-quantity-container {
+    top: -25%;
+    left: 98.5%;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
   }
 }
 @media (max-width: 700px) {
@@ -152,6 +186,21 @@ export default {
   }
   .logo {
     width: 120px;
+  }
+  .goods-quantity-container {
+    left: 98%;
+  }
+}
+@media (max-width: 550px) {
+  .goods-quantity-container {
+    top: -35%;
+    left: 96%;
+  }
+}
+@media (max-width: 390px) {
+  .goods-quantity-container {
+    top: -30%;
+    left: 94%;
   }
 }
 </style>

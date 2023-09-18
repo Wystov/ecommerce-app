@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { mapState, mapActions } from 'pinia';
+import { mapState } from 'pinia';
 import { useCartStore } from '@/stores/cart';
 import AppCart from '@/components/AppCart.vue';
 
@@ -22,12 +22,6 @@ export default {
   },
   computed: {
     ...mapState(useCartStore, ['fetching', 'cartVersion']),
-  },
-  methods: {
-    ...mapActions(useCartStore, ['initializationCart']),
-  },
-  created(): void {
-    if (!this.cartVersion) this.initializationCart();
   },
 };
 </script>
