@@ -25,6 +25,9 @@ export const useCartStore = defineStore('cart', {
     promocodeId(): string {
       return this.cart?.discountCodes[0]?.discountCode.id ?? '';
     },
+    totalItems(): number {
+      return this.cart?.totalLineItemQuantity ?? 0;
+    },
   },
   actions: {
     async initializationCart() {

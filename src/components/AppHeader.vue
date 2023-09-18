@@ -26,7 +26,9 @@
             class="cart-link"
             :src="cartIcon"
             alt="cart" />
-          <div v-if="productsQuantity" class="goods-quantity-container">
+          <div
+            v-if="productsQuantity"
+            class="goods-quantity-container">
             <p class="goods-quantity">{{ productsQuantity }}</p>
           </div>
         </RouterLink>
@@ -39,6 +41,7 @@
 </template>
 
 <script lang="ts">
+import { mapState } from 'pinia';
 import { useCartStore } from '@/stores/cart';
 import logoIcon from '@/assets/icons/logo.svg';
 import dividerIcon from '@/assets/icons/divider.svg';
@@ -64,19 +67,17 @@ export default {
     };
   },
   computed: {
+    ...mapState(useCartStore, ['totalItems']),
     productsQuantity(): string {
-      const cart = useCartStore();
-      if (!cart.products) return '';
-      const quantity = cart.products.reduce((acc, el) => acc + el.quantity, 0);
-      if (quantity === 0) return '';
-      return quantity >= 100 ? '99+' : quantity.toString();
+      const quantity = this.totalItems;
+      if (!this.totalItems) return '';
+      return quantity > 99 ? '99+' : quantity.toString();
     },
   },
   methods: {
     toggleMenu(): void {
       this.isBurgerOpen = !this.isBurgerOpen;
     },
-
   },
 };
 </script>
