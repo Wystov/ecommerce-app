@@ -12,7 +12,13 @@
       </div>
       <h4 class="member-name">{{ member.name }}</h4>
       <p class="member-role">{{ member.role }}</p>
-      <a class="member-gh" target="_blank" rel="noopener noreferrer" :href="member.ghLink">{{ member.ghNick }}</a>
+      <a
+        class="member-gh"
+        target="_blank"
+        rel="noopener noreferrer"
+        :href="member.ghLink">
+        {{ member.ghNick }}
+      </a>
       <p class="about-member">{{ member.bio }}</p>
     </div>
   </div>
@@ -92,7 +98,7 @@ export default {
   color: var(--main-color);
 }
 .member-gh:hover {
-font-weight: 600;
+  font-weight: 600;
 }
 .about-member {
   text-align: justify;

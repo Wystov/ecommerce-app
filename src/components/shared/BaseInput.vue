@@ -6,7 +6,9 @@
       v-if="label"
       :for="id"
       class="label"
-      :class="{ 'dark-theme-label': isDark }">{{ label }}</label>
+      :class="{ 'dark-theme-label': isDark }">
+      {{ label }}
+    </label>
     <input
       :id="id"
       ref="input"
