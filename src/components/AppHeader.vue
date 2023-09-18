@@ -26,8 +26,8 @@
             class="cart-link"
             :src="cartIcon"
             alt="cart" />
-          <div v-if="false" class="goods-quantity-container">
-            <p class="goods-quantity">9</p>
+          <div v-if="productsQuantity" class="goods-quantity-container">
+            <p class="goods-quantity">{{ productsQuantity }}</p>
           </div>
         </RouterLink>
       </div>
@@ -39,6 +39,7 @@
 </template>
 
 <script lang="ts">
+import { useCartStore } from '@/stores/cart';
 import logoIcon from '@/assets/icons/logo.svg';
 import dividerIcon from '@/assets/icons/divider.svg';
 import cartIcon from '@/assets/icons/cart.svg';
@@ -62,10 +63,20 @@ export default {
       isBurgerOpen: false,
     };
   },
+  computed: {
+    productsQuantity(): string {
+      const cart = useCartStore();
+      if (!cart.products) return '';
+      const quantity = cart.products.reduce((acc, el) => acc + el.quantity, 0);
+      if (quantity === 0) return '';
+      return quantity >= 100 ? '99+' : quantity.toString();
+    },
+  },
   methods: {
     toggleMenu(): void {
       this.isBurgerOpen = !this.isBurgerOpen;
     },
+
   },
 };
 </script>
