@@ -1,27 +1,32 @@
 <template>
-  <button
-    type="button"
-    :disabled="value === min || disabled"
-    class="button-decr"
-    @click="manualChange('decr')">
-    -
-  </button>
-  <input
-    ref="input"
-    class="input"
-    type="text"
-    name="count"
-    autocomplete="off"
-    maxlength="3"
-    :value="value"
-    @input="userInput" />
-  <button
-    type="button"
-    :disabled="value === max || disabled"
-    class="button-incr"
-    @click="manualChange('incr')">
-    +
-  </button>
+  <div
+    class="price-controller"
+    :class="disabled && loading && 'loading'">
+    <button
+      type="button"
+      :disabled="value === min || disabled"
+      class="button-decr"
+      @click="manualChange('decr')">
+      -
+    </button>
+    <input
+      ref="input"
+      class="input"
+      type="text"
+      name="count"
+      autocomplete="off"
+      maxlength="3"
+      :value="value"
+      :disabled="disabled"
+      @input="userInput" />
+    <button
+      type="button"
+      :disabled="value === max || disabled"
+      class="button-incr"
+      @click="manualChange('incr')">
+      +
+    </button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -47,8 +52,14 @@ export default {
     },
   },
   emits: ['valueChange'],
+  data(): { loading: boolean } {
+    return {
+      loading: false,
+    };
+  },
   methods: {
     manualChange(action: 'incr' | 'decr'): void {
+      this.loading = true;
       const input = this.$refs.input as HTMLInputElement;
       if (!input) return;
       const value = action === 'incr' ? +input.value + 1 : +input.value - 1;
@@ -56,6 +67,7 @@ export default {
       this.$emit('valueChange', value);
     },
     userInput(): void {
+      this.loading = true;
       const input = this.$refs.input as HTMLInputElement;
       if (!input) return;
       input.value = input.value.replace(/[^0-9]/g, '');
@@ -88,6 +100,11 @@ export default {
       },
     ),
   },
+  watch: {
+    value(): void {
+      this.loading = false;
+    },
+  },
 };
 </script>
 
@@ -101,7 +118,40 @@ export default {
   border-bottom: 1px solid #e9e9e9;
   border-radius: 0;
   padding: 0.5rem 0;
+  &:disabled {
+    background: #fafafa;
+  }
 }
+.price-controller {
+  position: relative;
+  display: flex;
+}
+.price-controller.loading::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 12px);
+  top: calc(50% - 12px);
+  width: 18px;
+  height: 18px;
+  background: #fafafa;
+  border: 3px solid #e9e9e9;
+  border-radius: 50%;
+  border-top-color: rgb(195 195 195);
+  animation: spin-79e2b0cd 1s ease-in-out infinite;
+  -webkit-animation: spin-79e2b0cd 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
 .button-incr,
 .button-decr {
   cursor: pointer;
