@@ -280,3 +280,33 @@ export interface StateCart {
   cart?: Cart;
   fetching: boolean;
 }
+
+export interface AboutUsBlock {
+  members: {
+    image: string;
+    name: string;
+    role: string;
+    ghNick: string;
+    ghLink: string;
+    bio: string;
+  }[];
+}
+
+export interface CartInfo {
+  showPromoAlert: boolean;
+  promoAlertMessage: string;
+  promoAlertTimeout: number | null;
+  promoBtnDisabled: boolean;
+}
+
+export interface CartItemPrices {
+  price: string;
+  itemTotal: string;
+  oldPrice?: string;
+  newPrice?: string;
+}
+
+export interface CartAddItem {
+  sku: string;
+  quantity: number;
+}
