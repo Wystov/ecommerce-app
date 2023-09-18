@@ -13,7 +13,9 @@
           {{ product.name[0] }}
           <span
             v-if="product.name[1]"
-            class="product-name-light">{{ product.name[1] }}</span>
+            class="product-name-light">
+            {{ product.name[1] }}
+          </span>
         </h1>
         <div class="product-slider">
           <AppSliderProductPage :images="product.images" />
@@ -23,7 +25,9 @@
             {{ product.name[0] }}
             <span
               v-if="product.name[1]"
-              class="product-name-light">{{ product.name[1] }}</span>
+              class="product-name-light">
+              {{ product.name[1] }}
+            </span>
           </h1>
           <div class="product-price-group">
             <div
@@ -202,7 +206,7 @@ export default {
     },
     async cartHandler(skuProduct?: string): Promise<void> {
       if (!this.cartId) await this.createCart();
-      this.addProductToCart([skuProduct ?? '']);
+      this.addProductToCart([{ sku: skuProduct ?? '', quantity: 1 }]);
     },
   },
   created(): void {
