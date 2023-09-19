@@ -27,12 +27,16 @@
         </div>
       </template>
     </Transition>
-    <h3 v-if="loading" class="notification">
+    <h3
+      v-if="loading"
+      class="notification">
       Loaded {{ cardsLoaded }}/{{ total }} products. We are loading more, please, wait...
     </h3>
-    <h3 v-if="endOfLoading" class="notification">
-      That's all.
-      Choose other category or set filters and restart the search if you'd like to see more.
+    <h3
+      v-if="endOfLoading"
+      class="notification">
+      That's all. Choose other category or set filters and restart the search if you'd like to see
+      more.
     </h3>
   </div>
 </template>
