@@ -119,7 +119,7 @@ describe('Show password method', () => {
 describe('Sing in function succeeded', () => {
   it('should redirect to main page if sign in is successful', async () => {
     setActivePinia(createPinia());
-    const signInCustomerMock = vi.fn().mockResolvedValue({ ok: true });
+    const signInCustomerMock = vi.fn().mockResolvedValue({ ok: true, data: {} });
     Api.signInCustomer = signInCustomerMock;
     const pushMock = vi.fn();
     const mockRouter = {

@@ -176,8 +176,8 @@ export default {
       }
       const data = this.dataForSignIn;
       const response = await Api.signInCustomer(data);
-      if (response.ok) {
-        this.userStore.loginUser();
+      if (response.ok && response.data) {
+        this.userStore.loginUser(response.data);
         this.$router.push(PathPages.Home);
         return;
       }

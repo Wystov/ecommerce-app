@@ -3,12 +3,8 @@
     <div class="first-screen">
       <div class="hero flex">
         <div class="hero-text-container">
-          <h1 class="title">
-            The crunchiest breakfasts in one place.
-          </h1>
-          <p class="description">
-            Order today, crunch tomorrow. Choose yours!
-          </p>
+          <h1 class="title">The crunchiest breakfasts in one place.</h1>
+          <p class="description">Order today, crunch tomorrow. Choose yours!</p>
           <BaseButton
             size="medium"
             class="button"
@@ -24,9 +20,7 @@
       </div>
       <div class="promo">
         <div class="promo-text-container">
-          <h1 class="title">
-            Promos
-          </h1>
+          <h1 class="title">Promos</h1>
           <div class="promo-image">
             <img
               src="@/assets/images/promo.svg"
@@ -34,25 +28,15 @@
               class="promo-img" />
           </div>
           <p class="description">
-            Enjoy special promocodes for registered customers
+            Enjoy special promocode for an extra 10% off all items in your cart
           </p>
+          <div class="promocode">CROSS-CHECK</div>
           <BaseButton
-            v-if="!authorized"
+            ref="copyButton"
             size="medium"
             class="button"
-            label="Join us"
-            @click="$router.push({ name: 'Sign Up' })" />
-          <template v-else>
-            <div class="promocode">
-              CROSS-CHECK
-            </div>
-            <BaseButton
-              ref="copyButton"
-              size="medium"
-              class="button"
-              :label="promoBtnText"
-              @click="copyPromo" />
-          </template>
+            :label="promoBtnText"
+            @click="copyPromo" />
         </div>
       </div>
     </div>
