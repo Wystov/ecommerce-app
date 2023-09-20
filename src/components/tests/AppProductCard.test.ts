@@ -1,8 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { RouterLinkStub, mount } from '@vue/test-utils';
 import { describe, it, expect } from 'vitest';
+import { setActivePinia, createPinia } from 'pinia';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 import AppProductCard from '@/components/AppProductCard.vue';
+
+setActivePinia(createPinia());
 
 describe('AppProductCard in catalog', () => {
   const global = {

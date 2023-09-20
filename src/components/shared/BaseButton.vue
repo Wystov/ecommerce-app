@@ -73,20 +73,20 @@ export default {
 }
 
 .theme-dark {
-  background: #4528a4;
+  background: #2f8a3a;
   color: #fff;
-  border: solid 1px #4528a4;
+  border: solid 1px #2f8a3a;
 
   &:not(:disabled):hover {
-    border: solid 1px #3f2496;
+    border: solid 1px #21762b;
     color: #d6cbf8;
-    background: #3f2496;
+    background: #21762b;
   }
 
   &:not(:disabled):active,
   &.active {
-    border: solid 1px #2f1b70;
-    background: #2f1b70;
+    border: solid 1px #186320;
+    background: #186320;
   }
 }
 

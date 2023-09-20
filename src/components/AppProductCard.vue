@@ -2,17 +2,17 @@
   <RouterLink
     class="card"
     :to="{ name: 'Product', params: { slug } }">
-    <img
-      class="product-image w-100"
-      :src="image"
-      alt="product image" />
     <div class="product-content">
-      <p class="product-name">
-        {{ name }}
-      </p>
+      <img
+        class="product-image w-100"
+        :src="image"
+        alt="product image" />
+      <p class="product-name">{{ name }}</p>
       <p class="product-description">
         {{ description }}
       </p>
+    </div>
+    <div class="product-footer">
       <div class="product-price">
         <span
           v-if="salePrice"
@@ -23,6 +23,25 @@
           {{ salePrice ?? price }}
         </span>
       </div>
+      <BaseButton
+        v-if="!hasProductInCart(keyProduct)"
+        class="btn"
+        circle
+        size="small"
+        :disabled="fetching"
+        @click.prevent="cartHandler()">
+        <ShoppingCartIcon class="icon" />
+      </BaseButton>
+      <BaseButton
+        v-else
+        dark
+        class="btn"
+        circle
+        size="small"
+        :disabled="fetching"
+        @click.prevent="updateQuantity(keyProduct, 0)">
+        <TrashIcon class="icon" />
+      </BaseButton>
     </div>
   </RouterLink>
 </template>
@@ -30,9 +49,18 @@
 <script lang="ts">
 import type { Price, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import { defineComponent, type PropType } from 'vue';
+import { ShoppingCartIcon, TrashIcon } from '@heroicons/vue/20/solid';
+import { mapActions, mapState } from 'pinia';
 import imgPlaceholder from '@/assets/images/no-image-placeholder.svg';
+import { useCartStore } from '@/stores/cart';
+import BaseButton from './shared/BaseButton.vue';
 
 export default defineComponent({
+  components: {
+    BaseButton,
+    ShoppingCartIcon,
+    TrashIcon,
+  },
   props: {
     productData: {
       type: Object as PropType<ProductProjection>,
@@ -49,6 +77,7 @@ export default defineComponent({
   },
   data: () => ({ imgPlaceholder }),
   computed: {
+    ...mapState(useCartStore, { cartId: 'cartId', fetching: 'fetching' }),
     product(): ProductVariant {
       return this.productData.masterVariant;
     },
@@ -84,10 +113,26 @@ export default defineComponent({
     slug(): string {
       return this.productData.slug.en;
     },
+    sku(): string {
+      return this.productData.masterVariant.sku ?? '';
+    },
+    keyProduct(): string {
+      return this.productData.key ?? '';
+    },
   },
   methods: {
+    ...mapActions(useCartStore, [
+      'addProductToCart',
+      'hasProductInCart',
+      'createCart',
+      'updateQuantity',
+    ]),
     formattedPrice(cents: number): string {
       return `${this.currencyTag}${(cents / 100).toFixed(2)}`;
+    },
+    async cartHandler(): Promise<void> {
+      if (!this.cartId) await this.createCart();
+      this.addProductToCart([{ sku: this.sku, quantity: 1 }]);
     },
   },
 });
@@ -95,6 +140,9 @@ export default defineComponent({
 
 <style scoped>
 .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   position: relative;
   z-index: 1;
   box-sizing: border-box;
@@ -128,13 +176,20 @@ export default defineComponent({
   }
 }
 .product-content {
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+.product-image {
+  margin-bottom: 20px;
+}
 .product-name {
   font-weight: 600;
+}
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 .old-price {
   display: block;
@@ -147,5 +202,13 @@ export default defineComponent({
 }
 .new-price {
   color: var(--main-color);
+}
+.icon :deep(path) {
+  color: #fff;
+  width: 20px;
+  transition: 0.3s;
+}
+.btn:hover:deep(path) {
+  color: #f0f0f0;
 }
 </style>
