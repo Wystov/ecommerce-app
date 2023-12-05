@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+:root {
+  --main-color: #eb5461;
+  --main-color-hover: #de4e5b;
+  --main-color-active: #d23a47;
+  --main-color-outline: rgba(58, 62, 63, 0.5);
+  --main-font-color: #3a3e3f;
+  --main-font-hover: #ffdede;
+  --dark-theme-font-color: #f7f0fb;
+  --main-font-style: sans-serif;
+  --placeholder-font-color: #160a3d55;
+  --secondary-color: #f6b82f;
+}
+
+* {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 400;
+  color: var(--main-font-color);
+}
+ul,
+hr,
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+h2 {
+  color: var(--main-font-color);
+  font-family: Work Sans;
+  font-size: 46px;
+  font-weight: 600;
+}
+
+h3 {
+  color: var(--main-font-color);
+  font-family: Work Sans;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+hr {
+  height: 1px;
+  width: 100%;
+  background: var(--main-font-color);
+  opacity: 0.5;
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.wrapper {
+  margin: 0 auto;
+  height: 100%;
+  max-width: 1680px;
+  padding: 0 120px;
+  box-sizing: border-box;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 26px;
+  --c: linear-gradient(#eb5461 0 0);
+  background:
+    var(--c) 0 100%,
+    var(--c) 50% 100%,
+    var(--c) 100% 100%;
+  background-size: 8px calc(100% - 4px);
+  background-repeat: no-repeat;
+  position: relative;
+}
+.spinner:before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #eb5461;
+  left: 0;
+  top: 0;
+  animation:
+    db3-1 1.5s linear infinite alternate,
+    db3-2 0.75s cubic-bezier(0, 200, 0.8, 200) infinite;
+}
+.spinner-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+@keyframes db3-1 {
+  100% {
+    left: calc(100% - 8px);
+  }
+}
+
+@keyframes db3-2 {
+  100% {
+    top: -0.1px;
+  }
+}
+
+.w-100 {
+  width: 100%;
+}
+
+@media (max-width: 1680px) {
+  .wrapper {
+    max-width: 1360px;
+    padding: 0 60px;
+  }
+}
+
+@media (max-width: 500px) {
+  .wrapper {
+    padding: 0 20px;
+  }
+}
